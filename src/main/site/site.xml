@@ -26,4 +26,7 @@
     </menu>
     <menu ref="reports" />
   </body>
+  <custom>
+     <absoluteResourceURL>http://datalayer/developer/model/</absoluteResourceURL>
+  </custom>
 </project>
