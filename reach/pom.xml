@@ -28,13 +28,4 @@
     <artifactId>datalayer-model</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
-  <distributionManagement>
-    <site>
-      <id>datalayer.site</id>
-      <name>Datalayer Site</name>
-      <url>scp://datalayer.io/site/datalayer.io/developer/reach</url>
-    </site>
-  </distributionManagement>
-  <dependencies>
-  </dependencies>
 </project>
