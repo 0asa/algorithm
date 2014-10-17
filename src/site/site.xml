@@ -24,7 +24,6 @@
     <menu name="${project.name}">
       <item name="Home" href="index.html"/>
     </menu>
-    <menu ref="reports" />
   </body>
   <custom>
      <absoluteResourceURL>http://datalayer/developer/model/</absoluteResourceURL>
