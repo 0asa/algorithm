@@ -32,7 +32,7 @@
     <site>
       <id>datalayer.site</id>
       <name>Datalayer Site</name>
-      <url>scp://datalayer.io/site/datalayer.io/developer/text</url>
+      <url>scp://datalayer.io/site/datalayer.io/text</url>
     </site>
   </distributionManagement>
 </project>
