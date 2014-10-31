@@ -19,7 +19,7 @@ Datalayer Model is a module that can be deployed and configured in the
 
 # License
 
-Copyright [2014] [Datalayer - http://datalayer.io]
+Copyright 2014 Datalayer http://datalayer.io
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
