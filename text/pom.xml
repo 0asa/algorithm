@@ -21,7 +21,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <artifactId>datalayer-model-text</artifactId>
-  <name>Datalayer Text</name>
+  <name>Datalayer Model Text</name>
   <packaging>jar</packaging>
   <parent>
     <groupId>io.datalayer</groupId>
@@ -31,7 +31,7 @@
   <distributionManagement>
     <site>
       <id>datalayer.site</id>
-      <name>Datalayer Site</name>
+      <name>Datalayer Model Site</name>
       <url>scp://datalayer.io/site/datalayer.io/text</url>
     </site>
   </distributionManagement>

@@ -21,22 +21,11 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <artifactId>datalayer-model-common</artifactId>
-  <name>Datalayer Common</name>
+  <name>Datalayer Model Common</name>
   <packaging>jar</packaging>
   <parent>
     <groupId>io.datalayer</groupId>
     <artifactId>datalayer-model</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
-  <dependencies>
-    <dependency>
-      <groupId>io.datalayer</groupId>
-      <artifactId>datalayer-scalex</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.github.nscala-time</groupId>
-      <artifactId>nscala-time_2.11</artifactId>
-      <version>1.6.0</version>
-    </dependency>
-  </dependencies>
 </project>

@@ -31,12 +31,59 @@
   <distributionManagement>
     <site>
       <id>datalayer.site</id>
-      <name>Datalayer Site</name>
+      <name>Datalayer Model Site</name>
       <url>scp://datalayer.io/site/datalayer.io/model</url>
     </site>
   </distributionManagement>
+  <dependencies>
+    <dependency>
+      <groupId>io.datalayer</groupId>
+      <artifactId>datalayer-scalex</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.scalanlp</groupId>
+      <artifactId>breeze_2.10</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.scalanlp</groupId>
+      <artifactId>epic_2.10</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-saddle</groupId>
+      <artifactId>saddle-core_2.10</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.github.nscala-time</groupId>
+      <artifactId>nscala-time_2.10</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-mllib_2.10</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-sql_2.10</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-hive_2.10</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-graphx_2.10</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-bagel_2.10</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-streaming_2.10</artifactId>
+    </dependency>
+  </dependencies>
   <modules>
     <module>algorithm</module>
+    <module>all</module>
     <module>controlchart</module>
     <module>common</module>
     <module>randomforest</module>
