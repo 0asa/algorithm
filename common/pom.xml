@@ -28,4 +28,10 @@
     <artifactId>datalayer-model</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
+  <dependencies>
+    <dependency>
+      <groupId>org.sameersingh.scalaplot</groupId>
+      <artifactId>scalaplot</artifactId>
+    </dependency>
+  </dependencies>
 </project>
