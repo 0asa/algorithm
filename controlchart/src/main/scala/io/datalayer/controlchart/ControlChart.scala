@@ -91,10 +91,14 @@ class ReadCSVFolder(folderPath: String) {
   val data = files.map(x => new ReadCSV(x.toString))
 }
 
-/** The Control Chart class perform a basic control chart. It simply oulines
+/** 
+ *  The Control Chart class perform a basic control chart. It simply oulines
   * data which are 2 times greater than the standard deviation.
-  * @param data An array of float representing the data to analyze. */
+  * 
+  * @param data An array of float representing the data to analyze.
+  * */
 class ControlChart(data: Array[Float]) {
+
   val mean = Stat.computeMean(data)
   val stdDev = Math.sqrt(Stat.computeVariance(data, mean)).toFloat
 
@@ -118,4 +122,5 @@ class ControlChart(data: Array[Float]) {
   def plotASCII() = {
     output(ASCII, plot(series))
   }
+
 }
