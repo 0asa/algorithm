@@ -18,9 +18,7 @@
  * under the License.                                           *
  * **************************************************************
  */
-
 package io.datalayer.controlchart
-
 
 import java.io.File
 import org.sameersingh.scalaplot.MemXYSeries

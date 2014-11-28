@@ -1,6 +1,4 @@
-/**
- * Created by manuel on 15/10/14.
- */
+package io.datalayer.controlchart
 
 import io.datalayer.controlchart._
 import org.scalatest.FunSuite
@@ -11,7 +9,7 @@ class ControlChartTest extends FunSuite with ShouldMatchers {
     val testArray = Array[Float](5, 5, 5, 5, 5, 5, 5, 5, 9)
     val cc = new ControlChart(testArray)
     cc.summary()
-    assert( cc.outliers.length === 1)
+    assert(cc.outliers.length === 1)
   }
 }
 
@@ -20,5 +18,5 @@ class ReadCSVTest extends FunSuite with ShouldMatchers {
     val testFile = new ReadCSV("src/test/resources/test.csv")
     assert(testFile.getColumn(0).length === 101)
   }
-}
 
+}
