@@ -122,5 +122,5 @@ class ControlChart(data: Array[Float]) {
   def plotASCII() = {
     output(ASCII, plot(series))
   }
-
+  
 }
