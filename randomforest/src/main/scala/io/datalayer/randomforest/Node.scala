@@ -37,7 +37,12 @@ class Node {
   
   def findRandomSplit(x: DenseMatrix[Double], y: DenseVector[Double]) {
     val rand = new Random
-    
+    val att = Random.nextInt(x.cols)    
+    val max = x(::,att).max
+    val min = x(::,att).min
+    // Pick a random threshold in [min and max]
+    // not the best strategy, yet.
+    val th = min + (Random.nextDouble() * (max-min))    
   }
   
   // TODO: set a split type (at random, best split, ...)

@@ -43,14 +43,14 @@ object dataGenerator {
   }
   */
   def genArray(numInstances: Int = 10): (DenseMatrix[Double], DenseVector[Double]) = {
-    val x = DenseMatrix.zeros[Double](numInstances, 2)
-    val y = DenseVector[Double](numInstances)
+    val x = DenseMatrix.zeros[Double](numInstances,2)
+    val y = DenseVector.zeros[Double](numInstances)
     val rand = new Random
-    for (i <- 0 until numInstances) {
+    for (i:Int <- 0 until numInstances) {      
       val a = rand.nextInt(10)
       val b = rand.nextInt(10)
       x(i, 0) = a
-      x(i, 1) = b
+      x(i, 1) = b      
       y(i) = if (a + b > 10) { 0 } else { 1 }
     }
     (x, y)
@@ -71,7 +71,7 @@ object Metrics {
 object App {
   def main(args: Array[String]) {
     println("Started")
-
+    
     val (x, y) = dataGenerator.genArray(10)
     val forest = new Forest()
     forest.fit(x, y)
@@ -84,8 +84,7 @@ object App {
     val r = new Node
     n.setChild(l, r)
     println(n.isLeaf())
-
-    n.findRandomSplit(x, y)
+    
     /*
     val conf = new SparkConf().setMaster("local").setAppName("Simple Application")
     val sc = new SparkContext(conf)
