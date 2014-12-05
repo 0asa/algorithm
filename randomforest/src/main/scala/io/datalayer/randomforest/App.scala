@@ -9,9 +9,7 @@ package io.datalayer.randomforest
 //import org.apache.spark.mllib.linalg.distributed.{IndexedRow, IndexedRowMatrix, RowMatrix}
 import scala.collection.mutable
 import scala.util.Random
-import io.datalayer.randomforest.Node
-import io.datalayer.randomforest.Tree
-import io.datalayer.randomforest.Forest
+import breeze.linalg._
 
 // Helper to generate dummy data
 // for testing purposes
@@ -44,17 +42,18 @@ object dataGenerator {
     mat
   }
   */
-  def genArray(numInstances: Int = 10) : (Array[Array[Double]], Array[Double]) = {
-    val x = new Array[Array[Double]](numInstances)
-    val y = new Array[Double](numInstances)
+  def genArray(numInstances: Int = 10): (DenseMatrix[Double], DenseVector[Double]) = {
+    val x = DenseMatrix.zeros[Double](numInstances, 2)
+    val y = DenseVector[Double](numInstances)
     val rand = new Random
-    for(i <- 0 until numInstances) {
+    for (i <- 0 until numInstances) {
       val a = rand.nextInt(10)
       val b = rand.nextInt(10)
-      x(i) = Array[Double](a,b)
-      y(i) = if (a+b > 10) { 0 } else { 1 }
+      x(i, 0) = a
+      x(i, 1) = b
+      y(i) = if (a + b > 10) { 0 } else { 1 }
     }
-    (x,y)
+    (x, y)
   }
 
 }
@@ -69,15 +68,24 @@ object Metrics {
   def variance() = {}
 }
 
-
 object App {
   def main(args: Array[String]) {
     println("Started")
 
-    val (x,y) = dataGenerator.genArray(100)
+    val (x, y) = dataGenerator.genArray(10)
     val forest = new Forest()
-    forest.fit(x,y)
-    forest.predict(x)
+    forest.fit(x, y)
+    var probas = forest.predict(x)
+    //probas.foreach(println)
+
+    val n = new Node
+    println(n.isLeaf())
+    val l = new Node
+    val r = new Node
+    n.setChild(l, r)
+    println(n.isLeaf())
+
+    n.findRandomSplit(x, y)
     /*
     val conf = new SparkConf().setMaster("local").setAppName("Simple Application")
     val sc = new SparkContext(conf)
