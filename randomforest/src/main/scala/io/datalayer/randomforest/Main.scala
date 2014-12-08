@@ -68,8 +68,8 @@ object Metrics {
   def variance() = {}
 }
 
-object App {
-  def main(args: Array[String]) {
+object Main extends App {
+  
     println("Started")
     
     val (x, y) = dataGenerator.genArray(10)
@@ -95,5 +95,5 @@ object App {
     val data2 = dataGenerator.genIndexedRowMatrix(sc, 10000)
     data2.rows.take(10).foreach(println)
     */
-  }
+  
 }
