@@ -32,7 +32,7 @@
     <site>
       <id>datalayer.site</id>
       <name>Datalayer Model Site</name>
-      <url>scp://datalayer.io/site/datalayer.io/model</url>
+      <url>scp://datalayer.io/site/datalayer.io/platform/doc/model</url>
     </site>
   </distributionManagement>
   <dependencies>
