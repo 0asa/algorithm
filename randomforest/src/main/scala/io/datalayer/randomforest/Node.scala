@@ -4,6 +4,8 @@ import scala.collection.mutable
 import scala.util.Random
 import breeze.linalg._
 
+abstract class GenericNode(left: Option[GenericNode], right: Option[GenericNode])
+
 // Node class: currently, I'm trying to keep things
 // consistent with a fit and predict
 // while it has a different meaning at the node level
@@ -42,7 +44,15 @@ class Node {
     val min = x(::,att).min
     // Pick a random threshold in [min and max]
     // not the best strategy, yet.
-    val th = min + (Random.nextDouble() * (max-min))    
+    // Will see what we can do with RDDs later.
+    val th = min + (Random.nextDouble() * (max-min))
+    // Something similar could be used to split the data:
+    // + maybe we won't need breeze in the end.
+    val partitions = x(::,att).toArray.partition(ex => ex < th)
+    //println("<  " + th) 
+    //partitions._1.foreach(println)
+    //println(">= " + th)
+    //partitions._2.foreach(println)
   }
   
   // TODO: set a split type (at random, best split, ...)
