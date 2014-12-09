@@ -4,7 +4,7 @@ import io.datalayer.randomforest._
 import breeze.linalg._
 import org.scalatest.FunSuite
 import org.scalatest.ShouldMatchers
-/*
+
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
@@ -16,7 +16,6 @@ class SparkTest extends FunSuite with ShouldMatchers {
     assert(1 == 1)
   }
 }
-*/
 
 class NodeTest extends FunSuite with ShouldMatchers {
   //val (x, y) = dataGenerator.genArray(40)
