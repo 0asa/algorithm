@@ -12,7 +12,8 @@ class Node {
   var left: Node = null
   var right: Node = null
   var split: Split = null
-  var depth: Int = 1  
+  var depth: Int = 1
+  var votes: scala.collection.immutable.Iterable[Double] = null
 
   def setLeft(n: Node) {
     left = n
@@ -38,7 +39,7 @@ class Node {
   def gini(p: Seq[Labeled]): Double = {    
     var gi:Double = 0.0
     val maps = p.groupBy(e => e.label.label)
-    val counts = maps.map(e => { (e._1, e._2.length) } )
+    val counts = maps.map(e => { (e._1, e._2.length) } )    
     val total:Double = counts.map(e => e._2).reduce(_+_)
     for (e <- counts) {
       gi += (e._2/total) * (e._2/total)
@@ -55,7 +56,7 @@ class Node {
   def infogain(p: Seq[Labeled]) : Double = {    
     var ig:Double = 0.0
     val maps = p.groupBy(e => e.label.label)
-    val counts = maps.map(e => { (e._1, e._2.length) } )
+    val counts = maps.map(e => { (e._1, e._2.length) } )    
     val total:Double = counts.map(e => e._2).reduce(_+_)
     for (e <- counts) {
       ig += (e._2/total) * math.log(e._2/total)
@@ -69,21 +70,17 @@ class Node {
     is/p.length
   }
   
-  def findRandomSplit(x: Seq[Labeled]): Split = {
-    var att = -1
-    var th = -1.0
-    if (x.length > 10) { // That's a dummy stopping criterion
-      val rand = new Random    
-      att = Random.nextInt(x(1).input.length)        
-      val att_vector = rand.shuffle(x.map(i => i.input(att)))
-      th = math.min(att_vector(0),att_vector(1)) + (math.abs(att_vector(0) - att_vector(1)) / 2.0)    
-    }
+  def findRandomSplit(x: Seq[Labeled]): Split = {    
+    val rand = new Random    
+    var att = Random.nextInt(x(0).input.length)        
+    val att_vector = rand.shuffle(x.map(i => i.input(att)))
+    var th = math.min(att_vector(0),att_vector(1)) + (math.abs(att_vector(0) - att_vector(1)) / 2.0)        
     Split(att,th)
   }
   
   def fit(x: Seq[Labeled]): Unit = {
-    split = findRandomSplit(x)
-    if (split.attribute != -1) {
+    if (x.length > 10) { // That's a dummy stopping criterion
+      split = findRandomSplit(x)
       val partitions = x.partition(i => i.input(split.attribute) < split.threshold)
       left = new Node()
       left.depth = depth + 1
@@ -92,24 +89,36 @@ class Node {
       right.depth = depth + 1
       right.fit(partitions._2) 
     } else {
-      // create a leaf ?      
+      // create votes
+      //println(x.length)
+      val maps = x.groupBy(e => e.label.label)
+      val counts = maps.map(e => { (e._1, e._2.length) } )
+      //val total:Double = counts.map(e => e._2).reduce(_+_)
+      // votes should be something else
+      // to store probabilities for all classes
+      // even if they are not present in the
+      // current sample    
+      votes = for (e <- counts)  yield { 0.0+e._2 } 
     }
   }
 
   def predict(x: Seq[Unlabeled]) = {}
 
   def display() {    
-    for (i:Int <- 0 until depth) print("   ")
-    println("+ Depth: " + depth)
+    //for (i:Int <- 0 until depth) print("   ")
+    //println("+ Depth: " + depth)
     if (split != null) {
       for (i:Int <- 0 until depth) print("   ")
       println("+ Split: " + split.attribute + " < " + split.threshold)
     }
-    if (left != null) {
+    if (!isLeaf) {
       left.display
-    }
-    if (right != null) {
       right.display
+    } else {
+      if (votes != null) { 
+        for (i:Int <- 0 until depth) print("   ")
+        println(votes)
+      }
     }
   } 
 }

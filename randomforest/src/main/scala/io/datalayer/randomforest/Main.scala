@@ -75,8 +75,8 @@ object dataGenerator {
     val x: Seq[Unlabeled] = for (i:Int <- 0 until numInstances) yield {
       val a:Float = rand.nextInt(10)
       val b:Float = rand.nextInt(10)
-      //val y = if (a + b > 10) { 0 } else { 1 }
-      Unlabeled(Seq(a,b))
+      val c:Float = rand.nextInt(100)      
+      Unlabeled(Seq(a,b,c))
     }
     x     
   }

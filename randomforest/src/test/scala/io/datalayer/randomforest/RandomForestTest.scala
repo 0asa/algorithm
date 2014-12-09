@@ -20,7 +20,7 @@ class SparkTest extends FunSuite with ShouldMatchers {
 
 class NodeTest extends FunSuite with ShouldMatchers {
   //val (x, y) = dataGenerator.genArray(40)
-  val train = dataGenerator.genLabeled(10)
+  val train = dataGenerator.genLabeled(20)
   val test = dataGenerator.genUnlabeled(10)
 
   test("Node is a leaf") {    
@@ -37,7 +37,7 @@ class NodeTest extends FunSuite with ShouldMatchers {
   test("Node.fit") {
     val node = new Node
     node.fit(train)
-    node.display
+    //node.display
     assert(node.split != null)
   }
   
@@ -60,7 +60,7 @@ class TreeTest extends FunSuite with ShouldMatchers {
 
 class ForestTest extends FunSuite with ShouldMatchers {
   //val (x, y) = dataGenerator.genArray(40)
-  val train = dataGenerator.genLabeled(20)
+  val train = dataGenerator.genLabeled(200)
   val test = dataGenerator.genUnlabeled(10)
   test("Some forest test") {    
     val forest = new Forest
