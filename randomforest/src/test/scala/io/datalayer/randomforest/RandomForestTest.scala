@@ -50,9 +50,13 @@ class TreeTest extends FunSuite with ShouldMatchers {
   test("Some tree test") {
     val tree = new Tree
     tree.fit(train)
-    tree.display
-    var probas = tree.predict(test(0))
-    //probas.foreach(println)
+    //tree.display
+    // predict for one sample
+    var prob = tree.predict(test(0))
+    println(prob(0) + "|" + prob(1))
+    // predict for many samples
+    var proball = tree.predict(test)
+    proball.foreach(e => println(e(0) + "|" + e(1)))
     assert(1 === 1)
   }
 }

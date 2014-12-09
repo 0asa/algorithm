@@ -19,21 +19,26 @@ class Forest(n_estimators: Int = 10, max_features: Int = 10, bootstrap: Boolean 
     }
   }
 
-  def predict(x: Unlabeled) = {
-    //println(x)
+  def predict(x: Unlabeled): Array[Double]= {
+
     /*
     for (i <- 0 to (trees.length - 1)) {
-      trees(i).predict(x)
+      // do something like trees(i).predict(x)
     }
     */
+    var probas = new Array[Double](1)
+    probas
   }
 
-  def predict(x: Seq[Unlabeled]): Seq[Double] = {
-    var probas = Seq.fill(x.length)(0.0)
+  def predict(x: Seq[Unlabeled]): Array[Array[Double]] = {
+    var probas = new Array[Array[Double]](x.length)
+    /*
     for (i <- 0 to (trees.length - 1)) {
       probas = (probas,trees(i).predict(x)).zipped.map(_ + _)
     }
     probas.map { x => x / n_estimators }
+    */
+    probas
   }
 
   def display() {

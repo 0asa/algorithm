@@ -1,12 +1,9 @@
 package io.datalayer.randomforest
 
-//import scala.collection.mutable
-
 // Tree class: building a single decision tree
 class Tree(max_features: Int = 10) extends Learner {
 
   var root = new Node
-  //var stack = new mutable.Stack[Node]
 
   def setParams() {
     println("Tree.setParams")
@@ -23,9 +20,11 @@ class Tree(max_features: Int = 10) extends Learner {
     root.predict(x)
   }
 
-  def predict(x: Seq[Unlabeled]): Seq[Double] = {
-    //println("+ Tree.predict()")
-    var probas = Seq.fill(x.length)(0.5)
+  def predict(x: Seq[Unlabeled]): Array[Array[Double]] = {
+    var probas = new Array[Array[Double]](x.length)
+    for (i <- 0 to (x.length - 1)) {
+      probas(i) = predict(x(i))
+    }
     probas
   }
 
