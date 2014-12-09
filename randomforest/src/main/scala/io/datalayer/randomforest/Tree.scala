@@ -18,6 +18,10 @@ class Tree(max_features: Int = 10) extends Learner {
     root.fit(x)    
   }
   
+  def predict(x: Unlabeled) = {
+    println(x)    
+  }
+
   def predict(x: Seq[Unlabeled]): Seq[Double] = {
     //println("+ Tree.predict()")
     var probas = Seq.fill(x.length)(0.5)

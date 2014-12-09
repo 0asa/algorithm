@@ -19,6 +19,10 @@ class Forest(n_estimators: Int = 10, max_features: Int = 10, bootstrap: Boolean 
     }
   }
 
+  def predict(x: Unlabeled) = {
+    println(x)    
+  }
+
   def predict(x: Seq[Unlabeled]): Seq[Double] = {      
     var probas = Seq.fill(x.length)(0.0)
     for (i <- 0 to (trees.length - 1)) {      

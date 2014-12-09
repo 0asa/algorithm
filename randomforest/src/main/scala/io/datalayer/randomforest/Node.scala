@@ -103,6 +103,11 @@ class Node {
     }
   }
 
+  def predict(x: Unlabeled) = {
+    println(x)
+    // propagate until it reaches a leaf.    
+  }
+
   def predict(x: Seq[Unlabeled]) = {}
 
   def display() {    

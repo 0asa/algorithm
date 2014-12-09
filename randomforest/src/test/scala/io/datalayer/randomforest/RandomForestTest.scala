@@ -66,7 +66,7 @@ class ForestTest extends FunSuite with ShouldMatchers {
     val forest = new Forest
     forest.fit(train)
     forest.display
-    var probas = forest.predict(test)
+    var probas = forest.predict(test(0))
     //probas.foreach(println)
     assert(1 === 1)
   }
