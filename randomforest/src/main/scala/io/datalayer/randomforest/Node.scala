@@ -86,10 +86,10 @@ class Node {
     if (split.attribute != -1) {
       val partitions = x.partition(i => i.input(split.attribute) < split.threshold)
       left = new Node()
-      left.depth += 1
+      left.depth = depth + 1
       left.fit(partitions._1)
       right = new Node()
-      right.depth += 1
+      right.depth = depth + 1
       right.fit(partitions._2) 
     } else {
       // create a leaf ?      
@@ -98,9 +98,7 @@ class Node {
 
   def predict(x: Seq[Unlabeled]) = {}
 
-  def display() {
-    for (i:Int <- 0 until depth) print(" ")
-    println("# Node info")
+  def display() {    
     for (i:Int <- 0 until depth) print("   ")
     println("+ Depth: " + depth)
     if (split != null) {
