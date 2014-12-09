@@ -21,9 +21,16 @@
 package io.datalayer.controlchart
 
 import java.io.File
+
 import org.sameersingh.scalaplot.MemXYSeries
 import org.sameersingh.scalaplot.XYPlotStyle
 import org.sameersingh.scalaplot.Implicits._
+
+import org.apache.spark.sql._
+//import org.apache.spark.sql.SchemaRDD
+import org.apache.spark.ml.param._
+import org.apache.spark.ml._
+import org.apache.spark.sql.catalyst.analysis.Star
 
 object Stat {
   def computeMean(input: Array[Float]): Float = {
@@ -99,6 +106,7 @@ class ReadCSVFolder(folderPath: String) {
   * */
 class ControlChart(data: Array[Float]) {
 
+
   val mean = Stat.computeMean(data)
   val stdDev = Math.sqrt(Stat.computeVariance(data, mean)).toFloat
 
@@ -124,3 +132,44 @@ class ControlChart(data: Array[Float]) {
   }
   
 }
+
+
+class ControlChartPipe extends Estimator[ControlChartModel] {
+
+  override def fit(dataset: SchemaRDD, paramMap: ParamMap): ControlChartModel = {
+    val data = dataset.collect.map(_.toVector).map(_(0).asInstanceOf[Float])
+    val cc = new ControlChart(data)
+    cc.summary()
+    val ccm = new ControlChartModel(this, paramMap)
+    return ccm
+  }
+
+  override def transformSchema(schema: StructType, paramMap: ParamMap): StructType = {
+    return schema
+  }
+}
+
+class ControlChartModel(override val parent: ControlChartPipe,
+                         override val fittingParamMap: ParamMap)
+  extends Model[ControlChartModel]  {
+  override def transform(dataset: SchemaRDD, paramMap: ParamMap): SchemaRDD = {
+    val data = dataset.collect.map(_.toVector).map(_(0).asInstanceOf[Float])
+    val cc = new ControlChart(data)
+
+    val predict: Int => Int = (index) => {
+      if (cc.outliers.filter(_ == index) == None) {
+        0
+      } else {
+        1
+      }
+    }
+
+    //dataset.select(Star(None), predict.call())
+    return dataset
+  }
+
+  override def transformSchema(schema: StructType, paramMap: ParamMap): StructType = {
+    schema
+  }
+}
+
