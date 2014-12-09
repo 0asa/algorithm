@@ -1,19 +1,20 @@
 package io.datalayer.randomforest
 
-import scala.collection.mutable
+//import scala.collection.mutable
 
 // Tree class: building a single decision tree
 class Tree(max_features: Int = 10) extends Learner {
 
   var root = new Node
-  var stack = new mutable.Stack[Node]
+  //var stack = new mutable.Stack[Node]
 
   def setParams() {
     println("Tree.setParams")
   }
 
-  def fit(x: Seq[Labeled]) = {
-    //println("+ Tree.fit()")
+  def fit(x: Seq[Labeled]) = {    
+    val maps = x.groupBy(e => e.label.label)
+    root.nbclass = maps.size
     root.fit(x)    
   }
   

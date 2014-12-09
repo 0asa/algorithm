@@ -13,7 +13,8 @@ class Node {
   var right: Node = null
   var split: Split = null
   var depth: Int = 1
-  var votes: scala.collection.immutable.Iterable[Double] = null
+  var votes: Array[Double] = null
+  var nbclass:Int = 0 
 
   def setLeft(n: Node) {
     left = n
@@ -84,21 +85,21 @@ class Node {
       val partitions = x.partition(i => i.input(split.attribute) < split.threshold)
       left = new Node()
       left.depth = depth + 1
+      left.nbclass = nbclass
       left.fit(partitions._1)
       right = new Node()
       right.depth = depth + 1
+      right.nbclass = nbclass
       right.fit(partitions._2) 
     } else {
       // create votes
-      //println(x.length)
       val maps = x.groupBy(e => e.label.label)
       val counts = maps.map(e => { (e._1, e._2.length) } )
-      //val total:Double = counts.map(e => e._2).reduce(_+_)
-      // votes should be something else
-      // to store probabilities for all classes
-      // even if they are not present in the
-      // current sample    
-      votes = for (e <- counts)  yield { 0.0+e._2 } 
+      votes = new Array[Double](nbclass)      
+      for (e <- counts) {                      
+        votes(e._1) = e._2
+      } 
+      // TODO : normalize votes
     }
   }
 
@@ -117,7 +118,7 @@ class Node {
     } else {
       if (votes != null) { 
         for (i:Int <- 0 until depth) print("   ")
-        println(votes)
+        println(votes(0) + " | " + votes(1))        
       }
     }
   } 
