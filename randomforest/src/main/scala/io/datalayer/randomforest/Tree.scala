@@ -1,13 +1,10 @@
 package io.datalayer.randomforest
 
 import scala.collection.mutable
-import breeze.linalg._
+//import breeze.linalg._
 
 // Tree class: building a single decision tree
-// the basics are available
-// we will need to extend this furthermore
-// depending on what we will do...
-class Tree(max_features: Int = 10) {
+class Tree(max_features: Int = 10) extends Learner {
 
   var root = new Node
   var stack = new mutable.Stack[Node]
@@ -16,8 +13,8 @@ class Tree(max_features: Int = 10) {
     println("Tree.setParams")
   }
 
-  def fit(x: DenseMatrix[Double], y: DenseVector[Double]) = {
-    println("+ Tree.fit()")
+  def fit(x: Seq[Labeled]) = {
+    //println("+ Tree.fit()")
 
     stack.push(root) // stack init
     while (!stack.isEmpty) {
@@ -28,16 +25,10 @@ class Tree(max_features: Int = 10) {
       // TODO: push into the stack
     }
   }
-
-  // Predict for a single object
-  def predict(x: DenseVector[Double]): DenseVector[Double] = {
-    predict(x.toDenseMatrix)
-  }
-
-  // Predict for many objects
-  def predict(x: DenseMatrix[Double]): DenseVector[Double] = {
-    println("+ Tree.predict()")
-    var probas = DenseVector.fill[Double](x.rows, 0.5)
+  
+  def predict(x: Seq[Unlabeled]): Seq[Double] = {
+    //println("+ Tree.predict()")
+    var probas = Seq.fill(x.length)(0.5)
     probas
   }
 }

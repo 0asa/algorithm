@@ -1,12 +1,9 @@
 package io.datalayer.randomforest
 
-import breeze.linalg._
+//import breeze.linalg._
 
-// Forest class: allow to build a forest of trees.
-// the basics are available
-// we will need to extend this furthermore
-// depending on how far we can go...
-class Forest(n_estimators: Int = 10, max_features: Int = 10, bootstrap: Boolean = false) {
+// Forest class: build a forest of trees.
+class Forest(n_estimators: Int = 10, max_features: Int = 10, bootstrap: Boolean = false) extends Learner {
 
   var trees: Array[Tree] = new Array[Tree](n_estimators)
   for (i <- 0 to (trees.length - 1)) {
@@ -17,28 +14,18 @@ class Forest(n_estimators: Int = 10, max_features: Int = 10, bootstrap: Boolean 
     println("Forest.setParams")
   }
 
-  def fit(x: DenseMatrix[Double], y: DenseVector[Double]) = {
-    println("Forest.fit(X,Y)")
+  def fit(x: Seq[Labeled]) = {    
     for (i <- 0 to (trees.length - 1)) {
       // TODO: bootstrap if needed
-      trees(i).fit(x, y)
+      trees(i).fit(x)
     }
   }
 
-  // Predict for a single object
-  def predict(x: DenseVector[Double]): DenseVector[Double] = {
-    predict(x.toDenseMatrix)
-  }
-
-  // Predict for many objects
-  def predict(x: DenseMatrix[Double]): DenseVector[Double] = {
-    println("Forest.predict(X)")
-    // TODO: store votes from each trees and return Array of votes
-    var probas = DenseVector.fill[Double](x.rows, 0.0)
-    for (i <- 0 to (trees.length - 1)) {
-      // TODO : do something...
-      probas += trees(i).predict(x)
+  def predict(x: Seq[Unlabeled]): Seq[Double] = {      
+    var probas = Seq.fill(x.length)(0.0)
+    for (i <- 0 to (trees.length - 1)) {      
+      probas = (probas,trees(i).predict(x)).zipped.map(_ + _)
     }
-    probas.map { x => x / n_estimators }
+    probas.map { x => x / n_estimators }    
   }
 }

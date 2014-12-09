@@ -2,6 +2,8 @@ name := "datalayer-model-random-forest"
 
 version := "1.0"
 
+scalaVersion := "2.10.4"
+
 libraryDependencies  ++= Seq(
             // other dependencies here
             "org.scalanlp" %% "breeze" % "0.8.1",
@@ -11,3 +13,5 @@ libraryDependencies  ++= Seq(
 )
 
 libraryDependencies += "org.scalatest" % "scalatest_2.10" % "2.0" % "test"
+
+libraryDependencies += "org.apache.spark" %% "spark-core" % "1.1.1"
