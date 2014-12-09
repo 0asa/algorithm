@@ -60,11 +60,12 @@ class TreeTest extends FunSuite with ShouldMatchers {
 
 class ForestTest extends FunSuite with ShouldMatchers {
   //val (x, y) = dataGenerator.genArray(40)
-  val train = dataGenerator.genLabeled(10)
+  val train = dataGenerator.genLabeled(20)
   val test = dataGenerator.genUnlabeled(10)
   test("Some forest test") {    
     val forest = new Forest
     forest.fit(train)
+    forest.display
     var probas = forest.predict(test)
     //probas.foreach(println)
     assert(1 === 1)

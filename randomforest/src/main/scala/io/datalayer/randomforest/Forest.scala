@@ -26,4 +26,11 @@ class Forest(n_estimators: Int = 10, max_features: Int = 10, bootstrap: Boolean 
     }
     probas.map { x => x / n_estimators }    
   }
+
+  def display() {
+    for (i <- 0 to (trees.length - 1)) {
+      println("TREE" + (i+1) + " #############")
+      trees(i).display
+    }
+  }
 }
