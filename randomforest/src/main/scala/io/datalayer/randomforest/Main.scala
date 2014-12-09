@@ -9,7 +9,7 @@ package io.datalayer.randomforest
 //import org.apache.spark.mllib.linalg.distributed.{IndexedRow, IndexedRowMatrix, RowMatrix}
 import scala.collection.mutable
 import scala.util.Random
-import breeze.linalg._
+//import breeze.linalg._
 
 // Helper to generate dummy data
 // for testing purposes
@@ -42,7 +42,7 @@ object dataGenerator {
     mat
   }
   */
-  
+  /*
   def genArray(numInstances: Int = 10): (DenseMatrix[Double], DenseVector[Double]) = {
     val x = DenseMatrix.zeros[Double](numInstances,2)
     val y = DenseVector.zeros[Double](numInstances)
@@ -56,7 +56,7 @@ object dataGenerator {
     }
     (x, y)
   }
-  
+  */
 
   def genLabeled(numInstances: Int = 10): Seq[Labeled] = {
     val rand = new Random

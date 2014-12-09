@@ -1,7 +1,5 @@
 package io.datalayer.randomforest
 
-//import breeze.linalg._
-
 // Forest class: build a forest of trees.
 class Forest(n_estimators: Int = 10, max_features: Int = 10, bootstrap: Boolean = false) extends Learner {
 

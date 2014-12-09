@@ -4,7 +4,7 @@ import io.datalayer.randomforest._
 import breeze.linalg._
 import org.scalatest.FunSuite
 import org.scalatest.ShouldMatchers
-
+/*
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
@@ -16,14 +16,16 @@ class SparkTest extends FunSuite with ShouldMatchers {
     assert(1 == 1)
   }
 }
+*/
 
 class NodeTest extends FunSuite with ShouldMatchers {
   //val (x, y) = dataGenerator.genArray(40)
-  val train = dataGenerator.genLabeled(20)
+  val train = dataGenerator.genLabeled(60)
   val test = dataGenerator.genUnlabeled(10)
 
   test("Node is a leaf") {    
     val node = new Node    
+    node.display
     assert(node.isLeaf == true)
   }
 
@@ -31,6 +33,12 @@ class NodeTest extends FunSuite with ShouldMatchers {
     val node = new Node
     node.findRandomSplit(train)
     assert(1 === 1)
+  }
+
+  test("Node.fit") {
+    val node = new Node
+    node.fit(train)
+    assert(node.split != null)
   }
   
 }
@@ -42,6 +50,7 @@ class TreeTest extends FunSuite with ShouldMatchers {
   test("Some tree test") {    
     val tree = new Tree
     tree.fit(train)
+    tree.display
     var probas = tree.predict(test)
     //probas.foreach(println)
     assert(1 === 1)

@@ -2,18 +2,17 @@ package io.datalayer.randomforest
 
 import scala.collection.mutable
 import scala.util.Random
-//import breeze.linalg._
 
 //abstract class GenericNode(left: Option[GenericNode], right: Option[GenericNode])
-//case class Split(attribute: Int, threshold: Float)
+case class Split(attribute: Int, threshold: Double)
 
 // Node class
 class Node {
   
   var left: Node = null
   var right: Node = null
-  var attribute = 0
-  var threshold = 0.0
+  var split: Split = null
+  var depth: Int = 1  
 
   def setLeft(n: Node) {
     left = n
@@ -48,10 +47,8 @@ class Node {
   }
 
   // Compute the gini impurity score
-  def giniScore(p: Seq[Labeled], pl: Seq[Labeled], pr: Seq[Labeled]) : Double = {
-    // weight the scores    
-    val gs: Double = p.length*gini(p) - (pl.length*gini(pl) + pr.length*gini(pr))
-    println(gs/p.length)
+  def giniScore(p: Seq[Labeled], pl: Seq[Labeled], pr: Seq[Labeled]) : Double = {    
+    val gs: Double = p.length*gini(p) - (pl.length*gini(pl) + pr.length*gini(pr))    
     gs/p.length
   }
 
@@ -72,35 +69,49 @@ class Node {
     is/p.length
   }
   
-  def findRandomSplit(x: Seq[Labeled]) {
-    val rand = new Random    
-    val att = Random.nextInt(x(1).input.length)    
-    println(att)
-    val att_vector = rand.shuffle(x.map(i => i.input(att)))
-    val th = math.min(att_vector(0),att_vector(1)) + (math.abs(att_vector(0) - att_vector(1)) / 2.0)    
-    val partitions = x.partition(i => i.input(att) < th)
-    //println("ATT" + att +  " < " + th )
-    //partitions._1.foreach(println)
-    //println("ATT" + att +  " >= " + th )
-    //partitions._2.foreach(println)
-    giniScore(x,partitions._1,partitions._2)
-    infogainScore(x,partitions._1,partitions._2)
-    //val max = x(::,att).max
-    //val min = x(::,att).min
-    // Pick a random threshold in [min and max]
-    // not the best strategy, yet.
-    // Will see what we can do with RDDs later.
-    //val th = min + (Random.nextDouble() * (max-min))
-    // Something similar could be used to split the data:
-    // + maybe we won't need breeze in the end.
-    //val partitions = x(::,att).toArray.partition(ex => ex < th)
-    //println("<  " + th) 
-    //partitions._1.foreach(println)
-    //println(">= " + th)
-    //partitions._2.foreach(println)
-    
+  def findRandomSplit(x: Seq[Labeled]): Split = {
+    var att = -1
+    var th = -1.0
+    if (x.length > 10) { // That's a dummy stopping criterion
+      val rand = new Random    
+      att = Random.nextInt(x(1).input.length)        
+      val att_vector = rand.shuffle(x.map(i => i.input(att)))
+      th = math.min(att_vector(0),att_vector(1)) + (math.abs(att_vector(0) - att_vector(1)) / 2.0)    
+    }
+    Split(att,th)
   }
   
-  def fit(x: Seq[Labeled]) = {}
+  def fit(x: Seq[Labeled]): Unit = {
+    split = findRandomSplit(x)
+    if (split.attribute != -1) {
+      val partitions = x.partition(i => i.input(split.attribute) < split.threshold)
+      left = new Node()
+      left.depth += 1
+      left.fit(partitions._1)
+      right = new Node()
+      right.depth += 1
+      right.fit(partitions._2) 
+    } else {
+      // create a leaf ?      
+    }
+  }
+
   def predict(x: Seq[Unlabeled]) = {}
+
+  def display() {
+    for (i:Int <- 0 until depth) print(" ")
+    println("# Node info")
+    for (i:Int <- 0 until depth) print("   ")
+    println("+ Depth: " + depth)
+    if (split != null) {
+      for (i:Int <- 0 until depth) print("   ")
+      println("+ Split: " + split.attribute + " < " + split.threshold)
+    }
+    if (left != null) {
+      left.display
+    }
+    if (right != null) {
+      right.display
+    }
+  } 
 }
