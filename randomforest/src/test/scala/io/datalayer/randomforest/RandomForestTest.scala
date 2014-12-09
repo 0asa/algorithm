@@ -20,11 +20,11 @@ class SparkTest extends FunSuite with ShouldMatchers {
 
 class NodeTest extends FunSuite with ShouldMatchers {
   //val (x, y) = dataGenerator.genArray(40)
-  val train = dataGenerator.genLabeled(20)
+  val train = dataGenerator.genLabeled(40)
   val test = dataGenerator.genUnlabeled(10)
 
-  test("Node is a leaf") {    
-    val node = new Node        
+  test("Node is a leaf") {
+    val node = new Node
     assert(node.isLeaf == true)
   }
 
@@ -40,18 +40,18 @@ class NodeTest extends FunSuite with ShouldMatchers {
     //node.display
     assert(1 == 1)
   }
-  
+
 }
 
 class TreeTest extends FunSuite with ShouldMatchers {
   //val (x, y) = dataGenerator.genArray(40)
   val train = dataGenerator.genLabeled(20)
   val test = dataGenerator.genUnlabeled(10)
-  test("Some tree test") {    
+  test("Some tree test") {
     val tree = new Tree
     tree.fit(train)
-    //tree.display
-    var probas = tree.predict(test)
+    tree.display
+    var probas = tree.predict(test(0))
     //probas.foreach(println)
     assert(1 === 1)
   }
@@ -62,10 +62,10 @@ class ForestTest extends FunSuite with ShouldMatchers {
   //val (x, y) = dataGenerator.genArray(40)
   val train = dataGenerator.genLabeled(40)
   val test = dataGenerator.genUnlabeled(10)
-  test("Some forest test") {    
+  test("Some forest test") {
     val forest = new Forest
     forest.fit(train)
-    forest.display
+    //forest.display
     var probas = forest.predict(test(0))
     //probas.foreach(println)
     assert(1 === 1)
@@ -76,7 +76,7 @@ class MainTest extends FunSuite with ShouldMatchers {
   //val (x, y) = dataGenerator.genArray(40)
   val train = dataGenerator.genLabeled(10)
   val test = dataGenerator.genUnlabeled(10)
-  test("Some more test to test scala") {    
+  test("Some more test to test scala") {
     /*
     var dv = DenseVector.rand(10)
     val part = dv.toArray.partition(ex => ex < 0.5)

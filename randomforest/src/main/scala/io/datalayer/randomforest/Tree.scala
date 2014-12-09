@@ -12,14 +12,15 @@ class Tree(max_features: Int = 10) extends Learner {
     println("Tree.setParams")
   }
 
-  def fit(x: Seq[Labeled]) = {    
+  def fit(x: Seq[Labeled]) = {
     val maps = x.groupBy(e => e.label.label)
     root.nbclass = maps.size
-    root.fit(x)    
+    root.fit(x)
   }
-  
+
   def predict(x: Unlabeled) = {
-    println(x)    
+    //println(x)
+    root.predict(x)
   }
 
   def predict(x: Seq[Unlabeled]): Seq[Double] = {

@@ -12,7 +12,7 @@ class Forest(n_estimators: Int = 10, max_features: Int = 10, bootstrap: Boolean 
     println("Forest.setParams")
   }
 
-  def fit(x: Seq[Labeled]) = {    
+  def fit(x: Seq[Labeled]) = {
     for (i <- 0 to (trees.length - 1)) {
       // TODO: bootstrap if needed
       trees(i).fit(x)
@@ -20,15 +20,20 @@ class Forest(n_estimators: Int = 10, max_features: Int = 10, bootstrap: Boolean 
   }
 
   def predict(x: Unlabeled) = {
-    println(x)    
+    //println(x)
+    /*
+    for (i <- 0 to (trees.length - 1)) {
+      trees(i).predict(x)
+    }
+    */
   }
 
-  def predict(x: Seq[Unlabeled]): Seq[Double] = {      
+  def predict(x: Seq[Unlabeled]): Seq[Double] = {
     var probas = Seq.fill(x.length)(0.0)
-    for (i <- 0 to (trees.length - 1)) {      
+    for (i <- 0 to (trees.length - 1)) {
       probas = (probas,trees(i).predict(x)).zipped.map(_ + _)
     }
-    probas.map { x => x / n_estimators }    
+    probas.map { x => x / n_estimators }
   }
 
   def display() {
