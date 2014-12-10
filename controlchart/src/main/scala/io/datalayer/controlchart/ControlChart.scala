@@ -27,32 +27,33 @@ import org.sameersingh.scalaplot.XYPlotStyle
 import org.sameersingh.scalaplot.Implicits._
 
 import org.apache.spark.sql._
+
 //import org.apache.spark.sql.SchemaRDD
 import org.apache.spark.ml.param._
 import org.apache.spark.ml._
 import org.apache.spark.sql.catalyst.analysis.Star
 
 object Stat {
-  def computeMean(input: Array[Float]): Float = {
+  def computeMean(input: Array[Double]): Double = {
     val mean = input.reduceLeft(_ + _) / input.length
-    return mean.toFloat
+    return mean
   }
 
   /** Compute empirical variance */
-  def computeVariance(input: Array[Float], mean: Float): Float = {
+  def computeVariance(input: Array[Double], mean: Double): Double = {
     val variance = input.map(x => Math.pow(x - mean, 2)).reduceLeft(_ + _) / (input.length - 1)
-    return variance.toFloat
+    return variance
   }
 
   /** Compute naively the area under the curve. */
-  def computeIntegral(xAxis: Array[Float], yAxis: Array[Float]): Float = {
+  def computeIntegral(xAxis: Array[Double], yAxis: Array[Double]): Double = {
     val step = Math.abs(xAxis(1) - xAxis(0))
-    var integ = yAxis.map(x => x * step).reduceLeft(_ + _)
-    return integ.toFloat
+    val integ = yAxis.map(x => x * step).reduceLeft(_ + _)
+    return integ
   }
 
   /** Compute the deviation from the mean. */
-  def computeStdDev(value: Float, mean: Float): Float = {
+  def computeStdDev(value: Double, mean: Double): Double = {
     return Math.abs(value - mean)
   }
 }
@@ -61,17 +62,13 @@ object Stat {
   * @param filePath the absolute/relative path of the csv.
   * */
  class ReadCSV(filePath: String) {
-  def arToFloat(ar: Array[String]): Array[Float] = {
-    val newAr = ar.map(_.toFloat)
-    return newAr
-  }
 
-  def getColumn(col: Int): Array[Float] = {
+  def getColumn(col: Int): Array[Double] = {
     val column = event.map(x => x(col))
     return column.toArray
   }
 
-  def getLine(col: Int): Array[Float] = {
+  def getLine(col: Int): Array[Double] = {
     val line = event(col)
     return line
 
@@ -82,8 +79,8 @@ object Stat {
 
   val colNames = parserIt.next()
 
-  val event = scala.collection.mutable.ArrayBuffer.empty[Array[Float]]
-  parserIt.foreach(a => event.append(arToFloat(a)))
+  val event = scala.collection.mutable.ArrayBuffer.empty[Array[Double]]
+  parserIt.foreach(a => event.append(a.map(_.toDouble)))
 
   file.close()
 }
@@ -104,15 +101,27 @@ class ReadCSVFolder(folderPath: String) {
   * 
   * @param data An array of float representing the data to analyze.
   * */
-class ControlChart(data: Array[Float]) {
+class ControlChart {
 
 
-  val mean = Stat.computeMean(data)
-  val stdDev = Math.sqrt(Stat.computeVariance(data, mean)).toFloat
+  var mean = 0.0
+  var stdDev = 1.0
 
-  val localDev = data.map(x => Stat.computeStdDev(x, mean))
+  var localDev = Array[Double]()
 
-  val outliers = localDev.map(x => Math.abs(x)).zipWithIndex.filter(_._1 > 2*stdDev).map(_._2)
+  var outliers = Array[Int]()
+
+  var data = Array[Double]()
+
+  def computeLimit(learnData: Array[Double]) = {
+    data = learnData
+    mean = Stat.computeMean(data)
+    stdDev = Math.sqrt(Stat.computeVariance(data, mean))
+
+    localDev = data.map(x => Stat.computeStdDev(x, mean))
+
+    outliers = localDev.map(x => Math.abs(x)).zipWithIndex.filter(_._1 > 2*stdDev).map(_._2)
+  }
 
   def summary() = {
     println("Mean = " + mean)
@@ -137,10 +146,8 @@ class ControlChart(data: Array[Float]) {
 class ControlChartPipe extends Estimator[ControlChartModel] {
 
   override def fit(dataset: SchemaRDD, paramMap: ParamMap): ControlChartModel = {
-    val data = dataset.collect.map(_.toVector).map(_(0).asInstanceOf[Float])
-    val cc = new ControlChart(data)
-    cc.summary()
     val ccm = new ControlChartModel(this, paramMap)
+    ccm.transform(dataset, paramMap)
     return ccm
   }
 
@@ -152,9 +159,13 @@ class ControlChartPipe extends Estimator[ControlChartModel] {
 class ControlChartModel(override val parent: ControlChartPipe,
                          override val fittingParamMap: ParamMap)
   extends Model[ControlChartModel]  {
+
+  var cc = new ControlChart
+
   override def transform(dataset: SchemaRDD, paramMap: ParamMap): SchemaRDD = {
-    val data = dataset.collect.map(_.toVector).map(_(0).asInstanceOf[Float])
-    val cc = new ControlChart(data)
+    val data = dataset.collect.map(_.toVector).map(_(0).asInstanceOf[Double])
+    cc.computeLimit(data)
+    cc.summary()
 
     val predict: Int => Int = (index) => {
       if (cc.outliers.filter(_ == index) == None) {

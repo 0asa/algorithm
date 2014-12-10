@@ -11,8 +11,9 @@ case class Measure(m: Float)
 
 class ControlChartTest extends FunSuite with ShouldMatchers {
   test("ControlChart should give us 1 outlier") {
-    val testArray = Array[Float](5, 5, 5, 5, 5, 5, 5, 5, 9)
-    val cc = new ControlChart(testArray)
+    val testArray = Array[Double](5, 5, 5, 5, 5, 5, 5, 5, 9)
+    val cc = new ControlChart
+    cc.computeLimit(testArray)
     cc.summary()
     assert(cc.outliers.length === 1)
   }
