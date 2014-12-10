@@ -64,8 +64,9 @@ object dataGenerator {
       val a:Float = rand.nextInt(10)
       val b:Float = rand.nextInt(10)
       val c:Float = rand.nextInt(100)
+      val d:Float = rand.nextFloat()
       val y = if (a + b > 10) { 0 } else { 1 }
-      Labeled(Seq(a,b,c), Label(y))
+      Labeled(Seq(a,b,c,d), Label(y))
     }
     x
   }
@@ -76,8 +77,9 @@ object dataGenerator {
       val a:Float = rand.nextInt(10)
       val b:Float = rand.nextInt(10)
       val c:Float = rand.nextInt(100)      
-      Unlabeled(Seq(a,b,c))
-    }
+      val d:Float = rand.nextFloat()
+      Unlabeled(Seq(a,b,c,d))
+    }    
     x     
   }
 }
