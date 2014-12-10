@@ -20,7 +20,7 @@ class SparkTest extends FunSuite with ShouldMatchers {
 
 object TestParams {
   val ls_size = 1000
-  val ts_size = 10
+  val ts_size = 100
 }
 
 class NodeTest extends FunSuite with ShouldMatchers {
@@ -110,6 +110,20 @@ class ForestTest extends FunSuite with ShouldMatchers {
 
     val expectedClass = forest.predictLabel(test(0))
     val expectedClasses = forest.predictLabel(test)
+    
+    val trueClasses: Seq[Label] = for (e <- test) yield {
+      val a = e.input(0)
+      val b = e.input(1)
+      val y = if ((a+b) > 0 && (a+b) < 6) { 0 } else if ((a+b) >= 6 && (a+b) < 12) { 1 } else { 2 }
+      Label(y)
+    }    
+    var error = 0.0
+    for (i <- 0 to (trueClasses.length - 1)) {
+      if (trueClasses(i) != expectedClasses(i)) {
+          error += 1.0
+        }
+    }
+    println("Error rate: " + error/test.length)
     /*prob.foreach(x => print(x + " "))
     print("\n")
     println(expectedClass)
