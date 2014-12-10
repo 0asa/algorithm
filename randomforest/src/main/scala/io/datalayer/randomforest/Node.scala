@@ -107,13 +107,11 @@ class Node {
       // could be useful for postpruning.
       val maps = x.groupBy(e => e.label.label)
       val counts = maps.map(e => { (e._1, e._2.length) } )
-      votes = new Array[Double](nbclass)
-      if (nbclass == 0) { println("SHIT")}
+      votes = new Array[Double](nbclass)      
       var total:Double = counts.values.reduce(_+_)      
       for (e <- counts) {
         votes(e._1) = e._2/total
-      }      
-      votes
+      }            
     }
   }
 
