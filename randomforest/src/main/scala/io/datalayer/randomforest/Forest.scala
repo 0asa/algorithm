@@ -1,7 +1,8 @@
 package io.datalayer.randomforest
 
 // Forest class: build a forest of trees.
-class Forest(n_estimators: Int = 10, max_features: Int = 10, bootstrap: Boolean = false) extends Learner {
+class Forest(n_estimators: Int = 10, max_features: Int = 10, _bootstrap: Boolean = false) extends Learner {
+  val bootstrap:Boolean = _bootstrap
 
   var trees: Array[Tree] = new Array[Tree](n_estimators)
   for (i <- 0 to (trees.length - 1)) {
@@ -14,30 +15,26 @@ class Forest(n_estimators: Int = 10, max_features: Int = 10, bootstrap: Boolean 
 
   def fit(x: Seq[Labeled]) = {
     for (i <- 0 to (trees.length - 1)) {
-      // TODO: bootstrap if needed
+      if (bootstrap) {
+        // TODO: bootstrap if needed  
+      }      
       trees(i).fit(x)
     }
   }
 
   def predict(x: Unlabeled): Array[Double]= {
-
-    /*
-    for (i <- 0 to (trees.length - 1)) {
-      // do something like trees(i).predict(x)
-    }
-    */
-    var probas = new Array[Double](1)
-    probas
+    var probas = new Array[Double](trees(0).root.nbclass)
+    for (i <- 0 to (trees.length - 1)) {      
+      probas = (probas,trees(i).predict(x)).zipped.map(_ + _)
+    }    
+    probas.map{ e => e/trees.length }
   }
 
   def predict(x: Seq[Unlabeled]): Array[Array[Double]] = {
     var probas = new Array[Array[Double]](x.length)
-    /*
-    for (i <- 0 to (trees.length - 1)) {
-      probas = (probas,trees(i).predict(x)).zipped.map(_ + _)
-    }
-    probas.map { x => x / n_estimators }
-    */
+    for (i <- 0 to (x.length - 1)) {
+      probas(i) = predict(x(i))
+    }    
     probas
   }
 

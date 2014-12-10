@@ -6,6 +6,10 @@ import scala.util.Random
 //abstract class GenericNode(left: Option[GenericNode], right: Option[GenericNode])
 case class Split(attribute: Int, threshold: Double)
 
+object Node {
+  var nbclass: Int = 0
+}
+
 // Node class
 class Node {
 
@@ -14,7 +18,7 @@ class Node {
   var split: Split = null
   var depth: Int = 1
   var votes: Array[Double] = null
-  var nbclass:Int = 0
+  val nbclass:Int = Node.nbclass
 
   def setLeft(n: Node) {
     left = n
@@ -70,26 +74,32 @@ class Node {
     val is: Double = p.length*infogain(p) - (pl.length*infogain(pl) + pr.length*infogain(pr))
     is/p.length
   }
-
+  
   def findRandomSplit(x: Seq[Labeled]): Split = {
     val rand = new Random
     var att = Random.nextInt(x(0).input.length)
-    val att_vector = rand.shuffle(x.map(i => i.input(att)))
-    var th = math.min(att_vector(0),att_vector(1)) + (math.abs(att_vector(0) - att_vector(1)) / 2.0)
+    var th = -1.0
+    var att_vector = rand.shuffle(x.map(i => i.input(att)))
+    att_vector = att_vector.distinct    
+    if (att_vector.length > 1) {
+      th = math.min(att_vector(0),att_vector(1)) + (math.abs(att_vector(0) - att_vector(1)) / 2.0)
+    } else {
+      att = -1      
+    }
     Split(att,th)
   }
 
   def fit(x: Seq[Labeled]): Unit = {
-    if (x.length > 10) { // That's a dummy stopping criterion
-      split = findRandomSplit(x)
+    split = findRandomSplit(x)
+    if (x.length > 10 && split.attribute != -1) { // That's a dummy stopping criterion      
       val partitions = x.partition(i => i.input(split.attribute) < split.threshold)
       left = new Node()
       left.depth = depth + 1
-      left.nbclass = nbclass
+      //left.nbclass = nbclass
       left.fit(partitions._1)
       right = new Node()
       right.depth = depth + 1
-      right.nbclass = nbclass
+      //right.nbclass = nbclass
       right.fit(partitions._2)
     } else {
       // create votes
@@ -98,10 +108,12 @@ class Node {
       val maps = x.groupBy(e => e.label.label)
       val counts = maps.map(e => { (e._1, e._2.length) } )
       votes = new Array[Double](nbclass)
+      if (nbclass == 0) { println("SHIT")}
+      var total:Double = counts.values.reduce(_+_)      
       for (e <- counts) {
-        votes(e._1) = e._2
-      }
-      // TODO : normalize votes
+        votes(e._1) = e._2/total
+      }      
+      votes
     }
   }
 

@@ -11,7 +11,7 @@ class Tree(max_features: Int = 10) extends Learner {
 
   def fit(x: Seq[Labeled]) = {
     val maps = x.groupBy(e => e.label.label)
-    root.nbclass = maps.size
+    Node.nbclass = maps.size
     root.fit(x)
   }
 
