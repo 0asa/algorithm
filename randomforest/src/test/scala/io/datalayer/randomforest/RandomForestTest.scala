@@ -22,29 +22,30 @@ class NodeTest extends FunSuite with ShouldMatchers {
   //val (x, y) = dataGenerator.genArray(40)
   val train = dataGenerator.genLabeled(40)
   val test = dataGenerator.genUnlabeled(10)
+  val maps = train.groupBy(e => e.label.label)
+  Node.nbclass = maps.size
 
   test("Node should be a leaf") {
     val node = new Node
     assert(node.isLeaf == true)
   }
-
+  
   test("Node after fit should not be a leaf") {
     val node = new Node
     node.fit(train)
     assert(node.isLeaf === false)
   }
 
+
   test("Node findRandomSplit should find a split") {
     val node = new Node
     val split = node.findRandomSplit(train)
-    //println(train.length)
+    println(train.length)
     assert(split.attribute > -1)
   }
 
   test("Node.fit") {
-    val node = new Node
-    val maps = train.groupBy(e => e.label.label)
-    Node.nbclass = maps.size
+    val node = new Node    
     node.fit(train)
     //node.display
     assert(1 == 1)
@@ -54,7 +55,7 @@ class NodeTest extends FunSuite with ShouldMatchers {
 
 class TreeTest extends FunSuite with ShouldMatchers {
   //val (x, y) = dataGenerator.genArray(40)
-  val train = dataGenerator.genLabeled(10)
+  val train = dataGenerator.genLabeled(40)
   val test = dataGenerator.genUnlabeled(10)
   test("Some tree test") {
     val tree = new Tree
