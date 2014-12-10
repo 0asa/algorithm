@@ -8,15 +8,39 @@ import org.scalatest.ShouldMatchers
 
 case class Measure(m: Double)
 
+class dummyCalculus extends  FunSuite with ShouldMatchers {
+  val conf = new SparkConf().setMaster("local[4]").setAppName("Simple Application")
+  val sc = new SparkContext(conf)
+  val testArray = sc.parallelize(Array[Double](5, 5, 5, 5, 5, 5, 5, 9))
+
+  test("Test mean computation with an RDD") {
+
+    val mean = Stat.computeMean(testArray)
+    assert(mean === 5.5)
+  }
+
+  test("Test variance computation with an RDD") {
+    val mean = Stat.computeMean(testArray)
+    val variance = Stat.computeVariance(testArray, mean)
+    println(variance)
+    assert(variance === 2.0)
+  }
+
+}
 
 class ControlChartTest extends FunSuite with ShouldMatchers {
+  val conf = new SparkConf().setMaster("local").setAppName("Simple Application")
+  val sc = new SparkContext(conf)
+
   test("ControlChart should give us 1 outlier") {
-    val testArray = Array[Double](5, 5, 5, 5, 5, 5, 5, 5, 9)
+    val testRDD = sc.parallelize(Array[Double](5, 5, 5, 5, 5, 5, 5, 5, 9))
     val cc = new ControlChart
-    cc.computeLimit(testArray)
-    cc.summary()
+    cc.computeLimit(testRDD)
+    cc.summary(testRDD)
+    assert(0 === 0)
     assert(cc.outliers.length === 1)
   }
+
 }
 
 class ReadCSVTest extends FunSuite with ShouldMatchers {
@@ -27,9 +51,10 @@ class ReadCSVTest extends FunSuite with ShouldMatchers {
 }
 
 class ControlChartPipeTest extends FunSuite with ShouldMatchers {
+  val conf = new SparkConf().setMaster("local[4]").setAppName("Simple Application")
+  val sc = new SparkContext(conf)
+
   test("test controlchart within a pipeline") {
-    val conf = new SparkConf().setMaster("local").setAppName("Simple Application")
-    val sc = new SparkContext(conf)
     val sqlContext = new org.apache.spark.sql.SQLContext(sc)
     import sqlContext.createSchemaRDD
     val rawData = Array[Measure](Measure(5), Measure(5), Measure(5), Measure(5),
@@ -37,11 +62,10 @@ class ControlChartPipeTest extends FunSuite with ShouldMatchers {
     val meas = sc.parallelize(rawData)
     meas.registerTempTable("measures")
     val data = sqlContext.sql("SELECT * FROM measures")
-//
+    //
     val cc = new ControlChartPipe
     val model = cc.fit(data)
     assert(0 === 0)
   }
+
 }
-
-
