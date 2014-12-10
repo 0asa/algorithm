@@ -6,7 +6,7 @@ import org.scalatest.FunSuite
 import org.scalatest.ShouldMatchers
 
 
-case class Measure(m: Float)
+case class Measure(m: Double)
 
 
 class ControlChartTest extends FunSuite with ShouldMatchers {
