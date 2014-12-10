@@ -67,7 +67,19 @@ class TreeTest extends FunSuite with ShouldMatchers {
     // predict for many samples
     var proball = tree.predict(test)
     //proball.foreach(e => println(e(0) + "|" + e(1)))
-    assert(prob === proball(0))    
+    val expectedClass = tree.predictLabel(test(0))
+    val expectedClasses = tree.predictLabel(test)
+
+    /*prob.foreach(x => print(x + " "))
+    print("\n")
+    println(expectedClass)
+    print("\n------------\n")
+    proball.take(3).foreach(x => {x.foreach(y => print(y + " "))
+                          println("\n---")})
+    expectedClasses.take(3).foreach(println)*/
+
+    assert(prob === proball(0))
+    assert(expectedClass === expectedClasses(0))
   }
 }
 
@@ -89,6 +101,18 @@ class ForestTest extends FunSuite with ShouldMatchers {
     //proball.foreach(println)
     //proball.foreach(e => println(e(0) + "|" + e(1)))
     //proball.foreach(e => println(e.length))
+
+    val expectedClass = forest.predictLabel(test(0))
+    val expectedClasses = forest.predictLabel(test)
+    /*prob.foreach(x => print(x + " "))
+    print("\n")
+    println(expectedClass)
+    print("\n------------\n")
+    proball.take(3).foreach(x => {x.foreach(y => print(y + " "))
+      println("\n---")})
+    expectedClasses.take(3).foreach(println)*/
+
+    assert(expectedClass === expectedClasses(0))
     assert(prob === proball(0))    
   }
 }
