@@ -7,7 +7,7 @@ import scala.util.Random
 case class Split(attribute: Int, threshold: Double)
 
 object Node {
-  var nbclass: Int = 0
+  var nbclass: Int = 0  
 }
 
 // Node class
@@ -18,7 +18,7 @@ class Node {
   var split: Split = null
   var depth: Int = 1
   var votes: Array[Double] = null
-  val nbclass:Int = Node.nbclass
+  val nbclass:Int = Node.nbclass  
 
   def setLeft(n: Node) {
     left = n
@@ -90,27 +90,25 @@ class Node {
   }
 
   def fit(x: Seq[Labeled]): Unit = {
-    split = findRandomSplit(x)
+    split = findRandomSplit(x)    
     if (x.length > 10 && split.attribute != -1) { // That's a dummy stopping criterion      
       val partitions = x.partition(i => i.input(split.attribute) < split.threshold)
       left = new Node()
-      left.depth = depth + 1
-      //left.nbclass = nbclass
+      left.depth = depth + 1      
       left.fit(partitions._1)
       right = new Node()
-      right.depth = depth + 1
-      //right.nbclass = nbclass
+      right.depth = depth + 1      
       right.fit(partitions._2)
     } else {
       // create votes
       // but we could store votes in all the nodes...
       // could be useful for postpruning.
-      val maps = x.groupBy(e => e.label.label)
-      val counts = maps.map(e => { (e._1, e._2.length) } )
-      votes = new Array[Double](nbclass)      
-      var total:Double = counts.values.reduce(_+_)      
-      for (e <- counts) {
-        votes(e._1) = e._2/total
+      val maps = x.groupBy(e => e.label.label)      
+      val counts = maps.map(e => { (e._1, e._2.length) } )            
+      votes = new Array[Double](nbclass)            
+      var total:Double = x.length      
+      for (e <- counts) {      
+        votes(e._1) = e._2/total        
       }            
     }
   }

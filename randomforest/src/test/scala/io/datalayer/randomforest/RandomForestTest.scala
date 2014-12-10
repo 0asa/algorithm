@@ -23,15 +23,22 @@ class NodeTest extends FunSuite with ShouldMatchers {
   val train = dataGenerator.genLabeled(40)
   val test = dataGenerator.genUnlabeled(10)
 
-  test("Node is a leaf") {
+  test("Node should be a leaf") {
     val node = new Node
     assert(node.isLeaf == true)
   }
 
-  test("Node.findRandomSplit") {
+  test("Node after fit should not be a leaf") {
     val node = new Node
-    node.findRandomSplit(train)
-    assert(1 === 1)
+    node.fit(train)
+    assert(node.isLeaf === false)
+  }
+
+  test("Node findRandomSplit should find a split") {
+    val node = new Node
+    val split = node.findRandomSplit(train)
+    //println(train.length)
+    assert(split.attribute > -1)
   }
 
   test("Node.fit") {
@@ -47,27 +54,27 @@ class NodeTest extends FunSuite with ShouldMatchers {
 
 class TreeTest extends FunSuite with ShouldMatchers {
   //val (x, y) = dataGenerator.genArray(40)
-  val train = dataGenerator.genLabeled(4000)
-  val test = dataGenerator.genUnlabeled(1000)
+  val train = dataGenerator.genLabeled(10)
+  val test = dataGenerator.genUnlabeled(10)
   test("Some tree test") {
     val tree = new Tree
     tree.fit(train)
     //tree.display
     // predict for one sample
-    var prob = tree.predict(test(0))
+    var prob = tree.predict(test(0))    
     //println(prob(0) + "|" + prob(1))
     // predict for many samples
     var proball = tree.predict(test)
     //proball.foreach(e => println(e(0) + "|" + e(1)))
-    assert(prob === proball(0))
+    assert(prob === proball(0))    
   }
 }
 
 
 class ForestTest extends FunSuite with ShouldMatchers {
   //val (x, y) = dataGenerator.genArray(40)
-  val train = dataGenerator.genLabeled(4000)
-  val test = dataGenerator.genUnlabeled(1000)
+  val train = dataGenerator.genLabeled(40)
+  val test = dataGenerator.genUnlabeled(100)
 
   test("Some forest test") {
     val forest = new Forest
@@ -78,8 +85,10 @@ class ForestTest extends FunSuite with ShouldMatchers {
     //println(prob(0) + "|" + prob(1))  
     // predict for many samples  
     var proball = forest.predict(test)
+    //proball.foreach(println)
     //proball.foreach(e => println(e(0) + "|" + e(1)))
-    assert(prob === proball(0))
+    //proball.foreach(e => println(e.length))
+    assert(prob === proball(0))    
   }
 }
 

@@ -34,7 +34,9 @@ class Forest(n_estimators: Int = 10, max_features: Int = 10, _bootstrap: Boolean
     var probas = new Array[Array[Double]](x.length)
     for (i <- 0 to (x.length - 1)) {
       probas(i) = predict(x(i))
-    }    
+      //probas(i).foreach(println) 
+    }
+
     probas
   }
 
