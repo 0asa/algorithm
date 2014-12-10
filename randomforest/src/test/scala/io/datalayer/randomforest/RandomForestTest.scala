@@ -123,7 +123,8 @@ class ForestTest extends FunSuite with ShouldMatchers {
           error += 1.0
         }
     }
-    println("Error rate: " + error/test.length)
+    //println("Error rate: " + error/test.length)
+    assert( error/test.length < 0.5)
     /*prob.foreach(x => print(x + " "))
     print("\n")
     println(expectedClass)
