@@ -18,10 +18,15 @@ class SparkTest extends FunSuite with ShouldMatchers {
 }
 */
 
+object TestParams {
+  val ls_size = 1000
+  val ts_size = 10
+}
+
 class NodeTest extends FunSuite with ShouldMatchers {
   //val (x, y) = dataGenerator.genArray(40)
-  val train = dataGenerator.genLabeled(40)
-  val test = dataGenerator.genUnlabeled(10)
+  val train = dataGenerator.genLabeled(TestParams.ls_size)
+  val test = dataGenerator.genUnlabeled(TestParams.ts_size)
   val maps = train.groupBy(e => e.label.label)
   Node.nbclass = maps.size
 
@@ -36,12 +41,13 @@ class NodeTest extends FunSuite with ShouldMatchers {
     assert(node.isLeaf === false)
   }
 
-
   test("Node findRandomSplit should find a split") {
+    // The truth is it might not...
+    // in which case split.attribute will be equal to -1
+    // this is caused by the current findRandomSplit implementation
     val node = new Node
-    val split = node.findRandomSplit(train)
-    println(train.length)
-    assert(split.attribute > -1)
+    val split = node.findRandomSplit(train)    
+    assert(split.attribute >= -1 && split.attribute <= train(0).input.length)
   }
 
   test("Node.fit") {
@@ -55,8 +61,8 @@ class NodeTest extends FunSuite with ShouldMatchers {
 
 class TreeTest extends FunSuite with ShouldMatchers {
   //val (x, y) = dataGenerator.genArray(40)
-  val train = dataGenerator.genLabeled(40)
-  val test = dataGenerator.genUnlabeled(10)
+  val train = dataGenerator.genLabeled(TestParams.ls_size)
+  val test = dataGenerator.genUnlabeled(TestParams.ts_size)
   test("Some tree test") {
     val tree = new Tree
     tree.fit(train)
@@ -86,8 +92,8 @@ class TreeTest extends FunSuite with ShouldMatchers {
 
 class ForestTest extends FunSuite with ShouldMatchers {
   //val (x, y) = dataGenerator.genArray(40)
-  val train = dataGenerator.genLabeled(40)
-  val test = dataGenerator.genUnlabeled(100)
+  val train = dataGenerator.genLabeled(TestParams.ls_size)
+  val test = dataGenerator.genUnlabeled(TestParams.ts_size)
 
   test("Some forest test") {
     val forest = new Forest
