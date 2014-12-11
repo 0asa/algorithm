@@ -109,15 +109,19 @@ class ControlChart {
   var mean = 0.0
   var stdDev = 1.0
 
+  var stdDevLimit = 2.0
   var outliers = Array[Long]()
+
+  def setStdLimit(factorLimit: Double) = stdDevLimit = factorLimit
 
   def computeLimit(data: RDD[Double]) = {
     computed = true
     val mu = Stat.computeMean(data)
     val dev = Math.sqrt(Stat.computeVariance(data, mu))
+    val factor = stdDevLimit
 
 
-    outliers = data.map((x:Double) => Math.abs(x - mu)).zipWithIndex.filter(_._1 > 2*dev).map(_._2).collect
+    outliers = data.map((x:Double) => Math.abs(x - mu)).zipWithIndex.filter(_._1 > factor*dev).map(_._2).collect
 
     mean = mu
     stdDev = dev
