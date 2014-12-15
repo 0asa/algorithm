@@ -19,7 +19,7 @@ object Timer {
 }
 
 object StructureParams {
-    val vector_size = 1000
+    val vector_size = 100000
     val nb_loop = 100
 }
 
@@ -36,7 +36,7 @@ class ScalaStructureTest extends FunSuite {
         assert(true)
     }
 
-    test("Creating List") {
+    test("Fill on List") {
         var t = List.fill(StructureParams.vector_size){0}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
@@ -47,7 +47,7 @@ class ScalaStructureTest extends FunSuite {
         assert(t.length == StructureParams.vector_size)
     }
 
-    test("Tabulating on List") {
+    test("Tabulate on List") {
         var t = List.fill(StructureParams.vector_size){0}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
@@ -58,7 +58,18 @@ class ScalaStructureTest extends FunSuite {
         assert(t.length == StructureParams.vector_size)
     }
 
-    test("Creating Array") {
+    test("Reduce on List") {
+        var t = List.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+        val t1 = System.currentTimeMillis
+        for (i:Int <- 0 until StructureParams.nb_loop) {
+            t.reduce(_+_)
+        }
+        val t2 = System.currentTimeMillis
+        info("Took: " + (t2 - t1) + " msecs")
+        assert(t.length == StructureParams.vector_size)
+    }
+
+    test("Fill on Array") {
         var t = Array.fill(StructureParams.vector_size){0}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
@@ -69,7 +80,7 @@ class ScalaStructureTest extends FunSuite {
         assert(t.length == StructureParams.vector_size)
     }
 
-    test("Tabulating on Array") {
+    test("Tabulate on Array") {
         var t = Array.fill(StructureParams.vector_size){0}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
@@ -80,7 +91,18 @@ class ScalaStructureTest extends FunSuite {
         assert(t.length == StructureParams.vector_size)
     }
 
-    test("Creating Vector") {
+    test("Reduce on Array") {
+        var t = Array.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+        val t1 = System.currentTimeMillis
+        for (i:Int <- 0 until StructureParams.nb_loop) {
+            t.reduce(_+_)
+        }
+        val t2 = System.currentTimeMillis
+        info("Took: " + (t2 - t1) + " msecs")
+        assert(t.length == StructureParams.vector_size)
+    }
+
+    test("Fill on Vector") {
         var t = Vector.fill(StructureParams.vector_size){0}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
@@ -91,7 +113,7 @@ class ScalaStructureTest extends FunSuite {
         assert(t.length == StructureParams.vector_size)
     }
 
-    test("Tabulating on Vector") {
+    test("Tabulate on Vector") {
         var t = Vector.fill(StructureParams.vector_size){0}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
@@ -102,7 +124,18 @@ class ScalaStructureTest extends FunSuite {
         assert(t.length == StructureParams.vector_size)
     }
 
-    test("Creating Seq") {
+    test("Reduce on Vector") {
+        var t = Vector.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+        val t1 = System.currentTimeMillis
+        for (i:Int <- 0 until StructureParams.nb_loop) {
+            t.reduce(_+_)
+        }
+        val t2 = System.currentTimeMillis
+        info("Took: " + (t2 - t1) + " msecs")
+        assert(t.length == StructureParams.vector_size)
+    }
+
+    test("Fill on Seq") {
         var t = Seq.fill(StructureParams.vector_size){0}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
@@ -113,11 +146,22 @@ class ScalaStructureTest extends FunSuite {
         assert(t.length == StructureParams.vector_size)
     }
 
-    test("Tabulating on Seq") {
+    test("Tabulate on Seq") {
         var t = Seq.fill(StructureParams.vector_size){0}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
             t = Seq.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+        }
+        val t2 = System.currentTimeMillis
+        info("Took: " + (t2 - t1) + " msecs")
+        assert(t.length == StructureParams.vector_size)
+    }
+
+    test("Reduce on Seq") {
+        var t = Seq.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+        val t1 = System.currentTimeMillis
+        for (i:Int <- 0 until StructureParams.nb_loop) {
+            t.reduce(_+_)
         }
         val t2 = System.currentTimeMillis
         info("Took: " + (t2 - t1) + " msecs")
@@ -139,7 +183,7 @@ class BreezeStructureTest extends FunSuite {
         assert(true)
     }
 
-    test("Creating DenseVector") {
+    test("Fill on DenseVector") {
         var t = DenseVector.zeros[Double](StructureParams.vector_size)
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
@@ -150,11 +194,22 @@ class BreezeStructureTest extends FunSuite {
         assert(t.length == StructureParams.vector_size)
     }
 
-    test("Tabulating on DenseVector") {
+    test("Tabulate on DenseVector") {
         var t = DenseVector.zeros[Double](StructureParams.vector_size)
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
             t = DenseVector.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+        }
+        val t2 = System.currentTimeMillis
+        info("Took: " + (t2 - t1) + " msecs")
+        assert(t.length == StructureParams.vector_size)
+    }
+
+    test("Reduce on DenseVector") {
+        var t = DenseVector.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+        val t1 = System.currentTimeMillis
+        for (i:Int <- 0 until StructureParams.nb_loop) {
+            t.reduce(_+_)
         }
         val t2 = System.currentTimeMillis
         info("Took: " + (t2 - t1) + " msecs")
