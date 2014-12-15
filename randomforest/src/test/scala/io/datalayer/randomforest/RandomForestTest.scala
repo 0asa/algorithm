@@ -23,7 +23,7 @@ object TestParams {
   val ts_size = 100
 }
 
-class NodeTest extends FunSuite with ShouldMatchers {
+class NodeTest extends FunSuite {
   //val (x, y) = dataGenerator.genArray(40)
   val train = dataGenerator.genLabeled(TestParams.ls_size)
   val test = dataGenerator.genUnlabeled(TestParams.ts_size)
@@ -34,7 +34,7 @@ class NodeTest extends FunSuite with ShouldMatchers {
     val node = new Node
     assert(node.isLeaf == true)
   }
-  
+
   test("Node after fit should not be a leaf") {
     val node = new Node
     node.fit(train)
@@ -46,12 +46,12 @@ class NodeTest extends FunSuite with ShouldMatchers {
     // in which case split.attribute will be equal to -1
     // this is caused by the current findRandomSplit implementation
     val node = new Node
-    val split = node.findRandomSplit(train)    
+    val split = node.findRandomSplit(train)
     assert(split.attribute >= -1 && split.attribute <= train(0).input.length)
   }
 
   test("Node.fit") {
-    val node = new Node    
+    val node = new Node
     node.fit(train)
     //node.display
     assert(1 == 1)
@@ -59,7 +59,7 @@ class NodeTest extends FunSuite with ShouldMatchers {
 
 }
 
-class TreeTest extends FunSuite with ShouldMatchers {
+class TreeTest extends FunSuite {
   //val (x, y) = dataGenerator.genArray(40)
   val train = dataGenerator.genLabeled(TestParams.ls_size)
   val test = dataGenerator.genUnlabeled(TestParams.ts_size)
@@ -68,7 +68,7 @@ class TreeTest extends FunSuite with ShouldMatchers {
     tree.fit(train)
     //tree.display
     // predict for one sample
-    var prob = tree.predict(test(0))    
+    var prob = tree.predict(test(0))
     //println(prob(0) + "|" + prob(1))
     // predict for many samples
     var proball = tree.predict(test)
@@ -90,19 +90,19 @@ class TreeTest extends FunSuite with ShouldMatchers {
 }
 
 
-class ForestTest extends FunSuite with ShouldMatchers {
+class ForestTest extends FunSuite {
   //val (x, y) = dataGenerator.genArray(40)
   val train = dataGenerator.genLabeled(TestParams.ls_size)
   val test = dataGenerator.genUnlabeled(TestParams.ts_size)
 
   test("Some forest test") {
     val forest = new Forest
-    forest.fit(train)    
+    forest.fit(train)
     //forest.display
     // predict for one sample
     var prob = forest.predict(test(0))
-    //println(prob(0) + "|" + prob(1))  
-    // predict for many samples  
+    //println(prob(0) + "|" + prob(1))
+    // predict for many samples
     var proball = forest.predict(test)
     //proball.foreach(println)
     //proball.foreach(e => println(e(0) + "|" + e(1)))
@@ -110,13 +110,13 @@ class ForestTest extends FunSuite with ShouldMatchers {
 
     val expectedClass = forest.predictLabel(test(0))
     val expectedClasses = forest.predictLabel(test)
-    
+
     val trueClasses: Seq[Label] = for (e <- test) yield {
       val a = e.input(0)
       val b = e.input(1)
       val y = if ((a+b) > 0 && (a+b) < 6) { 0 } else if ((a+b) >= 6 && (a+b) < 12) { 1 } else { 2 }
       Label(y)
-    }    
+    }
     var error = 0.0
     for (i <- 0 to (trueClasses.length - 1)) {
       if (trueClasses(i) != expectedClasses(i)) {
@@ -134,11 +134,11 @@ class ForestTest extends FunSuite with ShouldMatchers {
     expectedClasses.take(3).foreach(println)*/
 
     assert(expectedClass === expectedClasses(0))
-    assert(prob === proball(0))    
+    assert(prob === proball(0))
   }
 }
 
-class MainTest extends FunSuite with ShouldMatchers {  
+class MainTest extends FunSuite {
   test("Some more test to test scala") {
     /*
     var dv = DenseVector.rand(10)

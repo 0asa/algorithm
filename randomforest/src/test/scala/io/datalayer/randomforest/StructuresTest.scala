@@ -6,6 +6,7 @@ import scala.util.Random
 import org.scalatest.FunSuite
 import org.scalatest.ShouldMatchers
 
+// Source: http://stackoverflow.com/questions/15436593/how-to-measure-and-display-the-running-time-of-a-single-test
 object Timer {
     def time[T](str: String)(thunk: => T): T = {
         print(str + "... ")
@@ -18,14 +19,15 @@ object Timer {
 }
 
 object StructureParams {
-    val vector_size = 10000
-    val nb_loop = 10
+    val vector_size = 1000
+    val nb_loop = 100
 }
 
 /*
  Some test with pure scala data structures
 */
-class ScalaStructureTest extends FunSuite with ShouldMatchers {
+class ScalaStructureTest extends FunSuite {
+
     val rand = new Random
 
     test("Print StructureParams") {
@@ -125,17 +127,45 @@ class ScalaStructureTest extends FunSuite with ShouldMatchers {
 
 /*
  Some test with Breeze data structures
+ See: https://github.com/scalanlp/breeze/wiki/Linear-Algebra-Cheat-Sheet
 */
-class BreezeStructureTest extends FunSuite with ShouldMatchers {
-    test("Some test") {
+class BreezeStructureTest extends FunSuite {
+
+    val rand = new Random
+
+    test("Print StructureParams") {
+        info("Number of loop: " + StructureParams.nb_loop)
+        info("Structure size: " + StructureParams.vector_size)
         assert(true)
+    }
+
+    test("Creating DenseVector") {
+        var t = DenseVector.zeros[Double](StructureParams.vector_size)
+        val t1 = System.currentTimeMillis
+        for (i:Int <- 0 until StructureParams.nb_loop) {
+            t = DenseVector.fill(StructureParams.vector_size){0}
+        }
+        val t2 = System.currentTimeMillis
+        info("Took: " + (t2 - t1) + " msecs")
+        assert(t.length == StructureParams.vector_size)
+    }
+
+    test("Tabulating on DenseVector") {
+        var t = DenseVector.zeros[Double](StructureParams.vector_size)
+        val t1 = System.currentTimeMillis
+        for (i:Int <- 0 until StructureParams.nb_loop) {
+            t = DenseVector.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+        }
+        val t2 = System.currentTimeMillis
+        info("Took: " + (t2 - t1) + " msecs")
+        assert(t.length == StructureParams.vector_size)
     }
 }
 
 /*
  Some test with RDD data structures
 */
-class SparkStructureTest extends FunSuite with ShouldMatchers {
+class SparkStructureTest extends FunSuite {
     test("Some test") {
         assert(true)
     }
