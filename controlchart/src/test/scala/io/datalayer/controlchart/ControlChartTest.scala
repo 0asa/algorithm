@@ -6,6 +6,8 @@ import org.scalatest.FunSuite
 import org.scalatest.ShouldMatchers
 import scala.util.Random
 
+import org.apache.spark.mllib.util._
+
 
 case class Measure(m: Double)
 
@@ -49,13 +51,16 @@ class ControlChartTest extends FunSuite with ShouldMatchers {
   test("ControlChart should give us 1 outlier") {
     println("Generating data")
     //val testRDD = sc.parallelize(Array[Double](5, 5, 5, 5, 5, 5, 5, 5, 9))
-    val testRDD = genDataset(10000000)
+    val testRDD = genDataset(40000000)
     println("Data generated")
     val cc = new ControlChart
     cc.setStdLimit(5.0)
+    val start = System.currentTimeMillis()
     cc.computeLimit(testRDD)
+    val end = System.currentTimeMillis()
     cc.summary(testRDD)
     assert(0 === 0)
+    println("Time spent: " + (end - start) )
     //assert(cc.outliers.length === 1)
   }
 
