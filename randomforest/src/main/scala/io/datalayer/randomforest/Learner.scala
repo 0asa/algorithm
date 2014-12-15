@@ -20,16 +20,13 @@ trait Learner {
   def predictLabel(x: Seq[Unlabeled]): Seq[Label] = predict(x).map(getMaxByIndex(_))
   def predictLabel(x: Array[Array[Double]]): Seq[Label] = x.map(getMaxByIndex(_))
 
-  def predictEval(x: Seq[Labeled]): Array[Array[Double]] = {
+  def predictEval(x: Seq[Labeled]): (Array[Array[Double]], Double) = {
     val unlabeledSeq = x.map{l: Labeled => Unlabeled(l.input) }
     val out = predict(unlabeledSeq)
     val prediction = predictLabel(out)
     val accuracy = Metrics.accuracy(prediction, x.map(_.label))
-    println("Accuracy:")
-    println(accuracy)
-    println("Error rate:")
-    println(1 - accuracy)
 
-    out
+
+    (out, accuracy)
   }
 }

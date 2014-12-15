@@ -66,7 +66,8 @@ class TreeTest extends FunSuite {
   test("Some tree test") {
     val tree = new Tree
     tree.fit(train)
-    tree.predictEval(train)
+    val accuracy = tree.predictEval(train)._2
+    info("Accuracy = " + accuracy + "\nError rate = " + (1 - accuracy))
     //tree.display
     // predict for one sample
     var prob = tree.predict(test(0))
@@ -99,7 +100,8 @@ class ForestTest extends FunSuite {
   test("Some forest test") {
     val forest = new Forest
     forest.fit(train)
-    forest.predictEval(train)
+    val accuracy = forest.predictEval(train)._2
+    info("Accuracy = " + accuracy + "\nError rate = " + (1 - accuracy))
     //forest.display
     // predict for one sample
     var prob = forest.predict(test(0))
