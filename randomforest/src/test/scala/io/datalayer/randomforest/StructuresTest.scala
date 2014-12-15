@@ -11,7 +11,9 @@ import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
 */
 
-// Source: http://stackoverflow.com/questions/15436593/how-to-measure-and-display-the-running-time-of-a-single-test
+// Source:
+// http://stackoverflow.com/questions/15436593/how-to-measure-and-display-the-running-time-of-a-single-test
+// Could be useful somewhere else...
 object Timer {
     def time[T](str: String)(thunk: => T): T = {
         print(str + "... ")
@@ -24,8 +26,8 @@ object Timer {
 }
 
 object StructureParams {
-    val vector_size = 100000
-    val nb_loop = 100
+    val vector_size = 10000
+    val nb_loop = 1000
 }
 
 /*
