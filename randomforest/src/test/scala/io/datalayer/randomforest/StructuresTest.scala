@@ -18,8 +18,8 @@ object Timer {
 }
 
 object StructureParams {
-    val vector_size = 50000
-    val nb_loop = 1000
+    val vector_size = 10000
+    val nb_loop = 10
 }
 
 /*
@@ -28,48 +28,94 @@ object StructureParams {
 class ScalaStructureTest extends FunSuite with ShouldMatchers {
     val rand = new Random
 
-    test("Test with Lists") {
+    test("Print StructureParams") {
+        info("Number of loop: " + StructureParams.nb_loop)
+        info("Structure size: " + StructureParams.vector_size)
+        assert(true)
+    }
+
+    test("Creating List") {
         var t = List.fill(StructureParams.vector_size){0}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
             t = List.fill(StructureParams.vector_size){0}
-            //t = List.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
         }
         val t2 = System.currentTimeMillis
         info("Took: " + (t2 - t1) + " msecs")
         assert(t.length == StructureParams.vector_size)
     }
 
-    test("Test with Arrays") {
+    test("Tabulating on List") {
+        var t = List.fill(StructureParams.vector_size){0}
+        val t1 = System.currentTimeMillis
+        for (i:Int <- 0 until StructureParams.nb_loop) {
+            t = List.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+        }
+        val t2 = System.currentTimeMillis
+        info("Took: " + (t2 - t1) + " msecs")
+        assert(t.length == StructureParams.vector_size)
+    }
+
+    test("Creating Array") {
         var t = Array.fill(StructureParams.vector_size){0}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
             t = Array.fill(StructureParams.vector_size){0}
-            //t = Array.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
         }
         val t2 = System.currentTimeMillis
         info("Took: " + (t2 - t1) + " msecs")
         assert(t.length == StructureParams.vector_size)
     }
 
-    test("Test with Vectors") {
+    test("Tabulating on Array") {
+        var t = Array.fill(StructureParams.vector_size){0}
+        val t1 = System.currentTimeMillis
+        for (i:Int <- 0 until StructureParams.nb_loop) {
+            t = Array.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+        }
+        val t2 = System.currentTimeMillis
+        info("Took: " + (t2 - t1) + " msecs")
+        assert(t.length == StructureParams.vector_size)
+    }
+
+    test("Creating Vector") {
         var t = Vector.fill(StructureParams.vector_size){0}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
             t = Vector.fill(StructureParams.vector_size){0}
-            //t = Vector.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
         }
         val t2 = System.currentTimeMillis
         info("Took: " + (t2 - t1) + " msecs")
         assert(t.length == StructureParams.vector_size)
     }
 
-    test("Test with Seqs") {
+    test("Tabulating on Vector") {
+        var t = Vector.fill(StructureParams.vector_size){0}
+        val t1 = System.currentTimeMillis
+        for (i:Int <- 0 until StructureParams.nb_loop) {
+            t = Vector.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+        }
+        val t2 = System.currentTimeMillis
+        info("Took: " + (t2 - t1) + " msecs")
+        assert(t.length == StructureParams.vector_size)
+    }
+
+    test("Creating Seq") {
         var t = Seq.fill(StructureParams.vector_size){0}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
             t = Seq.fill(StructureParams.vector_size){0}
-            //t = Seq.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+        }
+        val t2 = System.currentTimeMillis
+        info("Took: " + (t2 - t1) + " msecs")
+        assert(t.length == StructureParams.vector_size)
+    }
+
+    test("Tabulating on Seq") {
+        var t = Seq.fill(StructureParams.vector_size){0}
+        val t1 = System.currentTimeMillis
+        for (i:Int <- 0 until StructureParams.nb_loop) {
+            t = Seq.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
         }
         val t2 = System.currentTimeMillis
         info("Took: " + (t2 - t1) + " msecs")
