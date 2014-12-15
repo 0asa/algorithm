@@ -60,7 +60,7 @@ class ControlChartTest extends FunSuite with ShouldMatchers {
     val end = System.currentTimeMillis()
     cc.summary(testRDD)
     assert(0 === 0)
-    println("Time spent: " + (end - start) )
+    info("Time spent: " + (end - start) + " ms" )
     //assert(cc.outliers.length === 1)
   }
 
