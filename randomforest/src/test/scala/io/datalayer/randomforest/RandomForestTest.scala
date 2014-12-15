@@ -66,6 +66,7 @@ class TreeTest extends FunSuite {
   test("Some tree test") {
     val tree = new Tree
     tree.fit(train)
+    tree.predictEval(train)
     //tree.display
     // predict for one sample
     var prob = tree.predict(test(0))
@@ -98,6 +99,7 @@ class ForestTest extends FunSuite {
   test("Some forest test") {
     val forest = new Forest
     forest.fit(train)
+    forest.predictEval(train)
     //forest.display
     // predict for one sample
     var prob = forest.predict(test(0))
@@ -120,8 +122,8 @@ class ForestTest extends FunSuite {
     var error = 0.0
     for (i <- 0 to (trueClasses.length - 1)) {
       if (trueClasses(i) != expectedClasses(i)) {
-          error += 1.0
-        }
+        error += 1.0
+      }
     }
     //println("Error rate: " + error/test.length)
     assert( error/test.length < 0.5)
