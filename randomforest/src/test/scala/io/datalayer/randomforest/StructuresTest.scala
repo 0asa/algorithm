@@ -108,10 +108,10 @@ class ScalaStructureTest extends FunSuite {
     }
 
     test("Fill on Vector") {
-        var t = Vector.fill(StructureParams.vector_size){0}
+        var t = scala.collection.immutable.Vector.fill(StructureParams.vector_size){0}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
-            t = Vector.fill(StructureParams.vector_size){0}
+            t = scala.collection.immutable.Vector.fill(StructureParams.vector_size){0}
         }
         val t2 = System.currentTimeMillis
         info("Took: " + (t2 - t1) + " msecs")
@@ -119,10 +119,10 @@ class ScalaStructureTest extends FunSuite {
     }
 
     test("Tabulate on Vector") {
-        var t = Vector.fill(StructureParams.vector_size){0}
+        var t = scala.collection.immutable.Vector.fill(StructureParams.vector_size){0}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
-            t = Vector.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
+            t = scala.collection.immutable.Vector.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
         }
         val t2 = System.currentTimeMillis
         info("Took: " + (t2 - t1) + " msecs")
@@ -130,10 +130,21 @@ class ScalaStructureTest extends FunSuite {
     }
 
     test("Reduce on Vector") {
-        var t = Vector.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
+        var t = scala.collection.immutable.Vector.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
             t.reduce(_+_)
+        }
+        val t2 = System.currentTimeMillis
+        info("Took: " + (t2 - t1) + " msecs")
+        assert(t.length == StructureParams.vector_size)
+    }
+
+    test("Partition on Vector") {
+        var t = scala.collection.immutable.Vector.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
+        val t1 = System.currentTimeMillis
+        for (i:Int <- 0 until StructureParams.nb_loop) {
+            t.partition(_ < rand.nextInt(100))
         }
         val t2 = System.currentTimeMillis
         info("Took: " + (t2 - t1) + " msecs")
@@ -172,6 +183,17 @@ class ScalaStructureTest extends FunSuite {
         info("Took: " + (t2 - t1) + " msecs")
         assert(t.length == StructureParams.vector_size)
     }
+
+    test("Partition on Seq") {
+        var t = Seq.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
+        val t1 = System.currentTimeMillis
+        for (i:Int <- 0 until StructureParams.nb_loop) {
+            t.partition(_ < rand.nextInt(100))
+        }
+        val t2 = System.currentTimeMillis
+        info("Took: " + (t2 - t1) + " msecs")
+        assert(t.length == StructureParams.vector_size)
+    }
 }
 
 /*
@@ -186,6 +208,53 @@ class BreezeStructureTest extends FunSuite {
         info("Number of loop: " + StructureParams.nb_loop)
         info("Structure size: " + StructureParams.vector_size)
         assert(true)
+    }
+
+    test("Fill on (Breeze) Vector") {
+        var t = Vector.fill(StructureParams.vector_size){0}
+        val t1 = System.currentTimeMillis
+        for (i:Int <- 0 until StructureParams.nb_loop) {
+            t = Vector.fill(StructureParams.vector_size){0}
+        }
+        val t2 = System.currentTimeMillis
+        info("Took: " + (t2 - t1) + " msecs")
+        assert(t.length == StructureParams.vector_size)
+    }
+
+    test("Tabulate on (Breeze) Vector") {
+        var t = Vector.fill(StructureParams.vector_size){0}
+        val t1 = System.currentTimeMillis
+        for (i:Int <- 0 until StructureParams.nb_loop) {
+            t = Vector.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
+        }
+        val t2 = System.currentTimeMillis
+        info("Took: " + (t2 - t1) + " msecs")
+        assert(t.length == StructureParams.vector_size)
+    }
+
+    test("Reduce on (Breeze) Vector") {
+        var t = Vector.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
+        val t1 = System.currentTimeMillis
+        for (i:Int <- 0 until StructureParams.nb_loop) {
+            t.reduce(_+_)
+        }
+        val t2 = System.currentTimeMillis
+        info("Took: " + (t2 - t1) + " msecs")
+        assert(t.length == StructureParams.vector_size)
+    }
+
+    test("Partition on (Breeze) Vector") {
+        var t = Vector.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
+        val t1 = System.currentTimeMillis
+        for (i:Int <- 0 until StructureParams.nb_loop) {
+            // no partition available (as such)
+            // need to cast to toArray (for instance)
+            t.toArray.partition(_ < rand.nextInt(100))
+
+        }
+        val t2 = System.currentTimeMillis
+        info("Took: " + (t2 - t1) + " msecs")
+        assert(t.length == StructureParams.vector_size)
     }
 
     test("Fill on DenseVector") {
@@ -215,6 +284,19 @@ class BreezeStructureTest extends FunSuite {
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
             t.reduce(_+_)
+        }
+        val t2 = System.currentTimeMillis
+        info("Took: " + (t2 - t1) + " msecs")
+        assert(t.length == StructureParams.vector_size)
+    }
+
+    test("Partition on DenseVector") {
+        var t = DenseVector.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
+        val t1 = System.currentTimeMillis
+        for (i:Int <- 0 until StructureParams.nb_loop) {
+            // no partition available (as such)
+            // need to cast to toArray (for instance)
+            t.toArray.partition(_ < rand.nextInt(100))
         }
         val t2 = System.currentTimeMillis
         info("Took: " + (t2 - t1) + " msecs")
