@@ -5,6 +5,11 @@ import breeze.linalg._
 import scala.util.Random
 import org.scalatest.FunSuite
 import org.scalatest.ShouldMatchers
+/*
+import org.apache.spark.SparkContext
+import org.apache.spark.SparkContext._
+import org.apache.spark.SparkConf
+*/
 
 // Source: http://stackoverflow.com/questions/15436593/how-to-measure-and-display-the-running-time-of-a-single-test
 object Timer {
@@ -51,7 +56,7 @@ class ScalaStructureTest extends FunSuite {
         var t = List.fill(StructureParams.vector_size){0}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
-            t = List.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+            t = List.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
         }
         val t2 = System.currentTimeMillis
         info("Took: " + (t2 - t1) + " msecs")
@@ -59,7 +64,7 @@ class ScalaStructureTest extends FunSuite {
     }
 
     test("Reduce on List") {
-        var t = List.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+        var t = List.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
             t.reduce(_+_)
@@ -84,7 +89,7 @@ class ScalaStructureTest extends FunSuite {
         var t = Array.fill(StructureParams.vector_size){0}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
-            t = Array.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+            t = Array.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
         }
         val t2 = System.currentTimeMillis
         info("Took: " + (t2 - t1) + " msecs")
@@ -92,7 +97,7 @@ class ScalaStructureTest extends FunSuite {
     }
 
     test("Reduce on Array") {
-        var t = Array.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+        var t = Array.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
             t.reduce(_+_)
@@ -117,7 +122,7 @@ class ScalaStructureTest extends FunSuite {
         var t = Vector.fill(StructureParams.vector_size){0}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
-            t = Vector.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+            t = Vector.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
         }
         val t2 = System.currentTimeMillis
         info("Took: " + (t2 - t1) + " msecs")
@@ -125,7 +130,7 @@ class ScalaStructureTest extends FunSuite {
     }
 
     test("Reduce on Vector") {
-        var t = Vector.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+        var t = Vector.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
             t.reduce(_+_)
@@ -150,7 +155,7 @@ class ScalaStructureTest extends FunSuite {
         var t = Seq.fill(StructureParams.vector_size){0}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
-            t = Seq.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+            t = Seq.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
         }
         val t2 = System.currentTimeMillis
         info("Took: " + (t2 - t1) + " msecs")
@@ -158,7 +163,7 @@ class ScalaStructureTest extends FunSuite {
     }
 
     test("Reduce on Seq") {
-        var t = Seq.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+        var t = Seq.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
             t.reduce(_+_)
@@ -198,7 +203,7 @@ class BreezeStructureTest extends FunSuite {
         var t = DenseVector.zeros[Double](StructureParams.vector_size)
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
-            t = DenseVector.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+            t = DenseVector.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
         }
         val t2 = System.currentTimeMillis
         info("Took: " + (t2 - t1) + " msecs")
@@ -206,7 +211,7 @@ class BreezeStructureTest extends FunSuite {
     }
 
     test("Reduce on DenseVector") {
-        var t = DenseVector.tabulate(StructureParams.vector_size){_ + rand.nextInt(100)}
+        var t = DenseVector.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
             t.reduce(_+_)
@@ -222,6 +227,10 @@ class BreezeStructureTest extends FunSuite {
 */
 class SparkStructureTest extends FunSuite {
     test("Some test") {
+        /*
+        val conf = new SparkConf().setMaster("local").setAppName("Simple Application")
+        val sc = new SparkContext(conf)
+        */
         assert(true)
     }
 }
