@@ -74,6 +74,17 @@ class ScalaStructureTest extends FunSuite {
         assert(t.length == StructureParams.vector_size)
     }
 
+    test("Partition on List") {
+        var t = List.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
+        val t1 = System.currentTimeMillis
+        for (i:Int <- 0 until StructureParams.nb_loop) {
+            t.partition(_ < rand.nextInt(100))
+        }
+        val t2 = System.currentTimeMillis
+        info("Took: " + (t2 - t1) + " msecs")
+        assert(t.length == StructureParams.vector_size)
+    }
+
     test("Fill on Array") {
         var t = Array.fill(StructureParams.vector_size){0}
         val t1 = System.currentTimeMillis
@@ -107,7 +118,18 @@ class ScalaStructureTest extends FunSuite {
         assert(t.length == StructureParams.vector_size)
     }
 
-    test("Fill on Vector") {
+    test("Partition on Array") {
+        var t = Array.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
+        val t1 = System.currentTimeMillis
+        for (i:Int <- 0 until StructureParams.nb_loop) {
+            t.partition(_ < rand.nextInt(100))
+        }
+        val t2 = System.currentTimeMillis
+        info("Took: " + (t2 - t1) + " msecs")
+        assert(t.length == StructureParams.vector_size)
+    }
+
+    test("Fill on (scala) Vector") {
         var t = scala.collection.immutable.Vector.fill(StructureParams.vector_size){0}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
@@ -118,7 +140,7 @@ class ScalaStructureTest extends FunSuite {
         assert(t.length == StructureParams.vector_size)
     }
 
-    test("Tabulate on Vector") {
+    test("Tabulate on (scala) Vector") {
         var t = scala.collection.immutable.Vector.fill(StructureParams.vector_size){0}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
@@ -129,7 +151,7 @@ class ScalaStructureTest extends FunSuite {
         assert(t.length == StructureParams.vector_size)
     }
 
-    test("Reduce on Vector") {
+    test("Reduce on (scala) Vector") {
         var t = scala.collection.immutable.Vector.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
@@ -140,7 +162,7 @@ class ScalaStructureTest extends FunSuite {
         assert(t.length == StructureParams.vector_size)
     }
 
-    test("Partition on Vector") {
+    test("Partition on (scala) Vector") {
         var t = scala.collection.immutable.Vector.tabulate(StructureParams.vector_size){_ => 0 + rand.nextInt(100)}
         val t1 = System.currentTimeMillis
         for (i:Int <- 0 until StructureParams.nb_loop) {
