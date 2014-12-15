@@ -25,4 +25,5 @@ events among a time series. Events must only be numbers.
 where `local[8]` indicates the number of workers.
 
 Then run the test alone to check the time spent (in millisecond).
+
 -------------------------------------------------------------------------------
