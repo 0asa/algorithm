@@ -7,30 +7,24 @@ import scala.util.Random
 case class Split(attribute: Int, threshold: Double)
 
 object Node {
-  var nbclass: Int = 0  
+  var nbclass: Int = 0
 }
 
 // Node class
-class Node {
+class Node(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int = 2) {
 
   var left: Node = null
   var right: Node = null
   var split: Split = null
   var depth: Int = 1
   var votes: Array[Double] = null
-  val nbclass:Int = Node.nbclass  
+  val nbclass:Int = Node.nbclass
 
-  def setLeft(n: Node) {
-    left = n
-  }
-
-  def setRight(n: Node) {
-    right = n
-  }
-
-  def setChild(l: Node, r: Node) {
-    left = l
-    right = r
+  def printParams() : String = {
+    val str_param:String = "max_features=" + max_features + ";" +
+    "max_depth=" + max_depth + ";" +
+    "min_samples_split=" + min_samples_split + ";"
+    str_param
   }
 
   def isLeaf() = {
@@ -40,6 +34,23 @@ class Node {
       false
     }
   }
+
+  def canSplit(x: Seq[Labeled]): Boolean = {
+    if (max_depth > 0) {
+      if (x.length > min_samples_split && depth <= max_depth && split.attribute != -1) {
+        true
+      } else {
+        false
+      }
+    } else {      
+      if (x.length > min_samples_split && split.attribute != -1) {
+        true
+      } else {
+        false
+      }
+    }
+  }
+
 
   def gini(p: Seq[Labeled]): Double = {
     var gi:Double = 0.0
@@ -74,42 +85,42 @@ class Node {
     val is: Double = p.length*infogain(p) - (pl.length*infogain(pl) + pr.length*infogain(pr))
     is/p.length
   }
-  
+
   def findRandomSplit(x: Seq[Labeled]): Split = {
     val rand = new Random
     var att = Random.nextInt(x(0).input.length)
     var th = -1.0
     var att_vector = rand.shuffle(x.map(i => i.input(att)))
-    att_vector = att_vector.distinct    
+    att_vector = att_vector.distinct
     if (att_vector.length > 1) {
       th = math.min(att_vector(0),att_vector(1)) + (math.abs(att_vector(0) - att_vector(1)) / 2.0)
     } else {
-      att = -1      
+      att = -1
     }
     Split(att,th)
   }
 
   def fit(x: Seq[Labeled]): Unit = {
-    split = findRandomSplit(x)    
-    if (x.length > 10 && split.attribute != -1) { // That's a dummy stopping criterion      
+    split = findRandomSplit(x)
+    if (canSplit(x)) { // That's a dummy stopping criterion
       val partitions = x.partition(i => i.input(split.attribute) < split.threshold)
-      left = new Node()
-      left.depth = depth + 1      
+      left = new Node(max_features,max_depth,min_samples_split)
+      left.depth = depth + 1
       left.fit(partitions._1)
-      right = new Node()
-      right.depth = depth + 1      
+      right = new Node(max_features,max_depth,min_samples_split)
+      right.depth = depth + 1
       right.fit(partitions._2)
     } else {
       // create votes
       // but we could store votes in all the nodes...
       // could be useful for postpruning.
-      val maps = x.groupBy(e => e.label.label)      
-      val counts = maps.map(e => { (e._1, e._2.length) } )            
-      votes = new Array[Double](nbclass)            
-      var total:Double = x.length      
-      for (e <- counts) {      
-        votes(e._1) = e._2/total        
-      }            
+      val maps = x.groupBy(e => e.label.label)
+      val counts = maps.map(e => { (e._1, e._2.length) } )
+      votes = new Array[Double](nbclass)
+      var total:Double = x.length
+      for (e <- counts) {
+        votes(e._1) = e._2/total
+      }
     }
   }
 

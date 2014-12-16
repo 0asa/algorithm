@@ -47,11 +47,11 @@ object dataGenerator {
     val x = DenseMatrix.zeros[Double](numInstances,2)
     val y = DenseVector.zeros[Double](numInstances)
     val rand = new Random
-    for (i:Int <- 0 until numInstances) {      
+    for (i:Int <- 0 until numInstances) {
       val a = rand.nextInt(10)
-      val b = rand.nextInt(10)      
+      val b = rand.nextInt(10)
       x(i, 0) = a
-      x(i, 1) = b      
+      x(i, 1) = b
       y(i) = if (a + b > 10) { 0 } else { 1 }
     }
     (x, y)
@@ -76,11 +76,11 @@ object dataGenerator {
     val x: Seq[Unlabeled] = for (i:Int <- 0 until numInstances) yield {
       val a:Float = rand.nextInt(10)
       val b:Float = rand.nextInt(10)
-      val c:Float = rand.nextInt(100)      
+      val c:Float = rand.nextInt(100)
       val d:Float = rand.nextFloat()
       Unlabeled(Seq(a,b,c,d))
-    }    
-    x     
+    }
+    x
   }
 }
 
@@ -98,24 +98,17 @@ object Metrics {
 }
 
 object Main extends App {
-  
+
     println("Started")
-    
+
     //val (x, y) = dataGenerator.genArray(10)
     val train = dataGenerator.genLabeled(10)
     val test = dataGenerator.genUnlabeled(10)
     val forest = new Forest()
     forest.fit(train)
     var probas = forest.predict(test)
-    probas.foreach(println)
+    probas.foreach(println)    
 
-    val n = new Node
-    println(n.isLeaf())
-    val l = new Node
-    val r = new Node
-    n.setChild(l, r)
-    println(n.isLeaf())    
-    
     /*
     val conf = new SparkConf().setMaster("local").setAppName("Simple Application")
     val sc = new SparkContext(conf)
@@ -126,5 +119,5 @@ object Main extends App {
     val data2 = dataGenerator.genIndexedRowMatrix(sc, 10000)
     data2.rows.take(10).foreach(println)
     */
-  
+
 }

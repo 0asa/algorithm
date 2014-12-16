@@ -1,17 +1,24 @@
 package io.datalayer.randomforest
 
 // Tree class: building a single decision tree
-class Tree(max_features: Int = 10) extends Learner {
+class Tree(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int = 2) extends Learner {
 
   var root:Node = null
+
+  def printParams() : String = {
+    val str_param:String = "max_features=" + max_features + ";" +
+    "max_depth=" + max_depth + ";" +
+    "min_samples_split=" + min_samples_split + ";"
+    str_param
+  }
 
   def setParams() {
     println("Tree.setParams")
   }
 
   def fit(x: Seq[Labeled]) = {
-    val maps = x.groupBy(e => e.label.label)    
-    Node.nbclass = maps.size    
+    val maps = x.groupBy(e => e.label.label)
+    Node.nbclass = maps.size
     root = new Node
     root.fit(x)
   }
