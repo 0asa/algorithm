@@ -102,6 +102,7 @@ class Node(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int =
 
   def fit(x: Seq[Labeled]): Unit = {
     split = findRandomSplit(x)
+    setVotes(x)
     if (canSplit(x)) { // That's a dummy stopping criterion
       val partitions = x.partition(i => i.input(split.attribute) < split.threshold)
       left = new Node(max_features,max_depth,min_samples_split)
@@ -110,17 +111,16 @@ class Node(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int =
       right = new Node(max_features,max_depth,min_samples_split)
       right.depth = depth + 1
       right.fit(partitions._2)
-    } else {
-      // create votes
-      // but we could store votes in all the nodes...
-      // could be useful for postpruning.
-      val maps = x.groupBy(e => e.label.label)
-      val counts = maps.map(e => { (e._1, e._2.length) } )
-      votes = new Array[Double](nbclass)
-      var total:Double = x.length
-      for (e <- counts) {
-        votes(e._1) = e._2/total
-      }
+    } 
+  }
+
+  def setVotes(x: Seq[Labeled]) = {
+    val maps = x.groupBy(e => e.label.label)
+    val counts = maps.map(e => { (e._1, e._2.length) } )
+    votes = new Array[Double](nbclass)
+    var total:Double = x.length
+    for (e <- counts) {
+      votes(e._1) = e._2/total
     }
   }
 
