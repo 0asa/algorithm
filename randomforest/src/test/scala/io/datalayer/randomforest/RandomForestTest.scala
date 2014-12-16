@@ -20,7 +20,7 @@ class SparkTest extends FunSuite with ShouldMatchers {
 
 object TestParams {
   val ls_size = 1000
-  val ts_size = 100
+  val ts_size = 1000
   val train = dataGenerator.genLabeled(ls_size)
   val test = dataGenerator.genUnlabeled(ts_size)
   val evaluate = dataGenerator.genLabeled(ts_size)
@@ -110,7 +110,7 @@ class ForestTest extends FunSuite {
   val evaluate = TestParams.evaluate
 
   test("Some forest test") {
-    val forest = new Forest(min_samples_split=100)
+    val forest = new Forest(min_samples_split=10,n_estimators=100)
     info(forest)
     forest.fit(train)
     val accuracy = forest.predictEval(evaluate)._2
