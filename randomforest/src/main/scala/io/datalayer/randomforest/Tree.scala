@@ -25,12 +25,12 @@ class Tree(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int =
     Node.nbclass = maps.size
     root = new Node
     root.samples = x
-    root.fit(x)
+    root.fit()
 
     stack.push(root) // stack init
     while (!stack.isEmpty) {
       val n = stack.pop()
-      if (n.canSplit(x)) {
+      if (n.canSplit()) {
         // gen partitions
         val partitions = x.partition(i => i.input(n.split.attribute) < n.split.threshold)
 

@@ -36,15 +36,15 @@ class Node(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int =
     }
   }
 
-  def canSplit(x: Seq[Labeled]): Boolean = {
+  def canSplit(): Boolean = {
     if (max_depth > 0) {
-      if (x.length > min_samples_split && depth <= max_depth && split.attribute != -1) {
+      if (samples.length > min_samples_split && depth <= max_depth && split.attribute != -1) {
         true
       } else {
         false
       }
     } else {
-      if (x.length > min_samples_split && split.attribute != -1) {
+      if (samples.length > min_samples_split && split.attribute != -1) {
         true
       } else {
         false
@@ -87,11 +87,11 @@ class Node(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int =
     is/p.length
   }
 
-  def findRandomSplit(x: Seq[Labeled]): Split = {
+  def findRandomSplit(): Split = {
     val rand = new Random
-    var att = Random.nextInt(x(0).input.length)
+    var att = Random.nextInt(samples(0).input.length)
     var th = -1.0
-    var att_vector = rand.shuffle(x.map(i => i.input(att)))
+    var att_vector = rand.shuffle(samples.map(i => i.input(att)))
     att_vector = att_vector.distinct
     if (att_vector.length > 1) {
       th = math.min(att_vector(0),att_vector(1)) + (math.abs(att_vector(0) - att_vector(1)) / 2.0)
@@ -101,25 +101,27 @@ class Node(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int =
     Split(att,th)
   }
 
-  def fit(x: Seq[Labeled]): Unit = {
-    split = findRandomSplit(x)
-    setVotes(x)
-    if (canSplit(x)) {
-      val partitions = x.partition(i => i.input(split.attribute) < split.threshold)
+  def fit(): Unit = {
+    split = findRandomSplit()
+    setVotes()
+    if (canSplit()) {
+      val partitions = samples.partition(i => i.input(split.attribute) < split.threshold)
       left = new Node(max_features,max_depth,min_samples_split)
       left.depth = depth + 1
-      left.fit(partitions._1)
+      left.samples = partitions._1
+      left.fit()
       right = new Node(max_features,max_depth,min_samples_split)
       right.depth = depth + 1
-      right.fit(partitions._2)
+      right.samples = partitions._2
+      right.fit()
     }
   }
 
-  def setVotes(x: Seq[Labeled]) = {
-    val maps = x.groupBy(e => e.label.label)
+  def setVotes() = {
+    val maps = samples.groupBy(e => e.label.label)
     val counts = maps.map(e => { (e._1, e._2.length) } )
     votes = new Array[Double](nbclass)
-    var total:Double = x.length
+    var total:Double = samples.length
     for (e <- counts) {
       votes(e._1) = e._2/total
     }
