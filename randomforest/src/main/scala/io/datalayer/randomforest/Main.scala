@@ -109,7 +109,7 @@ object Main extends App {
     probas.foreach(println)
 
     val t2 = System.currentTimeMillis
-    info("Time: " + (t2 - t1) + " ms")
+    println("Time: " + (t2 - t1) + " ms")
 
 
 
