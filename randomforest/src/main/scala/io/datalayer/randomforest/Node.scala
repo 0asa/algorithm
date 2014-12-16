@@ -18,6 +18,7 @@ class Node(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int =
   var split: Split = null
   var depth: Int = 1
   var votes: Array[Double] = null
+  var samples: Seq[Labeled] = null
   val nbclass:Int = Node.nbclass
 
   def printParams() : String = {
@@ -103,7 +104,7 @@ class Node(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int =
   def fit(x: Seq[Labeled]): Unit = {
     split = findRandomSplit(x)
     setVotes(x)
-    if (canSplit(x)) { // That's a dummy stopping criterion
+    if (canSplit(x)) {
       val partitions = x.partition(i => i.input(split.attribute) < split.threshold)
       left = new Node(max_features,max_depth,min_samples_split)
       left.depth = depth + 1
@@ -111,7 +112,7 @@ class Node(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int =
       right = new Node(max_features,max_depth,min_samples_split)
       right.depth = depth + 1
       right.fit(partitions._2)
-    } 
+    }
   }
 
   def setVotes(x: Seq[Labeled]) = {
