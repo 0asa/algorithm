@@ -40,3 +40,9 @@ class Tree(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int =
     root.display
   }
 }
+
+object Tree {
+  implicit def printParams(tree: Tree): String = {
+    tree.printParams()
+  }
+}
