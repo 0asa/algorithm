@@ -12,8 +12,7 @@ import org.apache.spark.mllib.util._
 case class Measure(m: Double)
 
 class dummyCalculus extends  FunSuite with ShouldMatchers {
-  val conf = new SparkConf().setMaster("local[4]").setAppName("Simple Application")
-  val sc = new SparkContext(conf)
+  val sc = SparkContextManager.getSparkContext(8)
   val testArray = sc.parallelize(Array[Double](5, 5, 5, 5, 5, 5, 5, 9))
 
   test("Test mean computation with an RDD") {
@@ -32,8 +31,7 @@ class dummyCalculus extends  FunSuite with ShouldMatchers {
 }
 
 class ControlChartTest extends FunSuite with ShouldMatchers {
-  val conf = new SparkConf().setMaster("local[8]").setAppName("Simple Application")
-  val sc = new SparkContext(conf)
+  val sc = SparkContextManager.getSparkContext(8)
 
   def genDataset(size: Int): org.apache.spark.rdd.RDD[Double] = {
     val generator = Random
@@ -51,7 +49,7 @@ class ControlChartTest extends FunSuite with ShouldMatchers {
   test("ControlChart should give us 1 outlier") {
     println("Generating data")
     //val testRDD = sc.parallelize(Array[Double](5, 5, 5, 5, 5, 5, 5, 5, 9))
-    val testRDD = genDataset(40000000)
+    val testRDD = genDataset(4000000)
     println("Data generated")
     val cc = new ControlChart
     cc.setStdLimit(5.0)
@@ -74,8 +72,7 @@ class ReadCSVTest extends FunSuite with ShouldMatchers {
 }
 
 class ControlChartPipeTest extends FunSuite with ShouldMatchers {
-  val conf = new SparkConf().setMaster("local[4]").setAppName("Simple Application")
-  val sc = new SparkContext(conf)
+  val sc = SparkContextManager.getSparkContext(8)
 
   test("test controlchart within a pipeline") {
     val sqlContext = new org.apache.spark.sql.SQLContext(sc)

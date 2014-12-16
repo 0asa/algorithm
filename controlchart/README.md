@@ -20,10 +20,9 @@ events among a time series. Events must only be numbers.
 
  if you want to change the number of workers in you spark context, you have to set the following lines
  ```scala
-    val conf = new SparkConf().setMaster("local[8]").setAppName("Simple Application")
+    val sc = SparkContextManager.getSparkContext(8)
  ```
-where `local[8]` indicates the number of workers.
+where `8` indicates the number of workers.
 
-Then run the test alone to check the time spent (in millisecond).
 
 -------------------------------------------------------------------------------
