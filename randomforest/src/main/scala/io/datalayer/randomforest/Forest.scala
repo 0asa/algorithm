@@ -1,11 +1,17 @@
 package io.datalayer.randomforest
 
+object Forest {
+  implicit def printParams(forest: Forest): String = {
+    forest.printParams()
+  }
+}
+
 // Forest class: build a forest of trees.
 class Forest(n_estimators: Int = 10, max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int = 2, bootstrap: Boolean = false) extends Learner {
 
   var trees: Array[Tree] = new Array[Tree](n_estimators)
   for (i <- 0 to (trees.length - 1)) {
-    trees(i) = new Tree(max_features, max_depth, min_samples_split)    
+    trees(i) = new Tree(max_features, max_depth, min_samples_split)
   }
 
   def printParams() : String = {

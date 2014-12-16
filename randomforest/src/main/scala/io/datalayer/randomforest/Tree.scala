@@ -2,6 +2,12 @@ package io.datalayer.randomforest
 
 import scala.collection.mutable
 
+object Tree {
+  implicit def printParams(tree: Tree): String = {
+    tree.printParams()
+  }
+}
+
 // Tree class: building a single decision tree
 class Tree(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int = 2) extends Learner {
 
@@ -64,11 +70,5 @@ class Tree(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int =
 
   def display() {
     root.display
-  }
-}
-
-object Tree {
-  implicit def printParams(tree: Tree): String = {
-    tree.printParams()
   }
 }

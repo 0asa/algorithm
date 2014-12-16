@@ -32,7 +32,7 @@ class NodeTest extends FunSuite {
 
   test("Node should be a leaf") {
     val node = new Node
-    info(node.printParams)
+    info(node)
     assert(node.isLeaf == true)
   }
 
@@ -100,7 +100,7 @@ class ForestTest extends FunSuite {
 
   test("Some forest test") {
     val forest = new Forest(min_samples_split=100)
-    info(forest.printParams)
+    info(forest)
     forest.fit(train)
     val accuracy = forest.predictEval(evaluate)._2
     info("Accuracy = " + accuracy)

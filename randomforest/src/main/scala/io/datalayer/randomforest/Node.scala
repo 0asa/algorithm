@@ -3,14 +3,25 @@ package io.datalayer.randomforest
 import scala.collection.mutable
 import scala.util.Random
 
-//abstract class GenericNode(left: Option[GenericNode], right: Option[GenericNode])
-case class Split(attribute: Int, threshold: Double)
-
+/*
+  Companion object
+*/
 object Node {
   var nbclass: Int = 0
+  implicit def printParams(node: Node): String = {
+    node.printParams()
+  }
 }
 
-// Node class
+
+/*
+  Split class
+*/
+case class Split(attribute: Int, threshold: Double)
+
+/*
+  Node class
+*/
 class Node(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int = 2) {
 
   var left: Node = null
@@ -64,7 +75,10 @@ class Node(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int =
     1 - gi
   }
 
-  // Compute the gini impurity score
+  /*
+    Compute the gini impurity score
+    Currently not used
+  */
   def giniScore(p: Seq[Labeled], pl: Seq[Labeled], pr: Seq[Labeled]) : Double = {
     val gs: Double = p.length*gini(p) - (pl.length*gini(pl) + pr.length*gini(pr))
     gs/p.length
@@ -81,7 +95,10 @@ class Node(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int =
     - ig
   }
 
-  // Compute the information gain score
+  /*
+    Compute the information gain score
+    Currently not used
+  */
   def infogainScore(p: Seq[Labeled], pl: Seq[Labeled], pr: Seq[Labeled]) : Double = {
     val is: Double = p.length*infogain(p) - (pl.length*infogain(pl) + pr.length*infogain(pr))
     is/p.length
@@ -104,19 +121,6 @@ class Node(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int =
   def fit(): Unit = {
     split = findRandomSplit()
     setVotes()
-    /*
-    if (canSplit()) {
-      val partitions = samples.partition(i => i.input(split.attribute) < split.threshold)
-      left = new Node(max_features,max_depth,min_samples_split)
-      left.depth = depth + 1
-      left.samples = partitions._1
-      left.fit()
-      right = new Node(max_features,max_depth,min_samples_split)
-      right.depth = depth + 1
-      right.samples = partitions._2
-      right.fit()
-    }
-    */
   }
 
   def setVotes() = {
@@ -131,7 +135,6 @@ class Node(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int =
 
   def predict(x: Unlabeled): Array[Double] = {
     if (!isLeaf) {
-      // propagate until it reaches a leaf.
       if (x.input(split.attribute) < split.threshold) {
           left.predict(x)
         } else {
@@ -147,8 +150,6 @@ class Node(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int =
   def predict(x: Seq[Unlabeled]) = {}
 
   def display() {
-    //for (i:Int <- 0 until depth) print("   ")
-    //println("+ Depth: " + depth)
     if (split != null) {
       for (i:Int <- 0 until depth) print("   ")
       println("+ Split: " + split.attribute + " < " + split.threshold)
