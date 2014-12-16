@@ -14,7 +14,7 @@ class Forest(n_estimators: Int = 10, max_features: Int = 10, max_depth: Int = -1
     trees(i) = new Tree(max_features, max_depth, min_samples_split)
   }
 
-  def printParams() : String = {
+  private def printParams() : String = {
     val str_param:String = "n_estimators=" + n_estimators + ";" +
       "bootstrap=" + bootstrap + ";" +
       "max_features=" + max_features + ";" +

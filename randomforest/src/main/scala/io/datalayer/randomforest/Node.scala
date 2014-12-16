@@ -32,7 +32,7 @@ class Node(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int =
   var samples: Seq[Labeled] = null
   val nbclass:Int = Node.nbclass
 
-  def printParams() : String = {
+  private def printParams() : String = {
     val str_param:String = "max_features=" + max_features + ";" +
     "max_depth=" + max_depth + ";" +
     "min_samples_split=" + min_samples_split + ";"
