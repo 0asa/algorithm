@@ -46,6 +46,21 @@ class NodeTest extends FunSuite {
     assert(node.split !== null)
   }
 
+  test("Node canSplit() test") {
+    // A case where canSplit() should return true
+    val ntrue = new Node(min_samples_split=TestParams.ls_size-1)
+    ntrue.samples = train
+    ntrue.split = ntrue.findRandomSplit()
+    info(ntrue)
+    assert(ntrue.canSplit === true)
+    // A case where canSplit() should return false
+    val nfalse = new Node(min_samples_split=TestParams.ls_size+1)
+    nfalse.samples = train
+    nfalse.split = nfalse.findRandomSplit()
+    info(nfalse)
+    assert(nfalse.canSplit === false)
+  }
+
   test("Node findRandomSplit should find a split") {
     // The truth is it might not...
     // in which case split.attribute will be equal to -1
