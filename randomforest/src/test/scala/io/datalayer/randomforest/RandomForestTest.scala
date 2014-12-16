@@ -63,10 +63,12 @@ class TreeTest extends FunSuite {
   //val (x, y) = dataGenerator.genArray(40)
   val train = dataGenerator.genLabeled(TestParams.ls_size)
   val test = dataGenerator.genUnlabeled(TestParams.ts_size)
+  val evaluate = dataGenerator.genLabeled(TestParams.ls_size)
+
   test("Some tree test") {
     val tree = new Tree
     tree.fit(train)
-    val accuracy = tree.predictEval(train)._2
+    val accuracy = tree.predictEval(evaluate)._2
     info("Accuracy = " + accuracy)
     info("Error rate = " + (1 - accuracy))
     //tree.display
@@ -97,11 +99,12 @@ class ForestTest extends FunSuite {
   //val (x, y) = dataGenerator.genArray(40)
   val train = dataGenerator.genLabeled(TestParams.ls_size)
   val test = dataGenerator.genUnlabeled(TestParams.ts_size)
+  val evaluate = dataGenerator.genLabeled(TestParams.ls_size)
 
   test("Some forest test") {
     val forest = new Forest
     forest.fit(train)
-    val accuracy = forest.predictEval(train)._2
+    val accuracy = forest.predictEval(evaluate)._2
     info("Accuracy = " + accuracy)
     info("Error rate = " + (1 - accuracy))
     //forest.display
