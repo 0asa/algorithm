@@ -31,6 +31,41 @@ object StructureParams {
 }
 
 /*
+import org.scalameter.api._
+// Benchmark with scalameter.
+// It generates a png plot in the tmp folder.
+// Sample taken from:
+// https://github.com/scalameter/scalameter/blob/master/src/test/scala/org/scalameter/RangeBenchmarks.scala
+object RangeBenchmark
+extends PerformanceTest {
+
+  // configuration
+
+  lazy val executor = SeparateJvmsExecutor(Warmer.Default(), Aggregator.min, new Measurer.Default)
+  lazy val reporter = ChartReporter(ChartFactory.XYLine())
+  lazy val persistor = Persistor.None
+
+  // inputs
+
+  val sizes = Gen.range("size")(300000, 1500000, 300000)
+
+  val ranges = for {
+    size <- sizes
+  } yield 0 until size
+
+  // tests
+
+  performance of "Range" in {
+    measure method "map" in {
+      using(ranges) in {
+        r => r.map(_ + 1)
+      }
+    }
+  }
+}
+*/
+
+/*
  Some test with pure scala data structures
 */
 class ScalaStructureTest extends FunSuite {

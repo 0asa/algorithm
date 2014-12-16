@@ -4,14 +4,13 @@ version := "1.0"
 
 scalaVersion := "2.10.4"
 
-resolvers += "Sonatype OSS Snapshots" at
-"https://oss.sonatype.org/content/repositories/snapshots"
+//resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 
-libraryDependencies += "com.storm-enroute" %% "scalameter" % "0.6" % "test"
+// libraryDependencies += "com.storm-enroute" %% "scalameter" % "0.6" % "test"
 
-testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework")
+// testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework")
 
-parallelExecution in Test := false
+// parallelExecution in Test := false
 
 libraryDependencies  ++= Seq(
             // other dependencies here
