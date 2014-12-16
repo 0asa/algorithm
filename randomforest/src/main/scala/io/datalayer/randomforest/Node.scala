@@ -41,30 +41,24 @@ class Node( max_features: Int = 10,
     str_param
   }
 
-  def isLeaf() = {
-    if (left == null && right == null) {
-      true
-    } else {
-      false
-    }
+  def isLeaf(): Boolean = {
+    if (left == null && right == null) return true
+    return false
   }
 
   def canSplit(): Boolean = {
     if (max_depth > 0) {
       if (samples.length > min_samples_split && depth <= max_depth && split.attribute != -1) {
-        true
-      } else {
-        false
+        return true
       }
+      return false
     } else {
       if (samples.length > min_samples_split && split.attribute != -1) {
-        true
-      } else {
-        false
+        return true
       }
+      return false
     }
   }
-
 
   def gini(p: Seq[Labeled]): Double = {
     var gi:Double = 0.0

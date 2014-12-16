@@ -1,7 +1,7 @@
 package io.datalayer.randomforest
 
 /*
-Companion object
+  Companion object
 */
 object Forest {
   implicit def printParams(forest: Forest): String = {
