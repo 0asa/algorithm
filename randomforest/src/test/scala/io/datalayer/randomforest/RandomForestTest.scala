@@ -68,7 +68,7 @@ class TreeTest extends FunSuite {
 
   test("Some tree test") {
     val tree = new Tree
-    info(tree.printParams)
+    info(tree)
     tree.fit(train)
     val accuracy = tree.predictEval(evaluate)._2
     info("Accuracy = " + accuracy)
