@@ -21,12 +21,15 @@ class SparkTest extends FunSuite with ShouldMatchers {
 object TestParams {
   val ls_size = 1000
   val ts_size = 100
+  val train = dataGenerator.genLabeled(ls_size)
+  val test = dataGenerator.genUnlabeled(ts_size)
+  val evaluate = dataGenerator.genLabeled(ts_size)
 }
 
 class NodeTest extends FunSuite {
-  //val (x, y) = dataGenerator.genArray(40)
-  val train = dataGenerator.genLabeled(TestParams.ls_size)
-  val test = dataGenerator.genUnlabeled(TestParams.ts_size)
+
+  val train = TestParams.train
+  val test = TestParams.test
   val maps = train.groupBy(e => e.label.label)
   Node.nbclass = maps.size
 
@@ -56,10 +59,10 @@ class NodeTest extends FunSuite {
 }
 
 class TreeTest extends FunSuite {
-  //val (x, y) = dataGenerator.genArray(40)
-  val train = dataGenerator.genLabeled(TestParams.ls_size)
-  val test = dataGenerator.genUnlabeled(TestParams.ts_size)
-  val evaluate = dataGenerator.genLabeled(TestParams.ls_size)
+
+  val train = TestParams.train
+  val test = TestParams.test
+  val evaluate = TestParams.evaluate
 
   test("Some tree test") {
     val tree = new Tree(min_samples_split=100)
@@ -72,20 +75,12 @@ class TreeTest extends FunSuite {
     //tree.display
     // predict for one sample
     var prob = tree.predict(test(0))
-    //println(prob(0) + "|" + prob(1))
+
     // predict for many samples
     var proball = tree.predict(test)
-    //proball.foreach(e => println(e(0) + "|" + e(1)))
+
     val expectedClass = tree.predictLabel(test(0))
     val expectedClasses = tree.predictLabel(test)
-
-    /*prob.foreach(x => print(x + " "))
-    print("\n")
-    println(expectedClass)
-    print("\n------------\n")
-    proball.take(3).foreach(x => {x.foreach(y => print(y + " "))
-                          println("\n---")})
-    expectedClasses.take(3).foreach(println)*/
 
     assert(prob === proball(0))
     assert(expectedClass === expectedClasses(0))
@@ -94,10 +89,10 @@ class TreeTest extends FunSuite {
 
 
 class ForestTest extends FunSuite {
-  //val (x, y) = dataGenerator.genArray(40)
-  val train = dataGenerator.genLabeled(TestParams.ls_size)
-  val test = dataGenerator.genUnlabeled(TestParams.ts_size)
-  val evaluate = dataGenerator.genLabeled(TestParams.ls_size)
+
+  val train = TestParams.train
+  val test = TestParams.test
+  val evaluate = TestParams.evaluate
 
   test("Some forest test") {
     val forest = new Forest(min_samples_split=100)
@@ -109,37 +104,12 @@ class ForestTest extends FunSuite {
     //forest.display
     // predict for one sample
     var prob = forest.predict(test(0))
-    //println(prob(0) + "|" + prob(1))
+
     // predict for many samples
     var proball = forest.predict(test)
-    //proball.foreach(println)
-    //proball.foreach(e => println(e(0) + "|" + e(1)))
-    //proball.foreach(e => println(e.length))
 
     val expectedClass = forest.predictLabel(test(0))
     val expectedClasses = forest.predictLabel(test)
-
-    val trueClasses: Seq[Label] = for (e <- test) yield {
-      val a = e.input(0)
-      val b = e.input(1)
-      val y = if ((a+b) > 0 && (a+b) < 6) { 0 } else if ((a+b) >= 6 && (a+b) < 12) { 1 } else { 2 }
-      Label(y)
-    }
-    var error = 0.0
-    for (i <- 0 to (trueClasses.length - 1)) {
-      if (trueClasses(i) != expectedClasses(i)) {
-        error += 1.0
-      }
-    }
-    //println("Error rate: " + error/test.length)
-    assert( error/test.length < 0.5)
-    /*prob.foreach(x => print(x + " "))
-    print("\n")
-    println(expectedClass)
-    print("\n------------\n")
-    proball.take(3).foreach(x => {x.foreach(y => print(y + " "))
-      println("\n---")})
-    expectedClasses.take(3).foreach(println)*/
 
     assert(expectedClass === expectedClasses(0))
     assert(prob === proball(0))
@@ -148,14 +118,7 @@ class ForestTest extends FunSuite {
 
 class MainTest extends FunSuite {
   test("Some more test to test scala") {
-    /*
-    var dv = DenseVector.rand(10)
-    val part = dv.toArray.partition(ex => ex < 0.5)
-    println("part._1")
-    part._1.foreach(println)
-    println("part._2")
-    part._2.foreach(println)
-    */
+    // I sometimes use this to test things...
     assert(1 === 1)
   }
 }
