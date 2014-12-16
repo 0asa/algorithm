@@ -22,7 +22,9 @@ case class Split(attribute: Int, threshold: Double)
 /*
   Node class
 */
-class Node(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int = 2) {
+class Node( max_features: Int = 10,
+            max_depth: Int = -1,
+            min_samples_split: Int = 2) {
 
   var left: Node = null
   var right: Node = null

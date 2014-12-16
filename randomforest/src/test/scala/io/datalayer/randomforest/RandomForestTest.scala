@@ -62,9 +62,10 @@ class TreeTest extends FunSuite {
   val evaluate = dataGenerator.genLabeled(TestParams.ls_size)
 
   test("Some tree test") {
-    val tree = new Tree
+    val tree = new Tree(min_samples_split=100)
     info(tree)
     tree.fit(train)
+    info(tree)
     val accuracy = tree.predictEval(evaluate)._2
     info("Accuracy = " + accuracy)
     info("Error rate = " + (1 - accuracy))

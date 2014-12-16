@@ -1,13 +1,23 @@
 package io.datalayer.randomforest
 
+/*
+Companion object
+*/
 object Forest {
   implicit def printParams(forest: Forest): String = {
     forest.printParams()
   }
 }
 
-// Forest class: build a forest of trees.
-class Forest(n_estimators: Int = 10, max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int = 2, bootstrap: Boolean = false) extends Learner {
+
+/*
+  Forest class: build a forest of trees.
+*/
+class Forest( n_estimators: Int = 10,
+              max_features: Int = 10,
+              max_depth: Int = -1,
+              min_samples_split: Int = 2,
+              bootstrap: Boolean = false) extends Learner {
 
   var trees: Array[Tree] = new Array[Tree](n_estimators)
   for (i <- 0 to (trees.length - 1)) {
@@ -49,9 +59,7 @@ class Forest(n_estimators: Int = 10, max_features: Int = 10, max_depth: Int = -1
     var probas = new Array[Array[Double]](x.length)
     for (i <- 0 to (x.length - 1)) {
       probas(i) = predict(x(i))
-      //probas(i).foreach(println)
     }
-
     probas
   }
 

@@ -98,16 +98,20 @@ object Metrics {
 }
 
 object Main extends App {
+    println("Started...")
+    val t1 = System.currentTimeMillis
 
-    println("Started")
-
-    //val (x, y) = dataGenerator.genArray(10)
-    val train = dataGenerator.genLabeled(10)
+    val train = dataGenerator.genLabeled(100)
     val test = dataGenerator.genUnlabeled(10)
     val forest = new Forest()
     forest.fit(train)
     var probas = forest.predict(test)
-    probas.foreach(println)    
+    probas.foreach(println)
+
+    val t2 = System.currentTimeMillis
+    info("Time: " + (t2 - t1) + " ms")
+
+
 
     /*
     val conf = new SparkConf().setMaster("local").setAppName("Simple Application")
