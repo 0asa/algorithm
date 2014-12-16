@@ -36,11 +36,11 @@ class NodeTest extends FunSuite {
     assert(node.isLeaf == true)
   }
 
-  test("Node after fit should not be a leaf") {
+  test("Node split after fit should not be null") {
     val node = new Node
     node.samples = train
     node.fit()
-    assert(node.isLeaf === false)
+    assert(node.split !== null)
   }
 
   test("Node findRandomSplit should find a split") {
@@ -51,7 +51,7 @@ class NodeTest extends FunSuite {
     node.samples = train
     val split = node.findRandomSplit()
     assert(split.attribute >= -1 && split.attribute <= train(0).input.length)
-  }  
+  }
 
 }
 
