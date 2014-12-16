@@ -42,7 +42,7 @@ class Node(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int =
       } else {
         false
       }
-    } else {      
+    } else {
       if (x.length > min_samples_split && split.attribute != -1) {
         true
       } else {
@@ -127,18 +127,12 @@ class Node(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int =
   def predict(x: Unlabeled): Array[Double] = {
     if (!isLeaf) {
       // propagate until it reaches a leaf.
-      //println(split.attribute + " < " + split.threshold)
-      //println(x)
       if (x.input(split.attribute) < split.threshold) {
-          //println("going left")
           left.predict(x)
         } else {
-          //println("going right")
           right.predict(x)
         }
     } else {
-      // and return the votes
-      //println(votes(0) + " | " + votes(1))
       votes
     }
 
