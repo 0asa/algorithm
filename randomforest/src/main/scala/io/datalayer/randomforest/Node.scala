@@ -104,6 +104,7 @@ class Node(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int =
   def fit(): Unit = {
     split = findRandomSplit()
     setVotes()
+    /*
     if (canSplit()) {
       val partitions = samples.partition(i => i.input(split.attribute) < split.threshold)
       left = new Node(max_features,max_depth,min_samples_split)
@@ -115,6 +116,7 @@ class Node(max_features: Int = 10, max_depth: Int = -1, min_samples_split: Int =
       right.samples = partitions._2
       right.fit()
     }
+    */
   }
 
   def setVotes() = {
