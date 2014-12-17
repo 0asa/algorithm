@@ -49,7 +49,11 @@ class DataTest extends FunSuite {
     data.getAttribute
     data.getAttributes
     data.getValue
-    assert(true)
+    data.describe
+
+    assert(data.labeled == false)
+    assert(data.nb_attributes == 0)
+    assert(data.nb_objects == 0)
   }
 }
 

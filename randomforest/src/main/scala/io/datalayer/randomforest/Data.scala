@@ -10,6 +10,7 @@ case class Unlabeled(input: Seq[Float])
 trait DataDNA {
   var labeled:Boolean = false
   var nb_attributes:Int = 0
+  var nb_objects:Int = 0
   var nb_classes:Int = 0
   var inputs:Any = null
   var labels:Any = null
@@ -24,6 +25,8 @@ trait DataDNA {
   def getAttribute
   def getAttributes
   def getValue
+
+  def describe
 }
 
 class Data extends DataDNA {
@@ -37,6 +40,7 @@ class Data extends DataDNA {
   def getAttribute { println("Data getAttribute") }
   def getAttributes { println("Data getAttributes") }
   def getValue { println("Data getValue") }
+  def describe { println("Data describe") }
 }
 
 // Helper to generate dummy data
