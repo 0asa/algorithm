@@ -54,33 +54,28 @@ y(i) = if (a + b > 10) { 0 } else { 1 }
 }
 */
 
-def genLabeled(numInstances: Int = 10): Seq[Labeled] = {
+def genLabeled(numInstances: Int = 10, numFeatures: Int = 10): Seq[Labeled] = {
   val rand = new scala.util.Random
   val x: Seq[Labeled] = for (i:Int <- 0 until numInstances) yield {
     val a:Float = rand.nextInt(10)
     val b:Float = rand.nextInt(10)
     val c:Float = rand.nextInt(100)
-    val d:Float = rand.nextFloat()
-    val e:Float = rand.nextFloat()
-    val f:Float = rand.nextFloat()
-    val g:Float = rand.nextFloat()
+    val d = Seq.fill(numFeatures - 3)(rand.nextFloat())
+
     val y = if ((a+b) > 0 && (a+b) < 6) { 0 } else if ((a+b) >= 6 && (a+b) < 12) { 1 } else { 2 }
-    Labeled(Seq(a,b,c,d,e,f,g), Label(y))
+    Labeled(Seq(a,b,c)++d, Label(y))
   }
   x
 }
 
-def genUnlabeled(numInstances: Int = 10): Seq[Unlabeled] = {
+def genUnlabeled(numInstances: Int = 10, numFeatures: Int = 10): Seq[Unlabeled] = {
   val rand = new scala.util.Random
   val x: Seq[Unlabeled] = for (i:Int <- 0 until numInstances) yield {
     val a:Float = rand.nextInt(10)
     val b:Float = rand.nextInt(10)
     val c:Float = rand.nextInt(100)
-    val d:Float = rand.nextFloat()
-    val e:Float = rand.nextFloat()
-    val f:Float = rand.nextFloat()
-    val g:Float = rand.nextFloat()
-    Unlabeled(Seq(a,b,c,d,e,f,g))
+    val d = Seq.fill(numFeatures - 3)(rand.nextFloat())
+    Unlabeled(Seq(a,b,c)++d)
   }
   x
 }

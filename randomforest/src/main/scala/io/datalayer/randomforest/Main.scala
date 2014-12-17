@@ -15,8 +15,8 @@ object Main extends App {
 
     println("Started...")
     val t1 = System.currentTimeMillis
-    val train = dataGenerator.genLabeled(1000)
-    val test = dataGenerator.genLabeled(100)
+    val train = dataGenerator.genLabeled(1000, 10)
+    val test = dataGenerator.genLabeled(100, 10)
     val forest = new Forest(min_samples_split=5,n_estimators=500)
     forest.fit(train)
     println(forest)
