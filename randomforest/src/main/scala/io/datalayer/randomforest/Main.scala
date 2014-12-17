@@ -11,34 +11,19 @@ package io.datalayer.randomforest
 //import scala.util.Random
 //import breeze.linalg._
 
-// Helper to compute various metrics...
-// will be extend later...
-object Metrics {
-  def accuracy(pred: Seq[Label], labels: Seq[Label]): Double = {
-    pred.zip(labels).filter(x => x._1 == x._2).size.toDouble / pred.length
-  }
-
-  def auc() = {}
-  def entropy() = {}
-  def gini() = {}
-  def variance() = {}
-}
-
 object Main extends App {
+
     println("Started...")
     val t1 = System.currentTimeMillis
-
-    val train = dataGenerator.genLabeled(100)
-    val test = dataGenerator.genUnlabeled(10)
-    val forest = new Forest()
+    val train = dataGenerator.genLabeled(1000)
+    val test = dataGenerator.genLabeled(100)
+    val forest = new Forest(min_samples_split=5,n_estimators=500)
     forest.fit(train)
-    var probas = forest.predict(test)
-    probas.foreach(println)
-
+    println(forest)
+    val accuracy = forest.predictEval(test)._2
+    println("Accuracy = " + accuracy)
     val t2 = System.currentTimeMillis
     println("Time: " + (t2 - t1) + " ms")
-
-
 
     /*
     val conf = new SparkConf().setMaster("local").setAppName("Simple Application")
