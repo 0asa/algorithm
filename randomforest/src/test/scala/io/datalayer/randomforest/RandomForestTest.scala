@@ -4,19 +4,10 @@ import io.datalayer.randomforest._
 import breeze.linalg._
 import org.scalatest.FunSuite
 //import org.scalatest.ShouldMatchers
-/*
+
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
-
-class SparkTest extends FunSuite with ShouldMatchers {
-  test("Creating Spark Context") {
-    val conf = new SparkConf().setMaster("local").setAppName("Simple Application")
-    val sc = new SparkContext(conf)
-    assert(1 == 1)
-  }
-}
-*/
 
 object TestParams {
   val ls_size = 1000
@@ -24,6 +15,42 @@ object TestParams {
   val train = dataGenerator.genLabeled(ls_size)
   val test = dataGenerator.genUnlabeled(ts_size)
   val evaluate = dataGenerator.genLabeled(ts_size)
+}
+
+class SparkTest extends FunSuite {
+  test("Creating Spark Context") {
+    val conf = new SparkConf().setMaster("local[4]").setAppName("Simple Application")
+    val sc = new SparkContext(conf)
+    Thread sleep 5000
+    val rdd = sc.parallelize(TestParams.train)
+    Thread sleep 1000
+    rdd.foreach(println)
+    Thread sleep 1000
+    val coucou = rdd.map(i => i.input(1)*10)
+    Thread sleep 1000
+    coucou.foreach(println)
+    println("You now have 20 seconds left...")
+    Thread sleep 20000
+    println("Done. Byebye.")
+    sc.stop()
+    assert(1 == 1)
+  }
+}
+
+class DataTest extends FunSuite {
+  test("First DataDNA test") {
+    info("Going to be the coolest thing you've ever done!")
+    val data = new Data
+    data.load
+    data.loadCSV
+    data.partition
+    data.getObject
+    data.getObjects
+    data.getAttribute
+    data.getAttributes
+    data.getValue
+    assert(true)
+  }
 }
 
 class NodeTest extends FunSuite {

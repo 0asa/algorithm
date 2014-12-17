@@ -7,6 +7,38 @@ case class Label(label: Int)
 case class Labeled(input: Seq[Float], label: Label)
 case class Unlabeled(input: Seq[Float])
 
+trait DataDNA {
+  var labeled:Boolean = false
+  var nb_attributes:Int = 0
+  var nb_classes:Int = 0
+  var inputs:Any = null
+  var labels:Any = null
+
+  def load
+  def loadCSV
+
+  def partition
+
+  def getObject
+  def getObjects
+  def getAttribute
+  def getAttributes
+  def getValue
+}
+
+class Data extends DataDNA {
+  def load { println("Data load") }
+  def loadCSV { println("Data loadCSV") }
+
+  def partition { println("Data partition") }
+
+  def getObject { println("Data getObject") }
+  def getObjects { println("Data getObjects") }
+  def getAttribute { println("Data getAttribute") }
+  def getAttributes { println("Data getAttributes") }
+  def getValue { println("Data getValue") }
+}
+
 // Helper to generate dummy data
 // for testing purposes
 object dataGenerator {
