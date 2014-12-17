@@ -19,7 +19,7 @@ object Main extends App {
     val test = dataGenerator.genLabeled(100, 10)
     val forest = new Forest(min_samples_split=20,n_estimators=500)
     forest.fit(train)
-    println(forest)
+    println(Forest.printParams(forest))
     val accuracy = forest.predictEval(test)._2
     println("Accuracy = " + accuracy)
     val t2 = System.currentTimeMillis
