@@ -48,12 +48,12 @@ class Node( max_features: Int = 10,
 
   def canSplit(): Boolean = {
     if (max_depth > 0) {
-      if (samples.length > min_samples_split && depth <= max_depth && split.attribute != -1) {
+      if (samples.length > math.max(2,min_samples_split) && depth <= max_depth && split.attribute != -1) {
         return true
       }
       return false
     } else {
-      if (samples.length > min_samples_split && split.attribute != -1) {
+      if (samples.length > math.max(2,min_samples_split) && split.attribute != -1) {
         return true
       }
       return false
