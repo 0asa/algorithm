@@ -17,7 +17,7 @@ object Main extends App {
     val t1 = System.currentTimeMillis
     val train = dataGenerator.genLabeled(1000, 10)
     val test = dataGenerator.genLabeled(100, 10)
-    val forest = new Forest(min_samples_split=5,n_estimators=500)
+    val forest = new Forest(min_samples_split=20,n_estimators=500)
     forest.fit(train)
     println(forest)
     val accuracy = forest.predictEval(test)._2

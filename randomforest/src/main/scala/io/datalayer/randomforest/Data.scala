@@ -60,8 +60,7 @@ def genLabeled(numInstances: Int = 10, numFeatures: Int = 10): Seq[Labeled] = {
     val a:Float = rand.nextInt(10)
     val b:Float = rand.nextInt(10)
     val c:Float = rand.nextInt(100)
-    val d = Seq.fill(numFeatures - 3)(rand.nextFloat())
-
+    val d = Seq.fill(math.max(3,numFeatures) - 3)(rand.nextFloat())
     val y = if ((a+b) > 0 && (a+b) < 6) { 0 } else if ((a+b) >= 6 && (a+b) < 12) { 1 } else { 2 }
     Labeled(Seq(a,b,c)++d, Label(y))
   }
@@ -74,7 +73,7 @@ def genUnlabeled(numInstances: Int = 10, numFeatures: Int = 10): Seq[Unlabeled] 
     val a:Float = rand.nextInt(10)
     val b:Float = rand.nextInt(10)
     val c:Float = rand.nextInt(100)
-    val d = Seq.fill(numFeatures - 3)(rand.nextFloat())
+    val d = Seq.fill(math.max(3,numFeatures) - 3)(rand.nextFloat())
     Unlabeled(Seq(a,b,c)++d)
   }
   x
