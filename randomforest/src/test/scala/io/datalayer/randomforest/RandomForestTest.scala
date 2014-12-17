@@ -8,6 +8,7 @@ import org.scalatest.FunSuite
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
+import scala.language.implicitConversions
 
 object TestParams {
   val ls_size = 1000
@@ -41,7 +42,8 @@ class DataTest extends FunSuite {
   test("First DataDNA test") {
     info("Going to be the coolest thing you've ever done!")
     val data = new Data
-    data.load
+
+    data.load(Seq(5.0,4.0))
     data.loadCSV
     data.partition
     data.getObject

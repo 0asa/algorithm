@@ -1,5 +1,10 @@
 package io.datalayer.randomforest
 
+import org.apache.spark.SparkContext
+import org.apache.spark.mllib.linalg.Vectors
+import org.apache.spark.mllib.linalg.distributed.{IndexedRow, IndexedRowMatrix}
+import org.apache.spark.rdd._
+
 /*
   A few temporary classes to handle data...
 */
@@ -7,7 +12,9 @@ case class Label(label: Int)
 case class Labeled(input: Seq[Float], label: Label)
 case class Unlabeled(input: Seq[Float])
 
-trait DataDNA {
+trait DataDNA[T] {
+  implicit def toType(i: Any) : T = {i.asInstanceOf[T]}
+
   var labeled:Boolean = false
   var nb_attributes:Int = 0
   var nb_objects:Int = 0
@@ -15,7 +22,7 @@ trait DataDNA {
   var inputs:Any = null
   var labels:Any = null
 
-  def load
+  def load(dat:Any)
   def loadCSV
 
   def partition
@@ -29,8 +36,10 @@ trait DataDNA {
   def describe
 }
 
-class Data extends DataDNA {
-  def load { println("Data load") }
+class Data extends DataDNA[Seq[Double]] {
+  def load(d: Any) {
+    d.foreach(println)
+  }
   def loadCSV { println("Data loadCSV") }
 
   def partition { println("Data partition") }
