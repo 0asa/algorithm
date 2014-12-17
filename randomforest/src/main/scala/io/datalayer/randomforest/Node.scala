@@ -156,7 +156,7 @@ class Node( max_features: Int = 10,
     } else {
       if (votes != null) {
         for (i:Int <- 0 until depth) print("   ")
-        println(votes(0) + " | " + votes(1))
+        println(votes.mkString(" | "))
       }
     }
   }
