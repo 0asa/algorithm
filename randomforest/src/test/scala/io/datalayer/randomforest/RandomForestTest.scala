@@ -49,15 +49,16 @@ class DataTest extends FunSuite {
 
     //data.loadCSV
     //data.partition
-    data.getObject(1)
-    data.getObjects(Seq(0,1))
-    data.getAttribute
-    data.getAttributes
-    data.getLabel(1)
-    data.getLabels(Seq(0,1))
-    data.getValue(0,0)
+
+    data.getAttribute(1)
+    data.getAttributes(Seq(0,1))
     data.describe
 
+    assert(data.getObjects(Seq(0,1)) == Seq(Seq(1.0,1.1),Seq(2.0,2.1)))
+    assert(data.getObject(1) == Seq(Seq(2.0,2.1)))
+    assert(data.getLabels(Seq(0,1)) == Seq(0.0,0.1))
+    assert(data.getLabel(1) == Seq(0.1))
+    assert(data.getValue(0,0) == 1.0)
     assert(data.labeled == true)
     assert(data.nb_attributes == 2)
     assert(data.nb_objects == 3)

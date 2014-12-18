@@ -35,8 +35,8 @@ trait DataDNA {
   def getObject(index : Int) : TX = { getObjects(Traversable(index)) }
   def getObjects(indexes : Traversable[Int]) : TX
 
-  def getAttribute
-  def getAttributes
+  def getAttribute(index : Int) : TX = { getAttributes(Traversable(index)) }
+  def getAttributes(indexes : Traversable[Int]) : TX
 
   def getLabel(index : Int) : TY = { getLabels(Traversable(index)) }
   def getLabels(indexes : Traversable[Int]) : TY
@@ -80,8 +80,11 @@ class Data extends DataDNA {
     indexes.map{i => inputs(i)}.toSeq
   }
 
-  def getAttribute { println("Data getAttribute") }
-  def getAttributes { println("Data getAttributes") }
+
+  def getAttributes(indexes : Traversable[Int]) : TX = {
+    //indexes.map(i => i.input(att))
+    Seq(Seq(1.0))
+  }
 
   def getLabels(indexes : Traversable[Int]) : TY = {
     indexes.map{i => labels(i)}.toSeq
