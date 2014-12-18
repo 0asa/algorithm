@@ -2,6 +2,8 @@ package io.datalayer.randomforest
 
 import io.datalayer.randomforest._
 import breeze.linalg._
+import org.apache.spark.mllib.linalg.Vectors
+import org.apache.spark.mllib.linalg.distributed.{IndexedRow, IndexedRowMatrix}
 import org.scalatest.FunSuite
 //import org.scalatest.ShouldMatchers
 
@@ -71,6 +73,16 @@ class DataTest extends FunSuite {
     assert(data.labeled == true)
     assert(data.nb_attributes == 2)
     assert(data.nb_objects == 3)
+  }
+
+  test("DataRDD test") {
+    info("Serious stuff going on…")
+
+    val sparkConf = new SparkConf().setMaster("local[2]").setAppName("DataRDD Application")
+    val sc = new SparkContext(sparkConf)
+    val data = new DataRDD(sc)
+    val matrix = new IndexedRowMatrix(sc.parallelize(Array(IndexedRow(0,Vectors.dense(Array[Double](0.0, 1.1))))))
+    data.load(matrix)
   }
 }
 

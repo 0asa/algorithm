@@ -1,10 +1,11 @@
 package io.datalayer.randomforest
 
 
-/*import org.apache.spark.SparkContext
+import org.apache.spark.SparkContext
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.linalg.distributed.{IndexedRow, IndexedRowMatrix}
-import org.apache.spark.rdd._*/
+import org.apache.spark.mllib.linalg.distributed.DistributedMatrix
+import org.apache.spark.rdd._
 import Math.pow
 
 /*
@@ -119,6 +120,83 @@ class Data extends DataDNA {
     }
   }
 
+}
+
+class DataRDD(sc: SparkContext) extends DataDNA {
+  type data_type = Double
+  type TX = IndexedRowMatrix
+  type TY = RDD[data_type]
+  var inputs: TX = new IndexedRowMatrix(sc.parallelize(Array(IndexedRow(0,Vectors.dense(Array[data_type](0.0))))))
+  var labels: TY = sc.emptyRDD[data_type]
+
+  def load(X: TX, Y: TY = sc.emptyRDD[data_type]) {
+    // TODO: add some check somewhere
+    // such as X.length == Y.length
+
+    inputs = X
+    nb_objects = X.numRows().toInt
+    nb_attributes = X.numCols().toInt
+
+    // Check if we have a labels
+    if (Y.count > 0) {
+      labeled = true
+      labels = Y
+      nb_classes = labels.distinct.count.toInt
+    } else {
+      labeled = false
+      labels = sc.emptyRDD[data_type]
+    }
+  }
+
+  //def loadCSV { println("Data loadCSV") }
+
+  def split(attr: Int, thr: data_type): (DataRDD, DataRDD) = {
+//    val partOne = new Data
+//    val partTwo = new Data
+//    val zipped = inputs.zip(labels).partition(i => i._1(attr) < thr)
+//    partOne.load(zipped._1.unzip._1, zipped._1.unzip._2)
+//    partTwo.load(zipped._2.unzip._1, zipped._2.unzip._2)
+//    (partOne, partTwo)
+    (this, this)
+  }
+
+  def getObjects(indexes : Traversable[Int]) : TX = {
+//    indexes.map{i => inputs(i)}.toSeq
+    inputs
+  }
+
+
+  def getAttributes(indexes : Traversable[Int]) : TX = {
+//    (for (i <- indexes) yield { inputs.map(_(i)) }).toSeq
+  inputs
+  }
+
+  def getLabels(indexes : Traversable[Int]) : TY = {
+//    indexes.map{i => labels(i)}.toSeq
+    labels
+  }
+
+  def getValue(i: Int, j: Int) : data_type = { 0.0 }
+
+  def describe {
+//    if (inputs.isEmpty) {
+//      println("There is no data.")
+//      return
+//    }
+
+//    println("\nData description :")
+//    println("------------------")
+//    println("Is there labels ?: " + labeled)
+//    println("Number of objects: " + inputs.length)
+//    println("Number of attributes: " + inputs(0).length)
+//
+//    for (i <- 0 to (inputs(0).length - 1) ) {
+//      println("Attribute " + i + " :")
+//      val mean = inputs.map(_(i)).reduce(_ + _) / inputs.length
+//      println("Mean: " + mean)
+//      println("Sample Variance: " + inputs.map( (x:Seq[Double]) => Math.pow(x(i) - mean, 2)).sum /(inputs.length - 1) )
+//    }
+  }
 }
 
 // Helper to generate dummy data
