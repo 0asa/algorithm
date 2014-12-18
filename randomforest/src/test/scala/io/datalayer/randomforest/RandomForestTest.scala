@@ -48,7 +48,11 @@ class DataTest extends FunSuite {
     println(data.labels)
 
     //data.loadCSV
-    //data.partition
+    
+    // Test split
+    val splited = data.split(0, 1.5)
+    println(splited._1.labels)
+    println(splited._2.labels)
 
     data.getAttribute(1)
     data.getAttributes(Seq(0,1))

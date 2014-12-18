@@ -30,7 +30,7 @@ trait DataDNA {
   def load(X:TX, Y:TY)
   //def loadCSV
 
-  //def partition(p: (A) => Boolean): ((A,T), (A,T))
+  def split(attr: Int, thr: data_type): (DataDNA, DataDNA)
 
   def getObject(index : Int) : TX = { getObjects(Traversable(index)) }
   def getObjects(indexes : Traversable[Int]) : TX
@@ -74,7 +74,14 @@ class Data extends DataDNA {
 
   //def loadCSV { println("Data loadCSV") }
 
-  //def partition(p: (A) => Boolean): ((A,T), (A,T)) = {}
+  def split(attr: Int, thr: data_type): (Data, Data) = {
+    val partOne = new Data
+    val partTwo = new Data
+    val zipped = inputs.zip(labels).partition(i => i._1(attr) < thr)
+    partOne.load(zipped._1.unzip._1, zipped._1.unzip._2)
+    partTwo.load(zipped._2.unzip._1, zipped._2.unzip._2)
+    (partOne, partTwo)
+  }
 
   def getObjects(indexes : Traversable[Int]) : TX = {
     indexes.map{i => inputs(i)}.toSeq
