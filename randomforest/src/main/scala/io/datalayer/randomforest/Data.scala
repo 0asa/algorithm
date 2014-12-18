@@ -28,7 +28,7 @@ trait DataDNA {
   var labels:TY
 
   def load(X:TX, Y:TY)
-  def loadCSV
+  //def loadCSV
 
   //def partition(p: (A) => Boolean): ((A,T), (A,T))
 
@@ -54,19 +54,25 @@ class Data extends DataDNA {
   var labels: TY = Seq.empty
 
   def load(X: TX, Y: TY = Seq.empty) {
+    // TODO: add some check somewhere
+    // such as X.length == Y.length
+
     inputs = X
+    nb_objects = X.length
+    nb_attributes = X(0).length
 
     // Check if we have a labels
     if (Y.size != 0) {
       labeled = true
       labels = Y
+      nb_classes = labels.distinct.length
     } else {
       labeled = false
       labels = Seq.empty
     }
   }
 
-  def loadCSV { println("Data loadCSV") }
+  //def loadCSV { println("Data loadCSV") }
 
   //def partition(p: (A) => Boolean): ((A,T), (A,T)) = {}
 
