@@ -17,6 +17,7 @@ case class Unlabeled(input: Seq[Float])
 
 trait DataDNA {
   //implicit def toType(i: Any) : T = {i.asInstanceOf[T]}
+  type data_type
   type TX
   type TY
   var labeled:Boolean = false
@@ -40,14 +41,15 @@ trait DataDNA {
   def getLabel(index : Int) : TY = { getLabels(Traversable(index)) }
   def getLabels(indexes : Traversable[Int]) : TY
 
-  def getValue
+  def getValue(i: Int, j: Int) : data_type
 
   def describe
 }
 
 class Data extends DataDNA {
-  type TX = Seq[Seq[Double]]
-  type TY = Seq[Double]
+  type data_type = Double
+  type TX = Seq[Seq[data_type]]
+  type TY = Seq[data_type]
   var inputs: TX = Seq.empty
   var labels: TY = Seq.empty
 
@@ -78,7 +80,7 @@ class Data extends DataDNA {
   def getLabels(indexes : Traversable[Int]) : TY = {
     indexes.map{i => labels(i)}.toSeq
   }
-  def getValue { println("Data getValue") }
+  def getValue(i: Int, j: Int) : data_type = { inputs(i)(j) }
   def describe { println("Data describe") }
 }
 

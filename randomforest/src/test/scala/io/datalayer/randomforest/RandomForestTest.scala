@@ -56,7 +56,7 @@ class DataTest extends FunSuite {
     data.getAttributes
     data.getLabel(1)
     data.getLabels(Seq(0,1))
-    data.getValue
+    data.getValue(0,0)
     data.describe
 
     assert(data.labeled == true)
