@@ -43,17 +43,19 @@ class DataTest extends FunSuite {
     info("Going to be the coolest thing you've ever done!")
     val data = new Data
 
-    data.load(Seq(Seq(5.0,4.0)))
+    data.load(Seq(Seq(1.0,1.1),Seq(2.0,2.1),Seq(3.0,3.1)))
     data.inputs.foreach(println)
-    data.load(Seq(Seq(5.0,4.0)), Seq(4.5))
+    data.load(Seq(Seq(1.0,1.1),Seq(2.0,2.1),Seq(3.0,3.1)), Seq(0.0,0.1,0.2,0.5))
     println(data.labels)
 
     data.loadCSV
-    data.partition
-    data.getObject
-    data.getObjects
+    //data.partition
+    data.getObject(1)
+    data.getObjects(Seq(0,1))
     data.getAttribute
     data.getAttributes
+    data.getLabel(1)
+    data.getLabels(Seq(0,1))
     data.getValue
     data.describe
 

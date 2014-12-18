@@ -17,36 +17,41 @@ case class Unlabeled(input: Seq[Float])
 
 trait DataDNA {
   //implicit def toType(i: Any) : T = {i.asInstanceOf[T]}
-  type A
-  type T
+  type TX
+  type TY
   var labeled:Boolean = false
   var nb_attributes:Int = 0
   var nb_objects:Int = 0
   var nb_classes:Int = 0
-  var inputs:A
-  var labels:T
+  var inputs:TX
+  var labels:TY
 
-  def load(X:A, Y:T)
+  def load(X:TX, Y:TY)
   def loadCSV
 
-  def partition(p: (A) => Boolean): ((A,T), (A,T))
+  //def partition(p: (A) => Boolean): ((A,T), (A,T))
 
-  def getObject
-  def getObjects
+  def getObject(index : Int) : TX = { getObjects(Traversable(index)) }
+  def getObjects(indexes : Traversable[Int]) : TX
+
   def getAttribute
   def getAttributes
+
+  def getLabel(index : Int) : TY = { getLabels(Traversable(index)) }
+  def getLabels(indexes : Traversable[Int]) : TY
+
   def getValue
 
   def describe
 }
 
 class Data extends DataDNA {
-  type A = Seq[Seq[Double]]
-  type T = Seq[Double]
-  var inputs: A = Seq.empty
-  var labels: T = Seq.empty
+  type TX = Seq[Seq[Double]]
+  type TY = Seq[Double]
+  var inputs: TX = Seq.empty
+  var labels: TY = Seq.empty
 
-  def load(X: A, Y: T = Seq.empty) {
+  def load(X: TX, Y: TY = Seq.empty) {
     inputs = X
 
     // Check if we have a labels
@@ -61,14 +66,18 @@ class Data extends DataDNA {
 
   def loadCSV { println("Data loadCSV") }
 
-  def partition(p: (A) => Boolean): ((A,T), (A,T)) = {
-    //A
+  //def partition(p: (A) => Boolean): ((A,T), (A,T)) = {}
+
+  def getObjects(indexes : Traversable[Int]) : TX = {
+    indexes.map{i => inputs(i)}.toSeq
   }
 
-  def getObject { println("Data getObject") }
-  def getObjects { println("Data getObjects") }
   def getAttribute { println("Data getAttribute") }
   def getAttributes { println("Data getAttributes") }
+
+  def getLabels(indexes : Traversable[Int]) : TY = {
+    indexes.map{i => labels(i)}.toSeq
+  }
   def getValue { println("Data getValue") }
   def describe { println("Data describe") }
 }
