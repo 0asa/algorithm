@@ -89,8 +89,8 @@ class Data extends DataDNA {
 
 
   def getAttributes(indexes : Traversable[Int]) : TX = {
-    //indexes.map(i => i.input(att))
-    Seq(Seq(1.0))
+    (for (i <- indexes) yield { inputs.map(_(i)) }).toSeq
+
   }
 
   def getLabels(indexes : Traversable[Int]) : TY = {

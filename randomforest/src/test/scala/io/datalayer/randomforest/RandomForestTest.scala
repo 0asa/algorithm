@@ -48,20 +48,23 @@ class DataTest extends FunSuite {
     println(data.labels)
 
     //data.loadCSV
-    
+
     // Test split
     val splited = data.split(0, 1.5)
     println(splited._1.labels)
     println(splited._2.labels)
 
-    data.getAttribute(1)
-    data.getAttributes(Seq(0,1))
     data.describe
+
+    assert(data.getAttribute(0) == Seq(Seq(1.0,2.0,3.0)))
+    assert(data.getAttributes(Seq(0,1)) == Seq(Seq(1.0,2.0,3.0),Seq(1.1,2.1,3.1)))
 
     assert(data.getObjects(Seq(0,1)) == Seq(Seq(1.0,1.1),Seq(2.0,2.1)))
     assert(data.getObject(1) == Seq(Seq(2.0,2.1)))
+
     assert(data.getLabels(Seq(0,1)) == Seq(0.0,0.1))
     assert(data.getLabel(1) == Seq(0.1))
+    
     assert(data.getValue(0,0) == 1.0)
     assert(data.labeled == true)
     assert(data.nb_attributes == 2)
