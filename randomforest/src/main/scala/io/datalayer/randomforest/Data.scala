@@ -5,6 +5,7 @@ package io.datalayer.randomforest
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.linalg.distributed.{IndexedRow, IndexedRowMatrix}
 import org.apache.spark.rdd._*/
+import Math.pow
 
 /*
   A few temporary classes to handle data...
@@ -109,6 +110,13 @@ class Data extends DataDNA {
     println("Is there labels ?: " + labeled)
     println("Number of objects: " + inputs.length)
     println("Number of attributes: " + inputs(0).length)
+
+    for (i <- 0 to (inputs(0).length - 1) ) {
+      println("Attribute " + i + " :")
+      val mean = inputs.map(_(i)).reduce(_ + _) / inputs.length
+      println("Mean: " + mean)
+      println("Sample Variance: " + inputs.map( (x:Seq[Double]) => Math.pow(x(i) - mean, 2)).sum /(inputs.length - 1) )
+    }
   }
 
 }

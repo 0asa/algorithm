@@ -57,7 +57,7 @@ class DataTest extends FunSuite {
     data.describe
 
     assert(splited._1.labels == Seq(0.0))
-    
+
     assert(data.getAttribute(0) == Seq(Seq(1.0,2.0,3.0)))
     assert(data.getAttributes(Seq(0,1)) == Seq(Seq(1.0,2.0,3.0),Seq(1.1,2.1,3.1)))
 
