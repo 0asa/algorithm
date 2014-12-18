@@ -1,9 +1,10 @@
 package io.datalayer.randomforest
 
-import org.apache.spark.SparkContext
+
+/*import org.apache.spark.SparkContext
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.linalg.distributed.{IndexedRow, IndexedRowMatrix}
-import org.apache.spark.rdd._
+import org.apache.spark.rdd._*/
 
 /*
   A few temporary classes to handle data...
@@ -12,17 +13,19 @@ case class Label(label: Int)
 case class Labeled(input: Seq[Float], label: Label)
 case class Unlabeled(input: Seq[Float])
 
-trait DataDNA[T] {
-  implicit def toType(i: Any) : T = {i.asInstanceOf[T]}
 
+
+trait DataDNA {
+  //implicit def toType(i: Any) : T = {i.asInstanceOf[T]}
+  type T
   var labeled:Boolean = false
   var nb_attributes:Int = 0
   var nb_objects:Int = 0
   var nb_classes:Int = 0
-  var inputs:Any = null
-  var labels:Any = null
+  var inputs:T
+  var labels:T
 
-  def load(dat:Any)
+  def load(dat:T)
   def loadCSV
 
   def partition
@@ -36,8 +39,12 @@ trait DataDNA[T] {
   def describe
 }
 
-class Data extends DataDNA[Seq[Double]] {
-  def load(d: Any) {
+class Data extends DataDNA {
+  type T = Seq[Double]
+  var inputs: T = null
+  var labels: T = null
+
+  def load(d: T) {
     d.foreach(println)
   }
   def loadCSV { println("Data loadCSV") }
@@ -49,7 +56,7 @@ class Data extends DataDNA[Seq[Double]] {
   def getAttribute { println("Data getAttribute") }
   def getAttributes { println("Data getAttributes") }
   def getValue { println("Data getValue") }
-  def describe { println("Data describe") }
+  def describe { println(inputs) }
 }
 
 // Helper to generate dummy data
