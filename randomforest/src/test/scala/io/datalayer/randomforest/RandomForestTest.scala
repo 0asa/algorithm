@@ -41,6 +41,14 @@ class SparkTest extends FunSuite {
 }
 
 class DataTest extends FunSuite {
+
+  test("Input and labels with different sizes") {
+    val data = new Data
+    intercept[IncompatibleDataTypeException]{
+      data.load(Seq(Seq(1.0,1.1),Seq(2.0,2.1),Seq(3.0,3.1)), Seq(0.0,0.1))
+    }
+  }
+
   test("First DataDNA test") {
     info("Going to be the coolest thing you've ever done!")
     val data = new Data
@@ -68,7 +76,7 @@ class DataTest extends FunSuite {
 
     assert(data.getLabels(Seq(0,1)) == Seq(0.0,0.1))
     assert(data.getLabel(1) == Seq(0.1))
-    
+
     assert(data.getValue(0,0) == 1.0)
     assert(data.labeled == true)
     assert(data.nb_attributes == 2)

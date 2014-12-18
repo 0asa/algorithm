@@ -15,7 +15,7 @@ case class Label(label: Int)
 case class Labeled(input: Seq[Float], label: Label)
 case class Unlabeled(input: Seq[Float])
 
-
+case class IncompatibleDataTypeException(message: String) extends Exception(message)
 
 trait DataDNA {
   //implicit def toType(i: Any) : T = {i.asInstanceOf[T]}
@@ -57,7 +57,6 @@ class Data extends DataDNA {
 
   def load(X: TX, Y: TY = Seq.empty) {
     // TODO: add some check somewhere
-    // such as X.length == Y.length
 
     inputs = X
     nb_objects = X.length
@@ -65,6 +64,7 @@ class Data extends DataDNA {
 
     // Check if we have a labels
     if (Y.size != 0) {
+      if (X.length != Y.length) throw IncompatibleDataTypeException(s"Inputs and labels have different size: ${X.length} != ${Y.length}")
       labeled = true
       labels = Y
       nb_classes = labels.distinct.length
