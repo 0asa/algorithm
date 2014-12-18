@@ -97,7 +97,20 @@ class Data extends DataDNA {
     indexes.map{i => labels(i)}.toSeq
   }
   def getValue(i: Int, j: Int) : data_type = { inputs(i)(j) }
-  def describe { println("Data describe") }
+
+  def describe {
+    if (inputs.isEmpty) {
+      println("There is no data.")
+      return
+    }
+
+    println("\nData description :")
+    println("------------------")
+    println("Is there labels ?: " + labeled)
+    println("Number of objects: " + inputs.length)
+    println("Number of attributes: " + inputs(0).length)
+  }
+
 }
 
 // Helper to generate dummy data
