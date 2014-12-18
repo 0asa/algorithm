@@ -43,12 +43,12 @@ class DataTest extends FunSuite {
     info("Going to be the coolest thing you've ever done!")
     val data = new Data
     //data.load(Seq(Seq(1.0,1.1),Seq(2.0,2.1),Seq(3.0,3.1)))
-    data.load(Seq(Seq(1.0,1.1),Seq(2.0,2.1),Seq(3.0,3.1)), Seq(0.0,0.1,0.2,0.5))
+    data.load(Seq(Seq(1.0,1.1),Seq(2.0,2.1),Seq(3.0,3.1)), Seq(0.0,0.1,0.2))
     data.inputs.foreach(println)
     println(data.labels)
 
     //data.loadCSV
-    
+
     // Test split
     val splited = data.split(0, 1.5)
     println(splited._1.labels)
