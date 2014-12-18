@@ -43,7 +43,11 @@ class DataTest extends FunSuite {
     info("Going to be the coolest thing you've ever done!")
     val data = new Data
 
-    data.load(Seq(5.0,4.0))
+    data.load(Seq(Seq(5.0,4.0)))
+    data.inputs.foreach(println)
+    data.load(Seq(Seq(5.0,4.0)), Seq(4.5))
+    println(data.labels)
+
     data.loadCSV
     data.partition
     data.getObject
@@ -53,7 +57,7 @@ class DataTest extends FunSuite {
     data.getValue
     data.describe
 
-    assert(data.labeled == false)
+    assert(data.labeled == true)
     assert(data.nb_attributes == 0)
     assert(data.nb_objects == 0)
   }

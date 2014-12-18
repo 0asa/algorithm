@@ -17,18 +17,19 @@ case class Unlabeled(input: Seq[Float])
 
 trait DataDNA {
   //implicit def toType(i: Any) : T = {i.asInstanceOf[T]}
+  type A
   type T
   var labeled:Boolean = false
   var nb_attributes:Int = 0
   var nb_objects:Int = 0
   var nb_classes:Int = 0
-  var inputs:T
+  var inputs:A
   var labels:T
 
-  def load(dat:T)
+  def load(X:A, Y:T)
   def loadCSV
 
-  def partition
+  def partition(p: (A) => Boolean): ((A,T), (A,T))
 
   def getObject
   def getObjects
@@ -40,23 +41,36 @@ trait DataDNA {
 }
 
 class Data extends DataDNA {
+  type A = Seq[Seq[Double]]
   type T = Seq[Double]
-  var inputs: T = null
-  var labels: T = null
+  var inputs: A = Seq.empty
+  var labels: T = Seq.empty
 
-  def load(d: T) {
-    d.foreach(println)
+  def load(X: A, Y: T = Seq.empty) {
+    inputs = X
+
+    // Check if we have a labels
+    if (Y.size != 0) {
+      labeled = true
+      labels = Y
+    } else {
+      labeled = false
+      labels = Seq.empty
+    }
   }
+
   def loadCSV { println("Data loadCSV") }
 
-  def partition { println("Data partition") }
+  def partition(p: (A) => Boolean): ((A,T), (A,T)) = {
+    //A
+  }
 
   def getObject { println("Data getObject") }
   def getObjects { println("Data getObjects") }
   def getAttribute { println("Data getAttribute") }
   def getAttributes { println("Data getAttributes") }
   def getValue { println("Data getValue") }
-  def describe { println(inputs) }
+  def describe { println("Data describe") }
 }
 
 // Helper to generate dummy data
