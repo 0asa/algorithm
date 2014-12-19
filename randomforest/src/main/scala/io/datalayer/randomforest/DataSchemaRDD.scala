@@ -7,6 +7,7 @@ import org.apache.spark.sql.SchemaRDD
 /**
  * Created by manuel on 19/12/14.
  */
+
 class DataSchemaRDD(sc: SparkContext) extends DataDNA {
   type data_type = Double
   type TX = SchemaRDD
@@ -15,17 +16,24 @@ class DataSchemaRDD(sc: SparkContext) extends DataDNA {
   val sqlContext = new org.apache.spark.sql.SQLContext(sc)
   import sqlContext.createSchemaRDD
 
-  case class Object(obj: Seq[data_type])
+  case class Object(obj: Array[data_type])
 
-  var inputs: TX = sqlC.createSchemaRDD(sc.parallelize(Array[Object](Object(Seq[data_type](0.0)))))
+  var inputs: TX = sqlContext.createSchemaRDD(sc.parallelize(Array[Object](Object(Array[data_type](0.0)))))
   var labels: TY = sc.emptyRDD[(data_type, Long)]
 
-  def load(X: TX, Y: TY = sc.emptyRDD[data_type]) {
+  def load(X: TX, Y: TY = sc.emptyRDD[(data_type, Long)]) {
     println("SchemaRDD does not support loading from scala object, only from CSV file.")
   }
 
-  def loadCSV(uri: String) = {
-    println("Data loadCSV")
+  def loadCSV(uri: String, label: Int) = {
+    val rawData = sc.textFile(uri).map(_.split(" ").map(_.toDouble))
+
+    if (label > -1) {
+      labeled = true
+      labels = rawData.zipWithIndex.map{ case (o:Array[Double], i:Long) => o(label).->[Long](i) }
+    }
+    rawData.map{ case (o: Array[Double]) => Object(o.drop(label)) }.registerTempTable("inputs")
+    inputs = sqlContext.sql("SELECT * FROM inputs")
   }
 
   def split(attr: Int, thr: data_type): (DataSchemaRDD, DataSchemaRDD) = {
