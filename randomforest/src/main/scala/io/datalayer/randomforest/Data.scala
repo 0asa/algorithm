@@ -30,7 +30,7 @@ trait DataDNA {
   var labels:TY
 
   def load(X:TX, Y:TY)
-  def loadCSV(uri: String)
+  def loadCSV(uri: String, label: Int)
 
   def split(attr: Int, thr: data_type): (DataDNA, DataDNA)
 
