@@ -74,7 +74,7 @@ class Data extends DataDNA {
     }
   }
 
-  def loadCSV(uri: String) = { println("Data loadCSV") }
+  def loadCSV(uri: String, label: Int) = { println("Data loadCSV") }
 
   def split(attr: Int, thr: data_type): (Data, Data) = {
     val partOne = new Data
@@ -148,7 +148,7 @@ class DataRDD(sc: SparkContext) extends DataDNA {
     }
   }
 
-  def loadCSV(uri: String) = { println("Data loadCSV") }
+  def loadCSV(uri: String, label: Int) = { println("Data loadCSV") }
 
   def split(attr: Int, thr: data_type): (DataRDD, DataRDD) = {
 //    val partOne = new Data
