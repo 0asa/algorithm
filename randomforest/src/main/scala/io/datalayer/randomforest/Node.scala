@@ -17,7 +17,7 @@ object Node {
 /*
   Split class
 */
-case class Split(attribute: Int, threshold: Double)
+case class Split(attribute: Int = -1, threshold: Double = -1, var score: Double = -1)
 
 /*
   Node class
@@ -100,6 +100,25 @@ class Node( max_features: Int = 10,
     is/p.length
   }
 
+  def findKRandomSplit(): Split = {
+    val score_max:Double = -1.0
+    var ksplits:Vector[Split] = Vector.empty
+    var s = Split()
+    for (i <- 0 until math.min(max_features,samples(0).input.length)) {
+      //println(i)
+      s = findRandomSplit()
+      if (s.attribute != -1)
+        updateSplitScore(s)
+      ksplits = ksplits :+ s
+    }
+    ksplits.maxBy(_.score)
+  }
+
+  def updateSplitScore(s: Split, scorer:(Seq[Labeled], Seq[Labeled], Seq[Labeled]) => Double = infogainScore) {
+    val part = samples.partition(i => i.input(s.attribute) < s.threshold)
+    s.score = scorer(samples,part._1,part._2)
+  }
+
   def findRandomSplit(): Split = {
     val rand = new Random
     var att = Random.nextInt(samples(0).input.length)
@@ -114,8 +133,8 @@ class Node( max_features: Int = 10,
     Split(att,th)
   }
 
-  def fit(): Unit = {
-    split = findRandomSplit()
+  def fit(): Unit = {    
+    split = findKRandomSplit()
     setVotes()
   }
 

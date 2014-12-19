@@ -139,6 +139,13 @@ class NodeTest extends FunSuite {
     assert(split.attribute >= -1 && split.attribute <= train(0).input.length)
   }
 
+  test("Node findKRandomSplit") {
+    val node = new Node(max_features=1)
+    node.samples = train
+    val split = node.findKRandomSplit()
+    assert(true)
+  }
+
 }
 
 class TreeTest extends FunSuite {
@@ -178,7 +185,7 @@ class ForestTest extends FunSuite {
   val evaluate = TestParams.evaluate
 
   test("Some forest test") {
-    val forest = new Forest(min_samples_split=10,n_estimators=100)
+    val forest = new Forest(min_samples_split=10,n_estimators=100,max_features=10)
     info(forest)
     forest.fit(train)
     val accuracy = forest.predictEval(evaluate)._2
