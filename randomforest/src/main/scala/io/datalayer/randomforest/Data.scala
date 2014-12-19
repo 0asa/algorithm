@@ -30,7 +30,7 @@ trait DataDNA {
   var labels:TY
 
   def load(X:TX, Y:TY)
-  //def loadCSV
+  def loadCSV(uri: String)
 
   def split(attr: Int, thr: data_type): (DataDNA, DataDNA)
 
@@ -63,7 +63,7 @@ class Data extends DataDNA {
     nb_attributes = X(0).length
 
     // Check if we have a labels
-    if (Y.size != 0) {
+    if (!Y.isEmpty) {
       if (X.length != Y.length) throw IncompatibleDataTypeException(s"Inputs and labels have different size: ${X.length} != ${Y.length}")
       labeled = true
       labels = Y
@@ -74,7 +74,7 @@ class Data extends DataDNA {
     }
   }
 
-  //def loadCSV { println("Data loadCSV") }
+  def loadCSV(uri: String) = { println("Data loadCSV") }
 
   def split(attr: Int, thr: data_type): (Data, Data) = {
     val partOne = new Data
@@ -148,7 +148,7 @@ class DataRDD(sc: SparkContext) extends DataDNA {
     }
   }
 
-  //def loadCSV { println("Data loadCSV") }
+  def loadCSV(uri: String) = { println("Data loadCSV") }
 
   def split(attr: Int, thr: data_type): (DataRDD, DataRDD) = {
 //    val partOne = new Data
