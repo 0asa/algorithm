@@ -79,9 +79,15 @@ class Data extends DataDNA {
   def split(attr: Int, thr: data_type): (Data, Data) = {
     val partOne = new Data
     val partTwo = new Data
-    val zipped = inputs.zip(labels).partition(i => i._1(attr) < thr)
-    partOne.load(zipped._1.unzip._1, zipped._1.unzip._2)
-    partTwo.load(zipped._2.unzip._1, zipped._2.unzip._2)
+    if (labeled) {
+      val zipped = inputs.zip(labels).partition(i => i._1(attr) < thr)
+      partOne.load(zipped._1.unzip._1, zipped._1.unzip._2)
+      partTwo.load(zipped._2.unzip._1, zipped._2.unzip._2)
+    } else {
+      val splitted = inputs.partition(_(attr) < thr)
+      partOne.load(splitted._1)
+      partTwo.load(splitted._2)
+    }
     (partOne, partTwo)
   }
 
