@@ -13,11 +13,11 @@ import org.apache.spark.SparkConf
 import scala.language.implicitConversions
 
 object TestParams {
-  val ls_size = 1000
+  val ls_size = 500
   val ts_size = 1000
-  val train = dataGenerator.genLabeled(ls_size)
-  val test = dataGenerator.genUnlabeled(ts_size)
-  val evaluate = dataGenerator.genLabeled(ts_size)
+  val train = dataGenerator.genLabeled(ls_size,50)
+  val test = dataGenerator.genUnlabeled(ts_size,50)
+  val evaluate = dataGenerator.genLabeled(ts_size,50)
 }
 
 class SparkTest extends FunSuite {
@@ -155,7 +155,7 @@ class TreeTest extends FunSuite {
   val evaluate = TestParams.evaluate
 
   test("Some tree test") {
-    val tree = new Tree(min_samples_split=100)
+    val tree = new Tree(min_samples_split=10,max_features=25)
     info(tree)
     tree.fit(train)
     info(tree)
@@ -184,8 +184,22 @@ class ForestTest extends FunSuite {
   val test = TestParams.test
   val evaluate = TestParams.evaluate
 
+  test("Totally Random Trees vs. Extra-Trees") {
+    val random_trees = new Forest(min_samples_split=10,n_estimators=100,max_features=1)
+    info(random_trees)
+    random_trees.fit(train)
+    val acc_random = random_trees.predictEval(evaluate)._2
+    val extra_trees = new Forest(min_samples_split=10,n_estimators=100,max_features=25)
+    info(extra_trees)
+    extra_trees.fit(train)
+    val acc_extra = extra_trees.predictEval(evaluate)._2
+    info("Totally Random acc: " + acc_random)
+    info("Extra-Trees acc.: " + acc_extra)
+    assert(acc_random < acc_extra)
+  }
+
   test("Some forest test") {
-    val forest = new Forest(min_samples_split=10,n_estimators=100,max_features=10)
+    val forest = new Forest(min_samples_split=10,n_estimators=200,max_features=25)
     info(forest)
     forest.fit(train)
     val accuracy = forest.predictEval(evaluate)._2

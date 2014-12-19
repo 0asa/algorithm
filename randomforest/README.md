@@ -1,16 +1,28 @@
--------------------------------------------------------------------------------
+![](http://datalayer.io/ext/images/logo_horizontal_072ppi.png)
+
+## datalayer-model-trees
+
+Implementation of a (not yet) distributed ensemble of decision trees algorithm.
+
+**Important:** This is a work in progress. The current implementation corresponds to the [Extra-Trees](http://www.montefiore.ulg.ac.be/~ernst/uploads/news/id63/extremely-randomized-trees.pdf) (Extremely randomized trees) method.
+
+Here is a small sample code:
+
 ```
-             ___       __       __
-   _______  / _ \___ _/ /____ _/ /__ ___ _____ ____
-  _______  / // / _ `/ __/ _ `/ / _ `/ // / -_) __/
- _______  /____/\_,_/\__/\_,_/_/\_,_/\_, /\__/_/
-                                    /___/
+package io.datalayer.randomforest
 
- #datalayer-model-randomforest
+object Main extends App {
+
+    // Generating some data
+    val train = dataGenerator.genLabeled(numInstances=200, numFeatures=10)
+    val test = dataGenerator.genLabeled(numInstances=200, numFeatures=10)
+
+    // Preparing the Extra-Trees forest
+    val forest = new Forest(min_samples_split=10,n_estimators=100, max_features=5)
+    println(Forest.printParams(forest))
+
+    // Training the model
+    forest.fit(train)
+    println("Accuracy = " + forest.predictEval(test)._2)
+}
 ```
--------------------------------------------------------------------------------
-
-Implementation of a (not yet) distributed random forest algorithm.
-The current implemented approach corresponds to ensemble of totally randomized trees.
-
--------------------------------------------------------------------------------
