@@ -10,40 +10,48 @@ import org.apache.spark.sql.SchemaRDD
 
 class DataSchemaRDD(sc: SparkContext) extends DataDNA {
   type data_type = Double
-  type TX = SchemaRDD
+  type TX = RDD[Array[data_type]]
   type TY = RDD[(data_type, Long)]
 
-  val sqlContext = new org.apache.spark.sql.SQLContext(sc)
-  import sqlContext.createSchemaRDD
-
-  case class Object(obj: Array[data_type])
-
-  var inputs: TX = sqlContext.createSchemaRDD(sc.parallelize(Array[Object](Object(Array[data_type](0.0)))))
+  var inputs: TX = sc.emptyRDD[Array[data_type]]
   var labels: TY = sc.emptyRDD[(data_type, Long)]
 
   def load(X: TX, Y: TY = sc.emptyRDD[(data_type, Long)]) {
-    println("SchemaRDD does not support loading from scala object, only from CSV file.")
+    if (Y != sc.emptyRDD[(data_type, Long)]) {
+      labeled = true
+      labels = Y
+
+      nb_classes = labels.map(_._1).distinct.count.toInt
+    } else {
+      labeled = false
+    }
+
+    inputs = X
+    nb_objects = inputs.count.toInt
+    nb_attributes = inputs.take(1).length
   }
 
   def loadCSV(uri: String, label: Int) = {
-    val rawData = sc.textFile(uri).map(_.split(" ").map(_.toDouble))
+//    val rawData = sc.textFile(uri).map(_.split(",").map(_.toDouble))
+//
+//    if (label > -1) {
+//      labeled = true
+//      labels = rawData.zipWithIndex.map{ case (o:Array[Double], i:Long) => o(label).->[Long](i) }
+//    }
+//    val test = rawData.map{ case (o: Array[Double]) => o.drop(label).toSeq }
+//    test.map(Object.apply(_))
+//    sqlContext.registerRDDAsTable()
 
-    if (label > -1) {
-      labeled = true
-      labels = rawData.zipWithIndex.map{ case (o:Array[Double], i:Long) => o(label).->[Long](i) }
-    }
-    rawData.map{ case (o: Array[Double]) => Object(o.drop(label)) }.registerTempTable("inputs")
-    inputs = sqlContext.sql("SELECT * FROM inputs")
+    //inputs = sqlContext.sql("SELECT * FROM inputs")
   }
 
   def split(attr: Int, thr: data_type): (DataSchemaRDD, DataSchemaRDD) = {
-    //    val partOne = new DataRDD(sc)
-    //    val partTwo = new DataRDD(sc)
-    //    val zipped = inputs.zip(labels).partition(i => i._1(attr) < thr)
-    //    partOne.load(zipped._1.unzip._1, zipped._1.unzip._2)
-    //    partTwo.load(zipped._2.unzip._1, zipped._2.unzip._2)
-    //    (partOne, partTwo)
-    (this, this)
+    val partOne = new DataSchemaRDD(sc)
+    val partTwo = new DataSchemaRDD(sc)
+    val zipped = inputs.zip(labels).filter(_._1(attr) < thr)
+    partOne.load(zipped.map(_._1), zipped.map(_._2))
+    partTwo.load(inputs.subtract(partOne.inputs), labels.subtract(partOne.labels))
+    (partOne, partTwo)
   }
 
   def getObjects(indexes : Traversable[Int]) : TX = {

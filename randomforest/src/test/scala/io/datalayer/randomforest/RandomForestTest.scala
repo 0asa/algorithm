@@ -84,13 +84,20 @@ class DataTest extends FunSuite {
   }
 
   test("DataRDD test") {
-    info("Serious stuff going on…")
-
-    val sparkConf = new SparkConf().setMaster("local[2]").setAppName("DataRDD Application")
+    info("Some serious stuff going on…")
+    val sparkConf = new SparkConf().setMaster("local[2]").setAppName("DataSchemaRDD Application")
     val sc = new SparkContext(sparkConf)
-    val data = new DataRDD(sc)
-    val matrix = new IndexedRowMatrix(sc.parallelize(Array(IndexedRow(0,Vectors.dense(Array[Double](0.0, 1.1))))))
-    data.load(matrix)
+    val data = new DataSchemaRDD(sc)
+    val train = sc.parallelize(Seq(Array(1.0,1.1), Array(2.0,2.1), Array(3.0,3.1)))
+    val labels = sc.parallelize(Seq((1.0, 1.toLong), (2.0, 1.toLong), (1.0, 0.toLong)))
+
+    data.load(train, labels)
+    val split = data.split(0, 1.5)
+    println(split._1.inputs.take(1).take(1)(0)(0))
+    println(split._2.inputs.take(1).take(1)(0)(0))
+    assert(data.inputs.take(1).take(1)(0)(1) === 1.1)
+
+    //    data.loadCSV("/home/manuel/wrk/model/randomforest/src/test/resources/", 0)
   }
 }
 
