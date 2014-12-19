@@ -48,9 +48,14 @@ class DataSchemaRDD(sc: SparkContext) extends DataDNA {
   def split(attr: Int, thr: data_type): (DataSchemaRDD, DataSchemaRDD) = {
     val partOne = new DataSchemaRDD(sc)
     val partTwo = new DataSchemaRDD(sc)
-    val zipped = inputs.zip(labels).filter(_._1(attr) < thr)
-    partOne.load(zipped.map(_._1), zipped.map(_._2))
-    partTwo.load(inputs.subtract(partOne.inputs), labels.subtract(partOne.labels))
+    if (labeled) {
+      val zipped = inputs.zip(labels).filter(_._1(attr) < thr)
+      partOne.load(zipped.map(_._1), zipped.map(_._2))
+      partTwo.load(inputs.subtract(partOne.inputs), labels.subtract(partOne.labels))
+    } else {
+      partOne.load(inputs.filter(_(attr) < thr))
+      partTwo.load(inputs.subtract(partOne.inputs))
+    }
     (partOne, partTwo)
   }
 
