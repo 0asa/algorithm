@@ -1,14 +1,4 @@
--------------------------------------------------------------------------------
-```
-             ___       __       __
-   _______  / _ \___ _/ /____ _/ /__ ___ _____ ____
-  _______  / // / _ `/ __/ _ `/ / _ `/ // / -_) __/
- _______  /____/\_,_/\__/\_,_/_/\_,_/\_, /\__/_/
-                                    /___/
-
- #datalayer-model-randomforest
-```
--------------------------------------------------------------------------------
+![http://datalayer.io](http://datalayer.io/ext/images/logo_horizontal_072ppi.png)
 
 Implementation of a (not yet) distributed random forest algorithm.
 The current implemented approach corresponds to ensemble of totally randomized trees.
@@ -28,5 +18,3 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
--------------------------------------------------------------------------------
