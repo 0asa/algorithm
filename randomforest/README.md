@@ -1,4 +1,4 @@
-![http://datalayer.io](http://datalayer.io/ext/images/logo_horizontal_072ppi.png)
+[![Datalayer](http://datalayer.io/ext/images/logo_horizontal_072ppi.png)](http://datalayer.io)
 
 Implementation of a (not yet) distributed random forest algorithm.
 The current implemented approach corresponds to ensemble of totally randomized trees.

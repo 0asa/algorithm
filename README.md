@@ -1,4 +1,4 @@
-![http://datalayer.io](http://datalayer.io/ext/images/logo_horizontal_072ppi.png)
+[![Datalayer](http://datalayer.io/ext/images/logo_horizontal_072ppi.png)](http://datalayer.io)
 
 # Introduction
 
