@@ -14,8 +14,8 @@
     <coverSubTitle>v. ${project.version}</coverSubTitle>
     <coverType>User Guide</coverType>
     <projectName>${project.name}</projectName>
-<!--     <projectLogo>images/datalayer-upper-280x31.png</projectLogo> -->
+<!--     <projectLogo>images/datalayer-logo.png</projectLogo> -->
     <companyName>Datalayer</companyName>
-    <companyLogo>images/datalayer-upper-280x31.png</companyLogo>
+    <companyLogo>images/datalayer-logo.png</companyLogo>
   </cover>
 </document>

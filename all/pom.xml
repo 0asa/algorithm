@@ -31,10 +31,6 @@
   <dependencies>
       <dependency>
         <groupId>io.datalayer</groupId>
-        <artifactId>datalayer-model-algorithm</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>io.datalayer</groupId>
         <artifactId>datalayer-model-common</artifactId>
       </dependency>
       <dependency>
