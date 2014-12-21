@@ -31,7 +31,7 @@
   <dependencies>
     <dependency>
       <groupId>io.datalayer</groupId>
-      <artifactId>datalayer-model-algorithm</artifactId>
+      <artifactId>datalayer-algorithm</artifactId>
     </dependency>
   </dependencies>
 </project>
