@@ -1,14 +1,4 @@
--------------------------------------------------------------------------------
-```
-             ___       __       __                 
-   _______  / _ \___ _/ /____ _/ /__ ___ _____ ____
-  _______  / // / _ `/ __/ _ `/ / _ `/ // / -_) __/
- _______  /____/\_,_/\__/\_,_/_/\_,_/\_, /\__/_/   
-                                    /___/          
-
- #datalayer-model
-```
--------------------------------------------------------------------------------
+![http://datalayer.io](http://datalayer.io/ext/images/logo_horizontal_072ppi.png)
 
 # Introduction
 
@@ -32,5 +22,3 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
--------------------------------------------------------------------------------
