@@ -165,26 +165,46 @@ class TreeTest extends FunSuite {
   val test = TestParams.test
   val evaluate = TestParams.evaluate
 
-  test("Some tree test") {
+  test("Complexity should increase after fit") {
     val tree = new Tree(min_samples_split=10,max_features=25)
-    info(tree)
+    val c1 = tree.complexity
     tree.fit(train)
-    info(tree)
+    val c2 = tree.complexity
+    assert(c1 < c2)
+  }
+
+  test("Prediction should be consistent") {
+    val tree = new Tree(min_samples_split=5,max_features=25)
+    tree.fit(train)
+    var prob0 = tree.predict(test(0))
+    var prob1 = tree.predict(test(1))
+    var proball = tree.predict(test)
+    assert(prob0 === proball(0))
+    assert(prob1 === proball(1))
+  }
+
+  test("Labels should be consistent") {
+    val tree = new Tree(min_samples_split=5,max_features=25)
+    tree.fit(train)
+    val expectedClass0 = tree.predictLabel(test(0))
+    val expectedClass1 = tree.predictLabel(test(1))
+    val expectedClasses = tree.predictLabel(test)
+    assert(expectedClass0 === expectedClasses(0))
+    assert(expectedClass1 === expectedClasses(1))
+  }
+
+  test("Accuracy should be > 0.5") {
+    val tree = new Tree(min_samples_split=10,max_features=25)
+    tree.fit(train)
     val accuracy = tree.predictEval(evaluate)._2
     info("Accuracy = " + accuracy)
-    info("Error rate = " + (1 - accuracy))
-    //tree.display
-    // predict for one sample
-    var prob = tree.predict(test(0))
+    assert(accuracy >= 0.5)
+  }
 
-    // predict for many samples
-    var proball = tree.predict(test)
-
-    val expectedClass = tree.predictLabel(test(0))
-    val expectedClasses = tree.predictLabel(test)
-
-    assert(prob === proball(0))
-    assert(expectedClass === expectedClasses(0))
+  test("Tree parameters test") {
+    val tree = new Tree(min_samples_split=10,max_features=25)
+    info(tree)
+    assert("max_features=25;max_depth=-1;min_samples_split=10;complexity=0;" == tree.printParams)
   }
 }
 

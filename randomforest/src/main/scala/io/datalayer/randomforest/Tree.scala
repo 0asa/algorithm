@@ -20,7 +20,7 @@ class Tree( max_features: Int = 10,
   var stack = new scala.collection.mutable.Stack[Node]
   var complexity:Int = 0
 
-  private def printParams() : String = {
+  def printParams() : String = {
     val str_param:String = "max_features=" + max_features + ";" +
     "max_depth=" + max_depth + ";" +
     "min_samples_split=" + min_samples_split + ";" +
