@@ -94,8 +94,11 @@ class DataTest extends FunSuite {
 
     data.load(train, labels)
     val split = data.split(0, 1.5)
-    println(split._1.inputs.take(1).take(1)(0)(0))
-    println(split._2.inputs.take(1).take(1)(0)(0))
+    //println(split._1.inputs.take(1).take(1)(0)(0))
+    //println(split._2.inputs.take(1).take(1)(0)(0))
+    //println(data.getAttribute(0).collect.toSeq)
+    //println(data.getObject(0).take(1).toSeq)
+    println(data.getValue(1,1))
     assert(data.inputs.take(1).take(1)(0)(1) === 1.1)
 
     //    data.loadCSV("/home/manuel/wrk/model/randomforest/src/test/resources/", 0)

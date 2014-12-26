@@ -60,22 +60,21 @@ class DataSchemaRDD(sc: SparkContext) extends DataDNA {
   }
 
   def getObjects(indexes : Traversable[Int]) : TX = {
-    //    indexes.map{i => inputs(i)}.toSeq
-    inputs
+    inputs.zipWithIndex.filter(x => indexes.exists(x._2.toInt == _)).map(_._1)
   }
 
-
   def getAttributes(indexes : Traversable[Int]) : TX = {
-    //    (for (i <- indexes) yield { inputs.map(_(i)) }).toSeq
-    inputs
+    inputs.map(x => (for (i <- indexes) yield { x(i) }).toArray)
   }
 
   def getLabels(indexes : Traversable[Int]) : TY = {
-    //    indexes.map{i => labels(i)}.toSeq
-    labels
+    labels.filter(x => indexes.exists(x._2.toInt == _))
   }
 
-  def getValue(i: Int, j: Int) : data_type = { 0.0 }
+  def getValue(i: Int, j: Int) : data_type = {
+    val obj = inputs.zipWithIndex.filter(_._2 == i).map(_._1).collect
+    obj(0)(j)
+  }
 
   def describe {
     //    if (inputs.isEmpty) {
