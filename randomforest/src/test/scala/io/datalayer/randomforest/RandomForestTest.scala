@@ -224,18 +224,31 @@ class ForestTest extends FunSuite {
     info(extra_trees)
     extra_trees.fit(train)
     val acc_extra = extra_trees.predictEval(evaluate)._2
-    info("Totally Random acc: " + acc_random)
+    info("Totally Random acc.: " + acc_random)
     info("Extra-Trees acc.: " + acc_extra)
     assert(acc_random < acc_extra)
   }
 
+  test("Single tree vs. Extra-Trees") {
+    val tree = new Tree(min_samples_split=10,max_features=25)
+    tree.fit(train)
+    info(tree)
+    val acc_tree = tree.predictEval(evaluate)._2
+    val extra_trees = new Forest(min_samples_split=10,n_estimators=100,max_features=25)
+    extra_trees.fit(train)
+    info(extra_trees)
+    val acc_extra = extra_trees.predictEval(evaluate)._2
+    info("Single tree acc.: " + acc_tree)
+    info("Extra-Trees acc.: " + acc_extra)
+    assert(acc_tree < acc_extra)
+  }
+
   test("Some forest test") {
-    val forest = new Forest(min_samples_split=10,n_estimators=200,max_features=25)
+    val forest = new Forest(min_samples_split=10,n_estimators=50,max_features=25)
     info(forest)
     forest.fit(train)
     val accuracy = forest.predictEval(evaluate)._2
     info("Accuracy = " + accuracy)
-    info("Error rate = " + (1 - accuracy))
     //forest.display
     // predict for one sample
     var prob = forest.predict(test(0))
