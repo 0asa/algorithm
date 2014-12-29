@@ -20,18 +20,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>datalayer-model-text</artifactId>
-  <name>Datalayer Model Text</name>
+  <artifactId>datalayer-algorithm-text</artifactId>
+  <name>Datalayer Algorithm Text</name>
   <packaging>jar</packaging>
   <parent>
     <groupId>io.datalayer</groupId>
-    <artifactId>datalayer-model</artifactId>
+    <artifactId>datalayer-algorithm</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
   <distributionManagement>
     <site>
       <id>datalayer.site</id>
-      <name>Datalayer Model Site</name>
+      <name>Datalayer Algorithm Site</name>
       <url>scp://datalayer.io/site/datalayer.io/text</url>
     </site>
   </distributionManagement>

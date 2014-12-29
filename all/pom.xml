@@ -20,50 +20,50 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>datalayer-model-all</artifactId>
-  <name>Datalayer Model All</name>
+  <artifactId>datalayer-algorithm-all</artifactId>
+  <name>Datalayer Algorithm All</name>
   <packaging>jar</packaging>
   <parent>
     <groupId>io.datalayer</groupId>
-    <artifactId>datalayer-model</artifactId>
+    <artifactId>datalayer-algorithm</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
   <dependencies>
       <dependency>
         <groupId>io.datalayer</groupId>
-        <artifactId>datalayer-model-common</artifactId>
+        <artifactId>datalayer-algorithm-common</artifactId>
       </dependency>
       <dependency>
         <groupId>io.datalayer</groupId>
-        <artifactId>datalayer-model-controlchart</artifactId>
+        <artifactId>datalayer-algorithm-controlchart</artifactId>
       </dependency>
       <dependency>
         <groupId>io.datalayer</groupId>
-        <artifactId>datalayer-model-graph</artifactId>
+        <artifactId>datalayer-algorithm-graph</artifactId>
       </dependency>
       <dependency>
         <groupId>io.datalayer</groupId>
-        <artifactId>datalayer-model-randomforest</artifactId>
+        <artifactId>datalayer-algorithm-randomforest</artifactId>
       </dependency>
       <dependency>
         <groupId>io.datalayer</groupId>
-        <artifactId>datalayer-model-rank</artifactId>
+        <artifactId>datalayer-algorithm-rank</artifactId>
       </dependency>
       <dependency>
         <groupId>io.datalayer</groupId>
-        <artifactId>datalayer-model-reach</artifactId>
+        <artifactId>datalayer-algorithm-reach</artifactId>
       </dependency>
       <dependency>
         <groupId>io.datalayer</groupId>
-        <artifactId>datalayer-model-regression</artifactId>
+        <artifactId>datalayer-algorithm-regression</artifactId>
       </dependency>
       <dependency>
         <groupId>io.datalayer</groupId>
-        <artifactId>datalayer-model-shortestpath</artifactId>
+        <artifactId>datalayer-algorithm-shortestpath</artifactId>
       </dependency>
       <dependency>
         <groupId>io.datalayer</groupId>
-        <artifactId>datalayer-model-text</artifactId>
+        <artifactId>datalayer-algorithm-text</artifactId>
       </dependency>
   </dependencies>
 </project>
