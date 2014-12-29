@@ -2,7 +2,7 @@ name := "datalayer-model-random-forest"
 
 version := "1.0"
 
-scalaVersion := "2.10.4"
+scalaVersion := "2.11.0"
 
 //resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 
@@ -20,10 +20,10 @@ scalaVersion := "2.10.4"
             //"org.scalanlp" %% "breeze-natives" % "0.8.1"
 //)
 
-libraryDependencies += "org.scalatest" % "scalatest_2.10" % "2.0" % "test"
+libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.2.1" % "test"
 
-libraryDependencies += "org.apache.spark" %% "spark-core" % "1.1.1"
+libraryDependencies += "org.apache.spark" %% "spark-core" % "1.2.0"
 
-libraryDependencies += "org.apache.spark" %% "spark-sql" % "1.1.1"
+libraryDependencies += "org.apache.spark" %% "spark-sql" % "1.2.0"
 
-libraryDependencies += "org.apache.spark" %% "spark-mllib" % "1.1.1"
+libraryDependencies += "org.apache.spark" %% "spark-mllib" % "1.2.0"
