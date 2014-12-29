@@ -12,6 +12,14 @@ import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
 import scala.language.implicitConversions
 
+object TestParams {
+  val ls_size = 500
+  val ts_size = 1000
+  val train = dataGenerator.genLabeled(ls_size,50)
+  val test = dataGenerator.genUnlabeled(ts_size,50)
+  val evaluate = dataGenerator.genLabeled(ts_size,50)
+}
+
 class SparkTest extends FunSuite {
   test("Creating Spark Context") {
     val conf = new SparkConf().setMaster("local[4]").setAppName("Simple Application")
@@ -24,20 +32,12 @@ class SparkTest extends FunSuite {
     val coucou = rdd.map(i => i.input(1)*10)
     Thread sleep 1000
     coucou.foreach(println)
-    println("You now have 5 seconds left...")
-    Thread sleep 5000
+    println("You now have 20 seconds left...")
+    Thread sleep 20000
     println("Done. Byebye.")
     sc.stop()
     assert(1 == 1)
   }
-}
-
-object TestParams {
-  val ls_size = 1000
-  val ts_size = 1000
-  val train = dataGenerator.genLabeled(ls_size)
-  val test = dataGenerator.genUnlabeled(ts_size)
-  val evaluate = dataGenerator.genLabeled(ts_size)
 }
 
 class DataTest extends FunSuite {
