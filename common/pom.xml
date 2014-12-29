@@ -59,47 +59,47 @@
     </dependency>
 <!--     <dependency> -->
 <!--       <groupId>org.apache.spark</groupId> -->
-<!--       <artifactId>spark-repl_${scala.binary.version.dla}</artifactId> -->
+<!--       <artifactId>spark-repl_${scala.binary.version}</artifactId> -->
 <!--     </dependency> -->
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-mllib_${scala.binary.version.dla}</artifactId>
+      <artifactId>spark-mllib_${scala.binary.version}</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-sql_${scala.binary.version.dla}</artifactId>
+      <artifactId>spark-sql_${scala.binary.version}</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-hive_${scala.binary.version.dla}</artifactId>
+      <artifactId>spark-hive_${scala.binary.version}</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-graphx_${scala.binary.version.dla}</artifactId>
+      <artifactId>spark-graphx_${scala.binary.version}</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-bagel_${scala.binary.version.dla}</artifactId>
+      <artifactId>spark-bagel_${scala.binary.version}</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-streaming_${scala.binary.version.dla}</artifactId>
+      <artifactId>spark-streaming_${scala.binary.version}</artifactId>
     </dependency>
     <dependency>
       <groupId>org.scalanlp</groupId>
-      <artifactId>breeze_${scala.binary.version.dla}</artifactId>
+      <artifactId>breeze_${scala.binary.version}</artifactId>
     </dependency>
     <dependency>
       <groupId>org.scalanlp</groupId>
-      <artifactId>epic_${scala.binary.version.dla}</artifactId>
+      <artifactId>epic_${scala.binary.version}</artifactId>
     </dependency>
     <dependency>
       <groupId>org.scala-saddle</groupId>
-      <artifactId>saddle-core_${scala.binary.version.dla}</artifactId>
+      <artifactId>saddle-core_${scala.binary.version}</artifactId>
     </dependency>
     <dependency>
       <groupId>com.github.nscala-time</groupId>
-      <artifactId>nscala-time_${scala.binary.version.dla}</artifactId>
+      <artifactId>nscala-time_${scala.binary.version}</artifactId>
     </dependency>
   </dependencies>
 </project>
