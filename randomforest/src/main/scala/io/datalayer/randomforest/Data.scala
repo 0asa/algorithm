@@ -252,6 +252,26 @@ y(i) = if (a + b > 10) { 0 } else { 1 }
 }
 */
 
+def genData(numInstances: Int = 10, numFeatures: Int = 10, labeled: Boolean = false): Data = {
+  val rand = new scala.util.Random
+  val x = new Data
+  var labels = Seq.empty[Double]
+  val inputs: Seq[Seq[Double]] = for (i:Int <- 0 until numInstances) yield {
+    val a:Double = rand.nextInt(10)
+    val b:Double = rand.nextInt(10)
+    val c:Double = rand.nextInt(100)
+    val d:Seq[Double] = Seq.fill(math.max(3,numFeatures) - 3)(rand.nextFloat())
+    val y:Double = if ((a+b) > 0 && (a+b) < 6) { 0 } else if ((a+b) >= 6 && (a+b) < 12) { 1 } else { 2 }
+    labels = labels :+ y
+    Seq(a,b,c)++d
+  }
+  if (labeled)
+    x.load(inputs,labels)
+  else
+    x.load(inputs)
+  x
+}
+
 def genLabeled(numInstances: Int = 10, numFeatures: Int = 10): Seq[Labeled] = {
   val rand = new scala.util.Random
   val x: Seq[Labeled] = for (i:Int <- 0 until numInstances) yield {

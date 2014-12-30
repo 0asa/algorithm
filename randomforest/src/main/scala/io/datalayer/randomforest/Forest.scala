@@ -1,5 +1,7 @@
 package io.datalayer.randomforest
 
+case class CannotFitException(message: String) extends Exception(message)
+
 /*
   Companion object
 */
@@ -8,6 +10,7 @@ object Forest {
     forest.printParams()
   }
 }
+
 
 
 /*
@@ -35,6 +38,19 @@ class Forest( n_estimators: Int = 10,
 
   def setParams() {
     println("Forest.setParams")
+  }
+
+  def fit(x: DataDNA) {
+    if (!x.labeled) {
+      throw CannotFitException("Data must be labeled")
+    }
+    for (i <- 0 to (trees.length - 1)) {
+      if (bootstrap) {
+        // TODO: bootstrap if needed
+      } else {
+        //trees(i).fit(x)
+      }
+    }
   }
 
   def fit(x: Seq[Labeled]) = {
