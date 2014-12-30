@@ -2,7 +2,7 @@ name := "datalayer-model-random-forest"
 
 version := "1.0"
 
-scalaVersion := "2.11.0"
+scalaVersion := "2.11.2"
 
 //resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 

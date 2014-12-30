@@ -215,6 +215,19 @@ class ForestTest extends FunSuite {
   val test = TestParams.test
   val evaluate = TestParams.evaluate
 
+  test("Forest fit on DataDNA") {
+    val trees = new Forest(min_samples_split=10,n_estimators=100,max_features=25)
+    val unlabeled = dataGenerator.genData(50,50,false)
+
+    intercept[CannotFitException]{
+      trees.fit(unlabeled)
+    }
+
+    val labeled = dataGenerator.genData(50,50,true)
+    trees.fit(labeled)
+
+  }
+
   test("Totally Random Trees vs. Extra-Trees") {
     val random_trees = new Forest(min_samples_split=10,n_estimators=100,max_features=1)
     info(random_trees)
