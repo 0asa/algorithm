@@ -28,6 +28,36 @@ class Tree( max_features: Int = 10,
     str_param
   }
 
+  def fit(x: DataDNA) = {
+    Node.nbclass = x.nb_classes
+    root = new Node
+    root._samples = x
+
+    stack.push(root)    
+    while (!stack.isEmpty) {
+      val n = stack.pop()
+      complexity += 1
+      n._fit()
+      // but will need to adapt the Node class
+      if (n._canSplit()) {
+        // generate partitions
+        val partitions = n._samples.split(n.split.attribute,n.split.threshold)
+        n.left = new Node(max_features,max_depth,min_samples_split)
+        n.left.depth = n.depth + 1
+        n.left._samples = partitions._1
+        n.right = new Node(max_features,max_depth,min_samples_split)
+        n.right.depth = n.depth + 1
+        n.right._samples = partitions._2
+        // push left and right children
+        stack.push(n.left)
+        stack.push(n.right)
+        // clear samples: not optimal
+        n._samples = null
+      }
+    }
+
+  }
+
   def fit(x: Seq[Labeled]) = {
     val maps = x.groupBy(e => e.label.label)
     Node.nbclass = maps.size

@@ -45,7 +45,7 @@ class DataSchemaRDD(sc: SparkContext) extends DataDNA {
     //inputs = sqlContext.sql("SELECT * FROM inputs")
   }
 
-  def split(attr: Int, thr: data_type): (DataSchemaRDD, DataSchemaRDD) = {
+  def split(attr: Int, thr: Double): (DataSchemaRDD, DataSchemaRDD) = {
     val partOne = new DataSchemaRDD(sc)
     val partTwo = new DataSchemaRDD(sc)
     if (labeled) {
@@ -74,6 +74,11 @@ class DataSchemaRDD(sc: SparkContext) extends DataDNA {
   def getValue(i: Int, j: Int) : data_type = {
     val obj = inputs.zipWithIndex.filter(_._2 == i).map(_._1).collect
     obj(0)(j)
+  }
+
+  def getCounts() : Map[data_type,Int] = {
+    // TODO
+    null
   }
 
   def describe {

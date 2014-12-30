@@ -32,6 +32,7 @@ class Node( max_features: Int = 10,
   var depth: Int = 1
   var votes: Array[Double] = null
   var samples: Seq[Labeled] = null
+  var _samples: DataDNA = null
   val nbclass:Int = Node.nbclass
 
   private def printParams() : String = {
@@ -44,6 +45,20 @@ class Node( max_features: Int = 10,
   def isLeaf(): Boolean = {
     if (left == null && right == null) return true
     return false
+  }
+
+  def _canSplit(): Boolean = {
+    if (max_depth > 0) {
+      if (_samples.nb_objects > math.max(2,min_samples_split) && depth <= max_depth && split.attribute != -1) {
+        return true
+      }
+      return false
+    } else {
+      if (_samples.nb_objects > math.max(2,min_samples_split) && split.attribute != -1) {
+        return true
+      }
+      return false
+    }
   }
 
   def canSplit(): Boolean = {
@@ -133,9 +148,39 @@ class Node( max_features: Int = 10,
     Split(att,th)
   }
 
-  def fit(): Unit = {    
+  def _findRandomSplit(): Split = {
+    val rand = new Random
+    var att = Random.nextInt(_samples.nb_attributes)
+    var th = -1.0
+    val values:List[Vector[Double]] = _samples.getAttribute(att).asInstanceOf[List[Vector[Double]]]
+    var att_vector = rand.shuffle(values(0))
+    att_vector = att_vector.distinct
+    if (att_vector.length > 1) {
+      th = math.min(att_vector(0),att_vector(1)) + (math.abs(att_vector(0) - att_vector(1)) / 2.0)
+    } else {
+      att = -1
+    }
+    Split(att,th)
+  }
+
+  def _fit(): Unit = {
+    // TODO: use DataDNA _ methods
+    split = _findRandomSplit()
+    _setVotes()
+  }
+
+  def fit(): Unit = {
     split = findKRandomSplit()
     setVotes()
+  }
+
+  def _setVotes() = {
+    val counts = _samples.getCounts
+    votes = new Array[Double](nbclass)
+    var total:Double = _samples.nb_objects
+    for (e <- counts) {
+      votes(e._1.asInstanceOf[Double].toInt) = e._2/total
+    }    
   }
 
   def setVotes() = {

@@ -32,7 +32,7 @@ trait DataDNA {
   def load(X:TX, Y:TY)
   def loadCSV(uri: String, label: Int)
 
-  def split(attr: Int, thr: data_type): (DataDNA, DataDNA)
+  def split(attr: Int, thr: Double): (DataDNA, DataDNA)
 
   def getObject(index : Int) : TX = { getObjects(Traversable(index)) }
   def getObjects(indexes : Traversable[Int]) : TX
@@ -42,6 +42,8 @@ trait DataDNA {
 
   def getLabel(index : Int) : TY = { getLabels(Traversable(index)) }
   def getLabels(indexes : Traversable[Int]) : TY
+
+  def getCounts(): Map[data_type,Int]
 
   def getValue(i: Int, j: Int) : data_type
 
@@ -76,7 +78,7 @@ class Data extends DataDNA {
 
   def loadCSV(uri: String, label: Int) = { println("Data loadCSV") }
 
-  def split(attr: Int, thr: data_type): (Data, Data) = {
+  def split(attr: Int, thr: Double): (Data, Data) = {
     val partOne = new Data
     val partTwo = new Data
     if (labeled) {
@@ -105,6 +107,11 @@ class Data extends DataDNA {
     indexes.map{i => labels(i)}.toSeq
   }
   def getValue(i: Int, j: Int) : data_type = { inputs(i)(j) }
+
+  def getCounts() : Map[data_type,Int] = {
+    val maps = labels.groupBy(e => e)
+    maps.map(e => { (e._1, e._2.length) } )
+  }
 
   def describe {
     if (inputs.isEmpty) {
@@ -156,7 +163,7 @@ class DataRDD(sc: SparkContext) extends DataDNA {
 
   def loadCSV(uri: String, label: Int) = { println("Data loadCSV") }
 
-  def split(attr: Int, thr: data_type): (DataRDD, DataRDD) = {
+  def split(attr: Int, thr: Double): (DataRDD, DataRDD) = {
 //    val partOne = new Data
 //    val partTwo = new Data
 //    val zipped = inputs.zip(labels).partition(i => i._1(attr) < thr)
@@ -183,6 +190,11 @@ class DataRDD(sc: SparkContext) extends DataDNA {
   }
 
   def getValue(i: Int, j: Int) : data_type = { 0.0 }
+
+  def getCounts() : Map[data_type,Int] = {
+    // TODO
+    null
+  }
 
   def describe {
 //    if (inputs.isEmpty) {

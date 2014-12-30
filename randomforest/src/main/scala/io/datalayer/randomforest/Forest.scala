@@ -48,7 +48,7 @@ class Forest( n_estimators: Int = 10,
       if (bootstrap) {
         // TODO: bootstrap if needed
       } else {
-        //trees(i).fit(x)
+        trees(i).fit(x)
       }
     }
   }
