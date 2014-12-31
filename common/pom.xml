@@ -30,37 +30,13 @@
   </parent>
   <dependencies>
     <dependency>
-      <groupId>org.scala-lang</groupId>
-      <artifactId>scala-library</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.scala-lang</groupId>
-      <artifactId>scala-compiler</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.scala-lang</groupId>
-      <artifactId>scala-actors</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.scala-lang</groupId>
-      <artifactId>scala-reflect</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>jline</groupId>
-      <artifactId>jline</artifactId>
-    </dependency>
-<!--     <dependency> -->
-<!--       <groupId>org.scala-lang</groupId> -->
-<!--       <artifactId>jline</artifactId> -->
-<!--     </dependency> -->
-    <dependency>
       <groupId>io.datalayer</groupId>
       <artifactId>datalayer-plot</artifactId>
     </dependency>
-<!--     <dependency> -->
-<!--       <groupId>org.apache.spark</groupId> -->
-<!--       <artifactId>spark-repl_${scala.binary.version}</artifactId> -->
-<!--     </dependency> -->
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-core_${scala.binary.version}</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.apache.spark</groupId>
       <artifactId>spark-mllib_${scala.binary.version}</artifactId>
