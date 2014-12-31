@@ -7,10 +7,11 @@ import org.apache.spark.mllib.linalg.distributed.{IndexedRow, IndexedRowMatrix}
 import org.scalatest.FunSuite
 //import org.scalatest.ShouldMatchers
 
-import org.apache.spark.SparkContext
-import org.apache.spark.SparkContext._
-import org.apache.spark.SparkConf
+//import org.apache.spark.SparkContext
+//import org.apache.spark.SparkContext._
+//import org.apache.spark.SparkConf
 import scala.language.implicitConversions
+import io.datalayer.common.SparkContextManager
 
 object TestParams {
   val ls_size = 500
@@ -22,8 +23,8 @@ object TestParams {
 
 class SparkTest extends FunSuite {
   test("Creating Spark Context") {
-    val conf = new SparkConf().setMaster("local[4]").setAppName("Simple Application")
-    val sc = new SparkContext(conf)
+    //val conf = new SparkConf().setMaster("local[4]").setAppName("Simple Application")
+    val sc = SparkContextManager.getSparkContext(8)
     Thread sleep 5000
     val rdd = sc.parallelize(TestParams.train)
     Thread sleep 1000
@@ -86,8 +87,8 @@ class DataTest extends FunSuite {
 
   test("DataRDD test") {
     info("Some serious stuff going on…")
-    val sparkConf = new SparkConf().setMaster("local[2]").setAppName("DataSchemaRDD Application")
-    val sc = new SparkContext(sparkConf)
+    //val sparkConf = new SparkConf().setMaster("local[2]").setAppName("DataSchemaRDD Application")
+    val sc = SparkContextManager.getSparkContext(8)
     val data = new DataSchemaRDD(sc)
     val train = sc.parallelize(Seq(Array(1.0,1.1), Array(2.0,2.1), Array(3.0,3.1)))
     val labels = sc.parallelize(Seq((1.0, 1.toLong), (2.0, 1.toLong), (1.0, 0.toLong)))

@@ -1,7 +1,6 @@
 package io.datalayer.controlchart
 
-import io.datalayer.controlchart._
-import org.apache.spark.{SparkContext, SparkConf}
+import io.datalayer.common.SparkContextManager
 import org.scalatest.FunSuite
 import org.scalatest.ShouldMatchers
 import scala.util.Random
