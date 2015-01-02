@@ -49,22 +49,29 @@ class DataSchemaRDD(sc: SparkContext) extends DataDNA {
     val partOne = new DataSchemaRDD(sc)
     val partTwo = new DataSchemaRDD(sc)
     if (labeled) {
-      val zipped = inputs.zip(labels).filter(_._1(attr) < thr)
+      var zipped = inputs.zip(labels).filter(_._1(attr) < thr)
       partOne.load(zipped.map(_._1), zipped.map(_._2))
-      partTwo.load(inputs.subtract(partOne.inputs), labels.subtract(partOne.labels))
+      zipped = inputs.zip(labels).filter(_._1(attr) >= thr)
+      partTwo.load(zipped.map(_._1), zipped.map(_._2))
     } else {
       partOne.load(inputs.filter(_(attr) < thr))
-      partTwo.load(inputs.subtract(partOne.inputs))
+      partTwo.load(inputs.filter(_(attr) >= thr))
     }
     (partOne, partTwo)
   }
 
-  def getObjects(indexes : Traversable[Int]) : TX = {
-    inputs.zipWithIndex.filter(x => indexes.exists(x._2.toInt == _)).map(_._1)
+  def getObjects(indexes : Traversable[Int]) : DataSchemaRDD = {
+    val newData = new DataSchemaRDD(sc)
+    newData.load(inputs.zipWithIndex.filter(x => indexes.exists(x._2.toInt == _)).map(_._1),
+      labels.filter(x => indexes.exists(x._2 == _)) )
+    newData
   }
 
-  def getAttributes(indexes : Traversable[Int]) : TX = {
-    inputs.map(x => (for (i <- indexes) yield { x(i) }).toArray)
+  def getAttributes(indexes : Traversable[Int]) : DataSchemaRDD = {
+    val newData = new DataSchemaRDD(sc)
+    val newInputs = inputs.map(a => a.zipWithIndex.filter(x => indexes.exists(_ == x._2)).map(_._1))
+    newData.load(newInputs, labels)
+    newData
   }
 
   def getLabels(indexes : Traversable[Int]) : TY = {

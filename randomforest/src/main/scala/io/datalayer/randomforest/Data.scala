@@ -17,11 +17,11 @@ case class Unlabeled(input: Seq[Float])
 
 case class IncompatibleDataTypeException(message: String) extends Exception(message)
 
-trait DataDNA {
-  //implicit def toType(i: Any) : T = {i.asInstanceOf[T]}
+trait DataDNA{
   type data_type
   type TX
   type TY
+
   var labeled:Boolean = false
   var nb_attributes:Int = 0
   var nb_objects:Int = 0
@@ -34,11 +34,11 @@ trait DataDNA {
 
   def split(attr: Int, thr: Double): (DataDNA, DataDNA)
 
-  def getObject(index : Int) : TX = { getObjects(Traversable(index)) }
-  def getObjects(indexes : Traversable[Int]) : TX
+  def getObject(index : Int) : DataDNA = { getObjects(Traversable(index)) }
+  def getObjects(indexes : Traversable[Int]) : DataDNA
 
-  def getAttribute(index : Int) : TX = { getAttributes(Traversable(index)) }
-  def getAttributes(indexes : Traversable[Int]) : TX
+  def getAttribute(index : Int) : DataDNA = { getAttributes(Traversable(index)) }
+  def getAttributes(indexes : Traversable[Int]) : DataDNA
 
   def getLabel(index : Int) : TY = { getLabels(Traversable(index)) }
   def getLabels(indexes : Traversable[Int]) : TY
@@ -93,14 +93,19 @@ class Data extends DataDNA {
     (partOne, partTwo)
   }
 
-  def getObjects(indexes : Traversable[Int]) : TX = {
-    indexes.map{i => inputs(i)}.toSeq
+  def getObjects(indexes : Traversable[Int]) : Data = {
+    val newData = new Data
+    newData.load(indexes.map{i => inputs(i)}.toSeq,
+      labels.zipWithIndex.filter(x => indexes.exists(_ == x._2)).map(_._1) )
+    newData
   }
 
 
-  def getAttributes(indexes : Traversable[Int]) : TX = {
-    (for (i <- indexes) yield { inputs.map(_(i)) }).toSeq
-
+  def getAttributes(indexes : Traversable[Int]) : Data = {
+    val newData = new Data
+    val newInputs = inputs.map(in => in.zipWithIndex.filter(x => indexes.exists(_ == x._2)).map(x => x._1) )
+    newData.load(newInputs, labels)
+    newData
   }
 
   def getLabels(indexes : Traversable[Int]) : TY = {
@@ -135,87 +140,87 @@ class Data extends DataDNA {
 
 }
 
-class DataRDD(sc: SparkContext) extends DataDNA {
-  type data_type = Double
-  type TX = IndexedRowMatrix
-  type TY = RDD[data_type]
-  var inputs: TX = new IndexedRowMatrix(sc.parallelize(Array(IndexedRow(0,Vectors.dense(Array[data_type](0.0))))))
-  var labels: TY = sc.emptyRDD[data_type]
-
-  def load(X: TX, Y: TY = sc.emptyRDD[data_type]) {
-    // TODO: add some check somewhere
-    // such as X.length == Y.length
-
-    inputs = X
-    nb_objects = X.numRows().toInt
-    nb_attributes = X.numCols().toInt
-
-    // Check if we have a labels
-    if (Y.count > 0) {
-      labeled = true
-      labels = Y
-      nb_classes = labels.distinct.count.toInt
-    } else {
-      labeled = false
-      labels = sc.emptyRDD[data_type]
-    }
-  }
-
-  def loadCSV(uri: String, label: Int) = { println("Data loadCSV") }
-
-  def split(attr: Int, thr: Double): (DataRDD, DataRDD) = {
-//    val partOne = new Data
-//    val partTwo = new Data
-//    val zipped = inputs.zip(labels).partition(i => i._1(attr) < thr)
-//    partOne.load(zipped._1.unzip._1, zipped._1.unzip._2)
-//    partTwo.load(zipped._2.unzip._1, zipped._2.unzip._2)
-//    (partOne, partTwo)
-    (this, this)
-  }
-
-  def getObjects(indexes : Traversable[Int]) : TX = {
-//    indexes.map{i => inputs(i)}.toSeq
-    inputs
-  }
-
-
-  def getAttributes(indexes : Traversable[Int]) : TX = {
-//    (for (i <- indexes) yield { inputs.map(_(i)) }).toSeq
-  inputs
-  }
-
-  def getLabels(indexes : Traversable[Int]) : TY = {
-//    indexes.map{i => labels(i)}.toSeq
-    labels
-  }
-
-  def getValue(i: Int, j: Int) : data_type = { 0.0 }
-
-  def getCounts() : Map[data_type,Int] = {
-    // TODO
-    null
-  }
-
-  def describe {
-//    if (inputs.isEmpty) {
-//      println("There is no data.")
-//      return
-//    }
-
-//    println("\nData description :")
-//    println("------------------")
-//    println("Is there labels ?: " + labeled)
-//    println("Number of objects: " + inputs.length)
-//    println("Number of attributes: " + inputs(0).length)
+//class DataRDD(sc: SparkContext) extends DataDNA {
+//  type data_type = Double
+//  type TX = IndexedRowMatrix
+//  type TY = RDD[data_type]
+//  var inputs: TX = new IndexedRowMatrix(sc.parallelize(Array(IndexedRow(0,Vectors.dense(Array[data_type](0.0))))))
+//  var labels: TY = sc.emptyRDD[data_type]
 //
-//    for (i <- 0 to (inputs(0).length - 1) ) {
-//      println("Attribute " + i + " :")
-//      val mean = inputs.map(_(i)).reduce(_ + _) / inputs.length
-//      println("Mean: " + mean)
-//      println("Sample Variance: " + inputs.map( (x:Seq[Double]) => Math.pow(x(i) - mean, 2)).sum /(inputs.length - 1) )
+//  def load(X: TX, Y: TY = sc.emptyRDD[data_type]) {
+//    // TODO: add some check somewhere
+//    // such as X.length == Y.length
+//
+//    inputs = X
+//    nb_objects = X.numRows().toInt
+//    nb_attributes = X.numCols().toInt
+//
+//    // Check if we have a labels
+//    if (Y.count > 0) {
+//      labeled = true
+//      labels = Y
+//      nb_classes = labels.distinct.count.toInt
+//    } else {
+//      labeled = false
+//      labels = sc.emptyRDD[data_type]
 //    }
-  }
-}
+//  }
+//
+//  def loadCSV(uri: String, label: Int) = { println("Data loadCSV") }
+//
+//  def split(attr: Int, thr: Double): (DataRDD, DataRDD) = {
+////    val partOne = new Data
+////    val partTwo = new Data
+////    val zipped = inputs.zip(labels).partition(i => i._1(attr) < thr)
+////    partOne.load(zipped._1.unzip._1, zipped._1.unzip._2)
+////    partTwo.load(zipped._2.unzip._1, zipped._2.unzip._2)
+////    (partOne, partTwo)
+//    (this, this)
+//  }
+//
+//  def getObjects(indexes : Traversable[Int]) : TX = {
+////    indexes.map{i => inputs(i)}.toSeq
+//    inputs
+//  }
+//
+//
+//  def getAttributes(indexes : Traversable[Int]) : TX = {
+////    (for (i <- indexes) yield { inputs.map(_(i)) }).toSeq
+//  inputs
+//  }
+//
+//  def getLabels(indexes : Traversable[Int]) : TY = {
+////    indexes.map{i => labels(i)}.toSeq
+//    labels
+//  }
+//
+//  def getValue(i: Int, j: Int) : data_type = { 0.0 }
+//
+//  def getCounts() : Map[data_type,Int] = {
+//    // TODO
+//    null
+//  }
+//
+//  def describe {
+////    if (inputs.isEmpty) {
+////      println("There is no data.")
+////      return
+////    }
+//
+////    println("\nData description :")
+////    println("------------------")
+////    println("Is there labels ?: " + labeled)
+////    println("Number of objects: " + inputs.length)
+////    println("Number of attributes: " + inputs(0).length)
+////
+////    for (i <- 0 to (inputs(0).length - 1) ) {
+////      println("Attribute " + i + " :")
+////      val mean = inputs.map(_(i)).reduce(_ + _) / inputs.length
+////      println("Mean: " + mean)
+////      println("Sample Variance: " + inputs.map( (x:Seq[Double]) => Math.pow(x(i) - mean, 2)).sum /(inputs.length - 1) )
+////    }
+//  }
+//}
 
 // Helper to generate dummy data
 // for testing purposes
@@ -284,6 +289,18 @@ def genData(numInstances: Int = 10, numFeatures: Int = 10, labeled: Boolean = fa
   x
 }
 
+def genDataRDD(numInstances: Int = 10, numFeatures: Int = 10,
+               labeled: Boolean = false, sc: SparkContext): DataSchemaRDD = {
+  val data = genData(numInstances, numFeatures, labeled)
+  val x = new DataSchemaRDD(sc)
+  val in = sc.parallelize(data.inputs.map(_.toArray))
+  if (labeled)
+    x.load(in, sc.parallelize(data.labels.zipWithIndex.map(x => (x._1, x._2.toLong))))
+  else
+    x.load(in)
+
+  x
+}
 def genLabeled(numInstances: Int = 10, numFeatures: Int = 10): Seq[Labeled] = {
   val rand = new scala.util.Random
   val x: Seq[Labeled] = for (i:Int <- 0 until numInstances) yield {

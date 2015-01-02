@@ -5,6 +5,9 @@ import breeze.linalg._
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.linalg.distributed.{IndexedRow, IndexedRowMatrix}
 import org.scalatest.FunSuite
+
+import scala.collection.mutable.ArrayBuffer
+
 //import org.scalatest.ShouldMatchers
 
 //import org.apache.spark.SparkContext
@@ -68,13 +71,16 @@ class DataTest extends FunSuite {
 
     data.describe
 
+    data.inputs.map(x => x)
+
     assert(splited._1.labels == Seq(0.0))
 
-    assert(data.getAttribute(0) == Seq(Seq(1.0,2.0,3.0)))
-    assert(data.getAttributes(Seq(0,1)) == Seq(Seq(1.0,2.0,3.0),Seq(1.1,2.1,3.1)))
+    assert(data.getAttribute(0).inputs == Seq(Seq(1.0),Seq(2.0),Seq(3.0)))
 
-    assert(data.getObjects(Seq(0,1)) == Seq(Seq(1.0,1.1),Seq(2.0,2.1)))
-    assert(data.getObject(1) == Seq(Seq(2.0,2.1)))
+    assert(data.getAttributes(Seq(0)).inputs == Seq(Seq(1.0),Seq(2.0), Seq(3.0)))
+
+    assert(data.getObjects(Seq(0,1)).inputs == Seq(Seq(1.0,1.1),Seq(2.0,2.1)))
+    assert(data.getObject(1).inputs == Seq(Seq(2.0,2.1)))
 
     assert(data.getLabels(Seq(0,1)) == Seq(0.0,0.1))
     assert(data.getLabel(1) == Seq(0.1))
@@ -87,7 +93,6 @@ class DataTest extends FunSuite {
 
   test("DataRDD test") {
     info("Some serious stuff going on…")
-    //val sparkConf = new SparkConf().setMaster("local[2]").setAppName("DataSchemaRDD Application")
     val sc = SparkContextManager.getSparkContext(8)
     val data = new DataSchemaRDD(sc)
     val train = sc.parallelize(Seq(Array(1.0,1.1), Array(2.0,2.1), Array(3.0,3.1)))
@@ -95,11 +100,14 @@ class DataTest extends FunSuite {
 
     data.load(train, labels)
     val split = data.split(0, 1.5)
-    //println(split._1.inputs.take(1).take(1)(0)(0))
-    //println(split._2.inputs.take(1).take(1)(0)(0))
-    //println(data.getAttribute(0).collect.toSeq)
-    //println(data.getObject(0).take(1).toSeq)
-    println(data.getValue(1,1))
+    assert(Seq(Seq(1.0, 1.1)) === split._1.inputs.collect().toSeq.map(_.toSeq))
+    assert(Seq(Seq(2.0, 2.1), Seq(3.0, 3.1)) === split._2.inputs.collect().toSeq.map(_.toSeq))
+
+    assert(data.getAttributes(Seq(0)).inputs.collect.toSeq.map(_.toSeq) === Seq(Seq(1.0),Seq(2.0), Seq(3.0)))
+    assert(data.getAttributes(Seq(1)).inputs.collect.toSeq.map(_.toSeq) === Seq(Seq(1.1),Seq(2.1), Seq(3.1)))
+
+    assert(data.getObjects(Seq(2)).inputs.collect.toSeq.map(_.toSeq) === Seq(Seq(3.0, 3.1)))
+
     assert(data.inputs.take(1).take(1)(0)(1) === 1.1)
 
     //    data.loadCSV("/home/manuel/wrk/model/randomforest/src/test/resources/", 0)
@@ -225,6 +233,20 @@ class ForestTest extends FunSuite {
     }
 
     val labeled = dataGenerator.genData(50,50,true)
+    trees.fit(labeled)
+
+  }
+
+  test("Forest fit on DataRDD") {
+    val sc = SparkContextManager.getSparkContext(8)
+    val trees = new Forest(min_samples_split=10,n_estimators=100,max_features=25)
+    val unlabeled = dataGenerator.genDataRDD(50,50,false,sc)
+
+    intercept[CannotFitException]{
+      trees.fit(unlabeled)
+    }
+
+    val labeled = dataGenerator.genDataRDD(50,50,true,sc)
     trees.fit(labeled)
 
   }
