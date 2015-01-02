@@ -54,8 +54,8 @@ class Data extends DataDNA {
   type data_type = Double
   type TX = Seq[Seq[data_type]]
   type TY = Seq[data_type]
-  var inputs: TX = Seq.empty
-  var labels: TY = Seq.empty
+  var inputs: Seq[Seq[data_type]] = Seq.empty
+  var labels: Seq[data_type] = Seq.empty
 
   def load(X: TX, Y: TY = Seq.empty) {
     // TODO: add some check somewhere

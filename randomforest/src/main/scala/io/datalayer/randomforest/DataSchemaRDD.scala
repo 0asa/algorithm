@@ -13,8 +13,8 @@ class DataSchemaRDD(sc: SparkContext) extends DataDNA {
   type TX = RDD[Array[data_type]]
   type TY = RDD[(data_type, Long)]
 
-  var inputs: TX = sc.emptyRDD[Array[data_type]]
-  var labels: TY = sc.emptyRDD[(data_type, Long)]
+  var inputs: RDD[Array[data_type]] = sc.emptyRDD[Array[data_type]]
+  var labels: RDD[(data_type, Long)] = sc.emptyRDD[(data_type, Long)]
 
   def load(X: TX, Y: TY = sc.emptyRDD[(data_type, Long)]) {
     if (Y != sc.emptyRDD[(data_type, Long)]) {
