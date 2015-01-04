@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Licensed to the AOS Community (AOS) under one or more
+  Licensed to the Datalayer Community (Datalayer) under one or more
   contributor license agreements.  See the NOTICE file
   distributed with this work for additional information
-  regarding copyright ownership.  The AOS licenses this file
+  regarding copyright ownership.  The Datalayer licenses this file
   to you under the Apache License, Version 2.0 (the 
   "License"); you may not use this file except in compliance
   with the License.  You may obtain a copy of the License at
@@ -22,7 +22,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>datalayer-algorithm</artifactId>
   <name>Datalayer Algorithm</name>
-  <packaging>pom</packaging>
+  <packaging>jar</packaging>
   <parent>
     <groupId>io.datalayer</groupId>
     <artifactId>datalayer-parent</artifactId>
@@ -32,22 +32,64 @@
     <site>
       <id>datalayer.site</id>
       <name>Datalayer Algorithm Site</name>
-      <url>scp://datalayer.io/site/datalayer.io/platform_doc/model</url>
+      <url>scp://datalayer.io/site/datalayer.io/doc/platform/model</url>
     </site>
   </distributionManagement>
   <properties>
     <spark.version>1.2.0</spark.version>
   </properties>
-  <modules>
-    <module>all</module>
-    <module>controlchart</module>
-    <module>common</module>
-    <module>randomforest</module>
-    <module>graph</module>
-    <module>rank</module>
-    <module>reach</module>
-    <module>regression</module>
-    <module>shortestpath</module>
-    <module>text</module>
-  </modules>
+  <dependencies>
+    <dependency>
+      <groupId>io.datalayer</groupId>
+      <artifactId>datalayer-dna</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.datalayer</groupId>
+      <artifactId>mahout-mrlegacy</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-core_${scala.binary.version}</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-mllib_${scala.binary.version}</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-sql_${scala.binary.version}</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-hive_${scala.binary.version}</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-graphx_${scala.binary.version}</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-bagel_${scala.binary.version}</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-streaming_${scala.binary.version}</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.scalanlp</groupId>
+      <artifactId>breeze_${scala.binary.version}</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.scalanlp</groupId>
+      <artifactId>epic_${scala.binary.version}</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-saddle</groupId>
+      <artifactId>saddle-core_${scala.binary.version}</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.github.nscala-time</groupId>
+      <artifactId>nscala-time_${scala.binary.version}</artifactId>
+    </dependency>
+  </dependencies>
 </project>
