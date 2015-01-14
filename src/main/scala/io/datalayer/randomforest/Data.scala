@@ -7,6 +7,7 @@ import org.apache.spark.mllib.linalg.distributed.{IndexedRow, IndexedRowMatrix}
 import org.apache.spark.mllib.linalg.distributed.DistributedMatrix
 import org.apache.spark.rdd._
 import Math.pow
+import scala.io.Source
 
 /*
   A few temporary classes to handle data...
@@ -30,7 +31,7 @@ trait DataDNA{
   var labels:TY
 
   def load(X:TX, Y:TY)
-  def loadCSV(uri: String, label: Int)
+  def loadCSV(uri: String, label: Int, delimiter:String = " ")
 
   def split(attr: Int, thr: Double): (DataDNA, DataDNA)
 
@@ -76,7 +77,25 @@ class Data extends DataDNA {
     }
   }
 
-  def loadCSV(uri: String, label: Int) = { println("Data loadCSV") }
+  def loadCSV(uri: String, label: Int, delimiter:String) = { 
+    // TODO: take label into account
+    // TODO: avoid the 2 passes over the CSV file
+    labeled = true
+    val p1 = Source.fromFile(uri).getLines() map {
+      line => val fields = line.split(delimiter)
+        fields(0).toDouble      
+    }
+    labels = p1.toList.toSeq
+    nb_classes = labels.distinct.length
+
+    val p2 = Source.fromFile(uri).getLines() map {
+      line => val fields = line.split(delimiter)
+        fields.drop(1).map(_.toDouble).toList.toSeq 
+    } 
+    inputs = p2.toList
+    nb_objects = inputs.length
+    nb_attributes = inputs(0).length    
+  }
 
   def split(attr: Int, thr: Double): (Data, Data) = {
     val partOne = new Data
@@ -126,7 +145,8 @@ class Data extends DataDNA {
 
     println("\nData description :")
     println("------------------")
-    println("Is there labels ?: " + labeled)
+    println("Is there labels: " + labeled)
+    println("How many labels: " + nb_classes)
     println("Number of objects: " + inputs.length)
     println("Number of attributes: " + inputs(0).length)
 

@@ -31,7 +31,7 @@ class DataSchemaRDD(sc: SparkContext) extends DataDNA {
     nb_attributes = inputs.take(1).length
   }
 
-  def loadCSV(uri: String, label: Int) = {
+  def loadCSV(uri: String, label: Int, delimiter:String) = {
 //    val rawData = sc.textFile(uri).map(_.split(",").map(_.toDouble))
 //
 //    if (label > -1) {
