@@ -15,7 +15,7 @@ Implementation of a (not yet) distributed ensemble of decision trees algorithm.
 
 Here is a small sample code:
 
-```
+```scala
 package io.datalayer.randomforest
 
 object Main extends App {
@@ -33,6 +33,7 @@ object Main extends App {
     println("Accuracy = " + forest.predictEval(test)._2)
 }
 ```
+
 # Control Chart
 
 [Control chart](http://en.wikipedia.org/wiki/Control_chart) or Shewhart Control Chart is a method to detect abnormal
@@ -43,17 +44,20 @@ events among a time series. Events must only be numbers.
  `src/test/scala/io/datalayer/controlchart` that tests 40,000,000 events.
 
  if you want to change the number of workers in you spark context, you have to set the following lines
- ```scala
-    val sc = SparkContextManager.getSparkContext(8)
- ```
+ 
+```scala
+val sc = SparkContextManager.getSparkContext(8)
+```
+ 
 where `8` indicates the number of workers.
 
-```
+```scala
 val measures = sc.parallelize(Array[Double](5, 5, 5, 5, 5, 5, 5, 5, 19))
 val cc = new ControlChart()
 cc.setStdLimit(5.0)
 cc.computeLimit(measures)
 cc summary(measures)
+```
 
 # License
 
