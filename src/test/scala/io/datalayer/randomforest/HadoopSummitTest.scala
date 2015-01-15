@@ -40,6 +40,7 @@ class StandaloneTest extends FunSuite {
     // TODO: there is something wrong here
     // the following returns a Stream instead of a Seq/List
     // there must be a better way ;-)
+    // TODO: switch to Data (DataDNA)
     val d = Source.fromFile("/Users/botta/wrk/datalayer/events/20150415-hadoop-summit/src/data.csv").getLines() map {
       line => val fields = line.split(" ")
         Labeled(
@@ -68,10 +69,11 @@ class StandaloneTest extends FunSuite {
   class StandaloneSplitTest extends FunSuite {
     test("Standalone dla Random Forest with Split") {    
 
-     // READ FROM CSV
+    // READ FROM CSV
     // TODO: there is something wrong here
     // the following returns a Stream instead of a Seq/List
     // there must be a better way ;-)
+    // TODO: switch to Data (DataDNA)
     val d = Source.fromFile("/Users/botta/wrk/datalayer/events/20150415-hadoop-summit/src/data.csv").getLines() map {
       line => val fields = line.split(" ")
         Labeled(
