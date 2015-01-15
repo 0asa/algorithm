@@ -82,19 +82,19 @@ class StandaloneTest extends FunSuite {
     val data = d.toList // Stream to List     
 
     val trees1 = new Forest(min_samples_split=10,n_estimators=10,max_features=10) 
-    val data1 = data.toSeq.slice(0,1000)//.toList.toSeq    
+    val data1 = data.toSeq.slice(0,6000)//.toList.toSeq    
     trees1.fit(data1)    
-    info("acc: " + trees1.predictEval(data.toSeq.slice(1000,2000))._2)
+    info("acc: " + trees1.predictEval(data.toSeq.slice(6000,12000))._2)
     
     val trees2 = new Forest(min_samples_split=10,n_estimators=10,max_features=10) 
-    val data2 = data.toSeq.slice(1000,2000)
+    val data2 = data.toSeq.slice(6000,12000)
     trees2.fit(data2)
-    info("acc: " + trees2.predictEval(data.toSeq.slice(0,1000))._2)
+    info("acc: " + trees2.predictEval(data.toSeq.slice(0,6000))._2)
 
     // WARNING: forest parameters are not updated here
     val ensemble = new Forest() 
     ensemble.trees = Array.concat(trees1.trees, trees2.trees)
-    info("acc: " + ensemble.predictEval(data.toSeq.slice(0,2000))._2)
+    info("acc: " + ensemble.predictEval(data.toSeq.slice(0,12000))._2)
 
   }
 }
