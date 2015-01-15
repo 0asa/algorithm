@@ -29,39 +29,38 @@ object TestParams {
 
 class StandaloneTest extends FunSuite {
   test("Standalone dla Random Forest") {
-    val trees = new Forest(min_samples_split=10,n_estimators=10,max_features=10)
+    val trees = new Forest(min_samples_split=10,n_estimators=10,max_features=10)    
     //val labeled = dataGenerator.genLabeled(100,50)
     //val labeled = new Data
     //labeled.loadCSV("/Users/botta/wrk/datalayer/events/20150415-hadoop-summit/src/data.csv",0)
     //labeled.describe
     //trees.fit(labeled)        
-
-    /*
+        
     // READ FROM CSV
     // TODO: there is something wrong here
-    val data = Source.fromFile("/Users/botta/wrk/datalayer/events/20150415-hadoop-summit/src/data.csv").getLines() map {
+    // the following returns a Stream instead of a Seq/List
+    // there must be a better way ;-)
+    val d = Source.fromFile("/Users/botta/wrk/datalayer/events/20150415-hadoop-summit/src/data.csv").getLines() map {
       line => val fields = line.split(" ")
         Labeled(
           fields.drop(1).map(_.toFloat).toList.toSeq,
           Label(fields(0).toInt)
           )
     }
-    */
+    val data = d.toList // Stream to List    
 
-    val data = dataGenerator.genLabeled(2000,50) 
+    val train = data.toSeq.slice(1000,2000)        
+    trees.fit(train)    
 
-    val train = data.toSeq.slice(1000,2000)    
-    trees.fit(train)
-
-    val test1 = data.toSeq.slice(0,1000)    
+    val test1 = data.toSeq.slice(0,1000).toList    
+    println(test1.length)
     var accuracy = trees.predictEval(test1)
     info("Accuracy = " + accuracy._2)
     
-    val test2 = data.toSeq.slice(1000,2000)    
+    val test2 = data.toSeq.slice(1000,2000).toList
+    println(test2.length)
     var accuracy2 = trees.predictEval(test2)
     info("Accuracy = " + accuracy2._2)
-
-    // TODO: what is going on with the accuracy?    
     
   }
 }
@@ -69,19 +68,18 @@ class StandaloneTest extends FunSuite {
   class StandaloneSplitTest extends FunSuite {
     test("Standalone dla Random Forest with Split") {    
 
-    /*
-    // READ FROM CSV
+     // READ FROM CSV
     // TODO: there is something wrong here
-    val data = Source.fromFile("/Users/botta/wrk/datalayer/events/20150415-hadoop-summit/src/data.csv").getLines() map {
+    // the following returns a Stream instead of a Seq/List
+    // there must be a better way ;-)
+    val d = Source.fromFile("/Users/botta/wrk/datalayer/events/20150415-hadoop-summit/src/data.csv").getLines() map {
       line => val fields = line.split(" ")
         Labeled(
           fields.drop(1).map(_.toFloat).toList.toSeq,
           Label(fields(0).toInt)
           )
     }
-    */
-
-    val data = dataGenerator.genLabeled(2000,50)    
+    val data = d.toList // Stream to List     
 
     val trees1 = new Forest(min_samples_split=10,n_estimators=10,max_features=10) 
     val data1 = data.toSeq.slice(0,1000)//.toList.toSeq    
