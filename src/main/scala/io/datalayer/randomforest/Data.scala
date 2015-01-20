@@ -18,7 +18,8 @@ case class Unlabeled(input: Seq[Float])
 
 case class IncompatibleDataTypeException(message: String) extends Exception(message)
 
-trait DataDNA{
+trait DataDNA {
+
   type data_type
   type TX
   type TY
@@ -60,12 +61,19 @@ trait DataDNA{
   def describe
 }
 
-class Data extends DataDNA {
+class Data extends DataDNA with Traversable[Seq[Double]] {
   type data_type = Double
   type TX = Seq[Seq[data_type]]
   type TY = Seq[data_type]
   var inputs: Seq[Seq[data_type]] = Seq.empty
   var labels: Seq[data_type] = Seq.empty
+
+  // TODO: use labels as well
+  // currently the foreach
+  // does not take labels into account
+  def foreach[U](f: Seq[Double] => U): Unit = {
+    inputs.foreach(f)
+  }
 
   def load(X: TX, Y: TY = Seq.empty) {
     // TODO: add some check somewhere

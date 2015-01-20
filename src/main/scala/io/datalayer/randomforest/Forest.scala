@@ -40,7 +40,7 @@ class Forest( n_estimators: Int = 10,
     println("Forest.setParams")
   }
 
-  def fit(x: DataDNA) {
+  def fit(x: DataDNA): Unit = {
     if (!x.labeled) {
       throw CannotFitException("Data must be labeled")
     }
@@ -53,18 +53,17 @@ class Forest( n_estimators: Int = 10,
     }
   }
 
-  def fit(x: Seq[Labeled]) = {
+  def fit(x: Seq[Labeled]): Unit = {
     for (i <- 0 to (trees.length - 1)) {
       if (bootstrap) {
         // TODO: bootstrap if needed
       } else {
-        trees(i).fit(x)
+        trees(i).fit(x)        
       }
     }
   }
   
-  def predict(x: Unlabeled): Array[Double]= {
-    // func to aggregate 2 prob vectors
+  def predict(x: Unlabeled): Array[Double]= {    
     def agg(x: Array[Double], y: Array[Double]) : Array[Double] = {
       val z = new Array[Double](x.length)
       for (i <- 0 until x.length) z(i) = x(i) + y(i)
@@ -76,6 +75,13 @@ class Forest( n_estimators: Int = 10,
 
   def predict(x: Seq[Unlabeled]): Array[Array[Double]] = {    
     x.map(predict(_)).toArray
+  }
+
+  // TODO
+  def predict(x: DataDNA): Array[Array[Double]] = {
+    var probas = new Array[Array[Double]](x.nb_objects)
+    probas
+    //x.map(predict(_)).toArray
   }
 
   def importances(): Array[Double] = {

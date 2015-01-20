@@ -234,8 +234,9 @@ class ForestTest extends FunSuite {
 
     val labeled = dataGenerator.genData(25,5,true)    
     trees.fit(labeled)
-
+    labeled.foreach(println)
     // TOOD: predict
+    val pred = trees.predict(labeled)
   }
 
   test("Forest fit on DataRDD") {

@@ -28,7 +28,7 @@ class Tree( max_features: Int = 10,
     str_param
   }
 
-  def fit(x: DataDNA) = {
+  def fit(x: DataDNA): Unit = {
     Node.nbclass = x.nb_classes
     root = new Node
     root._samples = x
@@ -58,7 +58,7 @@ class Tree( max_features: Int = 10,
 
   }
 
-  def fit(x: Seq[Labeled]) = {
+  def fit(x: Seq[Labeled]): Unit = {
     val maps = x.groupBy(e => e.label.label)
     Node.nbclass = maps.size
     root = new Node
@@ -91,12 +91,8 @@ class Tree( max_features: Int = 10,
     root.predict(x)
   }
 
-  def predict(x: Seq[Unlabeled]): Array[Array[Double]] = {
-    var probas = new Array[Array[Double]](x.length)
-    for (i <- 0 to (x.length - 1)) {
-      probas(i) = predict(x(i))
-    }
-    probas
+  def predict(x: Seq[Unlabeled]): Array[Array[Double]] = {    
+    x.map(predict(_)).toArray
   }
 
   def importances(): Array[Double] = {
