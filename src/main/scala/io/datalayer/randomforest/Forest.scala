@@ -62,21 +62,20 @@ class Forest( n_estimators: Int = 10,
       }
     }
   }
-
+  
   def predict(x: Unlabeled): Array[Double]= {
-    var probas = new Array[Double](trees(0).root.nbclass)
-    for (i <- 0 to (trees.length - 1)) {
-      probas = (probas,trees(i).predict(x)).zipped.map(_ + _)
-    }
+    // func to aggregate 2 prob vectors
+    def agg(x: Array[Double], y: Array[Double]) : Array[Double] = {
+      val z = new Array[Double](x.length)
+      for (i <- 0 until x.length) z(i) = x(i) + y(i)
+      z
+    }    
+    val probas = trees.map(_.predict(x)).reduce(agg)    
     probas.map{ e => e/trees.length }
   }
 
-  def predict(x: Seq[Unlabeled]): Array[Array[Double]] = {
-    var probas = new Array[Array[Double]](x.length)
-    for (i <- 0 to (x.length - 1)) {
-      probas(i) = predict(x(i))
-    }
-    probas
+  def predict(x: Seq[Unlabeled]): Array[Array[Double]] = {    
+    x.map(predict(_)).toArray
   }
 
   def importances(): Array[Double] = {
