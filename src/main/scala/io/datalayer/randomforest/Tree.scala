@@ -40,8 +40,8 @@ class Tree( max_features: Int = 10,
       n._fit()
       // but will need to adapt the Node class
       if (n._canSplit()) {
-        // generate partitions
-        val partitions = n._samples.split(n.split.attribute,n.split.threshold)
+        // generate partitions        
+        val partitions = n._samples.split(n.split.attribute,n.split.threshold)        
         n.left = new Node(max_features,max_depth,min_samples_split)
         n.left.depth = n.depth + 1
         n.left._samples = partitions._1
@@ -70,7 +70,7 @@ class Tree( max_features: Int = 10,
       complexity += 1
       n.fit()
       if (n.canSplit()) {
-        // generate partitions
+        // generate partitions       
         val partitions = n.samples.partition(i => i.input(n.split.attribute) < n.split.threshold)
         n.left = new Node(max_features,max_depth,min_samples_split)
         n.left.depth = n.depth + 1
@@ -97,6 +97,12 @@ class Tree( max_features: Int = 10,
       probas(i) = predict(x(i))
     }
     probas
+  }
+
+  def importances(): Array[Double] = {
+    // TODO: scan all the nodes
+    // use information stored in n.split
+    Array.empty[Double]
   }
 
   def display() {

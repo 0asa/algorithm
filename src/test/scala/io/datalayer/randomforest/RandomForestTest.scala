@@ -17,8 +17,8 @@ import scala.language.implicitConversions
 import io.datalayer.common.SparkContextManager
 
 object TestParams {
-  val ls_size = 500
-  val ts_size = 1000
+  val ls_size = 100
+  val ts_size = 100
   val train = dataGenerator.genLabeled(ls_size,50)
   val test = dataGenerator.genUnlabeled(ts_size,50)
   val evaluate = dataGenerator.genLabeled(ts_size,50)
@@ -225,22 +225,24 @@ class ForestTest extends FunSuite {
   val evaluate = TestParams.evaluate
 
   test("Forest fit on DataDNA") {
-    val trees = new Forest(min_samples_split=10,n_estimators=100,max_features=25)
-    val unlabeled = dataGenerator.genData(50,50,false)
+    val trees = new Forest(min_samples_split=10,n_estimators=10,max_features=5)
+    val unlabeled = dataGenerator.genData(50,10,false)
 
     intercept[CannotFitException]{
       trees.fit(unlabeled)
     }
 
-    val labeled = dataGenerator.genData(50,50,true)
+    val labeled = dataGenerator.genData(25,5,true)    
     trees.fit(labeled)
 
+    // TOOD: predict
   }
 
   test("Forest fit on DataRDD") {
-    val sc = SparkContextManager.getSparkContext(8)
-    val trees = new Forest(min_samples_split=10,n_estimators=100,max_features=25)
-    val unlabeled = dataGenerator.genDataRDD(50,50,false,sc)
+    info("Nothing done yet here")
+    //val sc = SparkContextManager.getSparkContext(8)
+    //val trees = new Forest(min_samples_split=10,n_estimators=100,max_features=25)
+    //val unlabeled = dataGenerator.genDataRDD(50,50,false,sc)
 
     // TODO: Make it work !
 //    intercept[CannotFitException]{

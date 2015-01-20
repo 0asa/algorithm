@@ -60,6 +60,11 @@ class DataSchemaRDD(sc: SparkContext) extends DataDNA {
     (partOne, partTwo)
   }
 
+  def findRandomSplit() : Split = {
+    // TODO: implement this
+    Split()
+  }
+
   def getObjects(indexes : Traversable[Int]) : DataSchemaRDD = {
     val newData = new DataSchemaRDD(sc)
     newData.load(inputs.zipWithIndex.filter(x => indexes.exists(x._2.toInt == _)).map(_._1),

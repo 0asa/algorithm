@@ -22,7 +22,7 @@ class Forest( n_estimators: Int = 10,
               min_samples_split: Int = 2,
               bootstrap: Boolean = false) extends Learner {
 
-  var trees: Array[Tree] = new Array[Tree](n_estimators)
+  var trees: Array[Tree] = new Array[Tree](n_estimators)  
   for (i <- 0 to (trees.length - 1)) {
     trees(i) = new Tree(max_features, max_depth, min_samples_split)
   }
@@ -77,6 +77,11 @@ class Forest( n_estimators: Int = 10,
       probas(i) = predict(x(i))
     }
     probas
+  }
+
+  def importances(): Array[Double] = {
+    // TODO
+    Array.empty[Double]
   }
 
   def display() {

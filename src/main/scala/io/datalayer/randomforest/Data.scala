@@ -1,6 +1,5 @@
 package io.datalayer.randomforest
 
-
 import org.apache.spark.SparkContext
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.linalg.distributed.{IndexedRow, IndexedRowMatrix}
@@ -8,6 +7,7 @@ import org.apache.spark.mllib.linalg.distributed.DistributedMatrix
 import org.apache.spark.rdd._
 import Math.pow
 import scala.io.Source
+import scala.util.Random
 
 /*
   A few temporary classes to handle data...
@@ -41,6 +41,15 @@ trait DataDNA{
   def getAttribute(index : Int) : DataDNA = { getAttributes(Traversable(index)) }
   def getAttributes(indexes : Traversable[Int]) : DataDNA
 
+  /*
+  implicit def dataDNAToSeq(d: DataDNA) = {
+    // TODO: implicit cast to a scala type?
+    println("IMPLICIT CALL")    
+  }
+  */
+  
+  def findRandomSplit() : Split
+  
   def getLabel(index : Int) : TY = { getLabels(Traversable(index)) }
   def getLabels(indexes : Traversable[Int]) : TY
 
@@ -62,7 +71,7 @@ class Data extends DataDNA {
     // TODO: add some check somewhere
 
     inputs = X
-    nb_objects = X.length
+    nb_objects = X.length    
     nb_attributes = X(0).length
 
     // Check if we have a labels
@@ -97,19 +106,33 @@ class Data extends DataDNA {
     nb_attributes = inputs(0).length    
   }
 
-  def split(attr: Int, thr: Double): (Data, Data) = {
+  def split(att: Int, th: Double): (Data, Data) = {
     val partOne = new Data
     val partTwo = new Data
-    if (labeled) {
-      val zipped = inputs.zip(labels).partition(i => i._1(attr) < thr)
+    if (labeled) {      
+      val zipped = inputs.zip(labels).partition(i => i._1(att) < th)      
       partOne.load(zipped._1.unzip._1, zipped._1.unzip._2)
       partTwo.load(zipped._2.unzip._1, zipped._2.unzip._2)
     } else {
-      val splitted = inputs.partition(_(attr) < thr)
+      val splitted = inputs.partition(_(att) < th)
       partOne.load(splitted._1)
       partTwo.load(splitted._2)
     }
     (partOne, partTwo)
+  }
+
+  def findRandomSplit() : Split = {    
+    val rand = new Random
+    var att = Random.nextInt(nb_attributes)
+    var th = -1.0
+    var att_vector = rand.shuffle(inputs.map(_(att)))
+    att_vector = att_vector.distinct    
+    if (att_vector.length > 1) {      
+      th = math.min(att_vector(0),att_vector(1)) + (math.abs(att_vector(0) - att_vector(1)) / 2.0)
+    } else {      
+      att = -1
+    }    
+    Split(att,th)
   }
 
   def getObjects(indexes : Traversable[Int]) : Data = {
@@ -125,7 +148,7 @@ class Data extends DataDNA {
     val newInputs = inputs.map(in => in.zipWithIndex.filter(x => indexes.exists(_ == x._2)).map(x => x._1) )
     newData.load(newInputs, labels)
     newData
-  }
+  }  
 
   def getLabels(indexes : Traversable[Int]) : TY = {
     indexes.map{i => labels(i)}.toSeq

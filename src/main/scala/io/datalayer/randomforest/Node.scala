@@ -15,11 +15,6 @@ object Node {
 
 
 /*
-  Split class
-*/
-case class Split(attribute: Int = -1, threshold: Double = -1, var score: Double = -1)
-
-/*
   Node class
 */
 class Node( max_features: Int = 10,
@@ -132,6 +127,7 @@ class Node( max_features: Int = 10,
   def updateSplitScore(s: Split, scorer:(Seq[Labeled], Seq[Labeled], Seq[Labeled]) => Double = infogainScore) {
     val part = samples.partition(i => i.input(s.attribute) < s.threshold)
     s.score = scorer(samples,part._1,part._2)
+    s.size = samples.length
   }
 
   def findRandomSplit(): Split = {
@@ -149,18 +145,7 @@ class Node( max_features: Int = 10,
   }
 
   def _findRandomSplit(): Split = {
-    val rand = new Random
-    var att = Random.nextInt(_samples.nb_attributes)
-    var th = -1.0
-    val values:List[Vector[Double]] = _samples.getAttribute(att).asInstanceOf[List[Vector[Double]]]
-    var att_vector = rand.shuffle(values(0))
-    att_vector = att_vector.distinct
-    if (att_vector.length > 1) {
-      th = math.min(att_vector(0),att_vector(1)) + (math.abs(att_vector(0) - att_vector(1)) / 2.0)
-    } else {
-      att = -1
-    }
-    Split(att,th)
+    _samples.findRandomSplit
   }
 
   def _fit(): Unit = {
