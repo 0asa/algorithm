@@ -54,8 +54,46 @@ class DataTest extends FunSuite {
   }
   */
 
+  test("RowDNA test") {
+    val rowtest = new RowDNA[Double,Seq[Double], Int](Seq(1.5,2.5,3.5),Some(1))
+    
+    assert(rowtest.nb_attributes == 3)
+    assert(rowtest.isLabeled == true)
+    assert(rowtest.attributes(0) == 1.5)
+    assert(rowtest.attributes(1) == 2.5)
+    assert(rowtest.attributes(2) == 3.5)
+    assert(rowtest.label == Some(1))
+  }
+
   test("First DataDNA test") {
     info("Going to be the coolest thing you've ever done!")
+    
+    val r1 = new RowDNA[Double,Seq[Double], Int](Seq(1.0,1.35,1.5,1.99),Some(0))
+    val r2 = new RowDNA[Double,Seq[Double], Int](Seq(2.0,2.35,2.5,2.99),Some(1))
+    val r3 = new RowDNA[Double,Seq[Double], Int](Seq(3.0,3.35,3.5,3.99),Some(2))
+  
+    val datatest = new Data(Seq(r1,r2,r3))
+
+    assert(datatest.nb_objects == 3)
+    assert(datatest.nb_attributes == 4)
+    assert(datatest.nb_classes == 3)
+    assert(datatest.labeled == true)
+    assert(datatest.getAttribute(1) == List(1.35, 2.35, 3.35))
+    assert(datatest.getLabel(1) == 1)
+    //println(datatest.findRandomSplit)
+    //println(datatest.split(0,1.5)._1)
+    //println(datatest.split(0,1.5)._2)
+    //println(datatest.getCounts)      
+    //println(datatest.getLabels(Seq(1,2)))
+    //println(datatest.getObject(1))
+    //println(datatest.getObjects(Seq(0,2)))
+    //println(datatest.getAttributes(Seq(1,2)))
+    //println(datatest)
+      
+    //println(datatest.map(_.attributes(0)))
+    //println(datatest.map(_.label))
+    //println(datatest.partition(_.attributes(1) < 2.5))  
+
     /*
     val data = new Data
     data.load(Seq(Seq(1.0,1.1),Seq(2.0,2.1),Seq(3.0,3.1)))

@@ -150,39 +150,7 @@ class Data(val rows: Seq[RowDNA[Double,Seq[Double], Int]]) extends DataDNA[Doubl
 //########################################
 case class IncompatibleDataTypeException(message: String) extends Exception(message)
 
-trait DataDNA {
-
-  // TODO: move the commented code in test suites
-  //val rowtest = new RowDNA[Double,Seq[Double], Int](Seq(1.5,2.5,3.5),Some(1))
-  //println(rowtest)
-  //println(rowtest.nbAttributes)
-  //println(rowtest.isLabeled)
-  //println(rowtest.attributes(0))
-
-  // toy rows
-  //val r1 = new RowDNA[Double,Seq[Double], Int](Seq(1.0,1.35,1.5,1.99),Some(0))
-  //val r2 = new RowDNA[Double,Seq[Double], Int](Seq(2.0,2.35,2.5,2.99),Some(1))
-  //val r3 = new RowDNA[Double,Seq[Double], Int](Seq(3.0,3.35,3.5,3.99),Some(2))
-  
-  //val datatest = new Data2(Seq(r1,r2,r3))
-  //println(datatest.findRandomSplit)
-  //println(datatest.split(0,1.5)._1)
-  //println(datatest.split(0,1.5)._2)
-  //println(datatest.getCounts)
-  //println(datatest.getLabel(1))
-  //println(datatest.getLabels(Seq(1,2)))
-  //println(datatest.getObject(1))
-  //println(datatest.getObjects(Seq(0,2)))
-  //println(datatest.getAttribute(1))
-  //println(datatest.getAttributes(Seq(1,2)))
-  //println(datatest)
-  //println(datatest.nb_objects)  
-  //println(datatest.nb_attributes)
-  //println(datatest.nb_classes)
-  //println(datatest.labeled)
-  //println(datatest.map(_.attributes(0)))
-  //println(datatest.map(_.label))
-  //println(datatest.partition(_.attributes(1) < 2.5))  
+trait DataDNA {  
 
   type data_type
   type TX
