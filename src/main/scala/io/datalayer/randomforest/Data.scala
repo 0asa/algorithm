@@ -17,7 +17,6 @@ case class Label(label: Int)
 case class Labeled(input: Seq[Float], label: Label)
 case class Unlabeled(input: Seq[Float])
 
-
 class RowDNA[T,TX <: Traversable[T],TY] (val attributes:TX, val label:Option[TY] = None) {
   val isLabeled:Boolean = { label != None }
   val nb_attributes:Int = attributes.size
@@ -50,12 +49,11 @@ trait DataDNA2[T,TX <: Traversable[T],TY] extends Traversable[RowDNA[T,TX,TY]] {
   def getLabel(index : Int) : TY = { getLabels(Traversable(index)).head }
   def getLabels(indexes : Traversable[Int]) : Traversable[TY]
 
-  //def findRandomSplit() : Split
-  //def split(att: Int, th: Double): (DataDNA2[T,TX,TY], DataDNA2[T,TX,TY])
-  //def getCounts(): Map[TY,Int]
-
-  //def describe
+  def getCounts(): Map[TY,Int]
+  def split(att: Int, th: Double): (DataDNA2[T,TX,TY], DataDNA2[T,TX,TY])
+  def findRandomSplit() : Split
   
+  //def describe // Do we need this now?
 }
 
 class Data2(val rows: Seq[RowDNA[Double,Seq[Double], Int]]) extends DataDNA2[Double,Seq[Double],Int] {  
@@ -85,7 +83,7 @@ class Data2(val rows: Seq[RowDNA[Double,Seq[Double], Int]]) extends DataDNA2[Dou
     this(Seq.empty[RowDNA[Double,Seq[Double], Int]])
   }
 
-  def getAttributes(indexes : Traversable[Int]) : Traversable[Seq[Double]] = {
+  def getAttributes(indexes : Traversable[Int]) = {
     indexes.map(
       i => rows.map(
         row => row.attributes(i)
@@ -93,15 +91,37 @@ class Data2(val rows: Seq[RowDNA[Double,Seq[Double], Int]]) extends DataDNA2[Dou
       )        
   }
 
-  def getObjects(indexes : Traversable[Int]) : DataDNA2[Double,Seq[Double],Int] = {
+  def getObjects(indexes : Traversable[Int]) = {
     new Data2(indexes.map(i => rows(i)).toSeq)    
   }
 
-  def getLabels(indexes : Traversable[Int]) : Traversable[Int] = {
+  def getLabels(indexes : Traversable[Int]) = {
     indexes.map(i => rows(i).label.getOrElse(-1))
   }
   
-  def getValue(row: Int, att: Int) : Double = { rows(row).attributes(att) }
+  def getValue(row: Int, att: Int) = { rows(row).attributes(att) }
+
+  def getCounts() = {    
+    rows.groupBy(row => row.label.getOrElse(-1)).map(e => { (e._1, e._2.length) })    
+  }
+
+  def split(att: Int, th: Double) = {
+    val part = partition(_.attributes(att) < th)
+    (new Data2(part._1.toSeq), new Data2(part._2.toSeq))
+  }
+
+  def findRandomSplit() = {    
+    var att = Random.nextInt(nb_attributes)
+    var th = -1.0    
+    var att_vector = Random.shuffle(getAttribute(att))    
+    att_vector = att_vector.distinct    
+    if (att_vector.length > 1) {      
+      th = math.min(att_vector(0),att_vector(1)) + (math.abs(att_vector(0) - att_vector(1)) / 2.0)
+    } else {      
+      att = -1
+    }    
+    Split(att,th)    
+  }
   
 }
 
@@ -122,6 +142,10 @@ trait DataDNA {
   //val r3 = new RowDNA[Double,Seq[Double], Int](Seq(3.0,3.35,3.5,3.99),Some(2))
   
   //val datatest = new Data2(Seq(r1,r2,r3))
+  //println(datatest.findRandomSplit)
+  //println(datatest.split(0,1.5)._1)
+  //println(datatest.split(0,1.5)._2)
+  //println(datatest.getCounts)
   //println(datatest.getLabel(1))
   //println(datatest.getLabels(Seq(1,2)))
   //println(datatest.getObject(1))
