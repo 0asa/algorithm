@@ -28,7 +28,7 @@ class Tree( max_features: Int = 10,
     str_param
   }
 
-  def fit(x: DataDNA): Unit = {
+  def fit(x: DataDNA[Double,Seq[Double],Int]): Unit = {
     Node.nbclass = x.nb_classes
     root = new Node
     root._samples = x

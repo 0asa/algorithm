@@ -27,7 +27,7 @@ class Node( max_features: Int = 10,
   var depth: Int = 1
   var votes: Array[Double] = null
   var samples: Seq[Labeled] = null
-  var _samples: DataDNA = null
+  var _samples: DataDNA[Double,Seq[Double],Int] = null
   val nbclass:Int = Node.nbclass
 
   private def printParams() : String = {

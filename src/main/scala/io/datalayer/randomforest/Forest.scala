@@ -40,7 +40,7 @@ class Forest( n_estimators: Int = 10,
     println("Forest.setParams")
   }
 
-  def fit(x: DataDNA): Unit = {
+  def fit(x: DataDNA[Double,Seq[Double],Int]): Unit = {
     if (!x.labeled) {
       throw CannotFitException("Data must be labeled")
     }
@@ -78,7 +78,7 @@ class Forest( n_estimators: Int = 10,
   }
 
   // TODO
-  def predict(x: DataDNA): Array[Array[Double]] = {
+  def predict(x: DataDNA[Double,Seq[Double],Int]): Array[Array[Double]] = {
     var probas = new Array[Array[Double]](x.nb_objects)
     probas
     //x.map(predict(_)).toArray

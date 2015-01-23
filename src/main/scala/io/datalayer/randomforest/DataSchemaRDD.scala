@@ -7,7 +7,7 @@ import org.apache.spark.sql.SchemaRDD
 /**
  * Created by manuel on 19/12/14.
  */
-
+/*
 class DataSchemaRDD(sc: SparkContext) extends DataDNA {
   type data_type = Double
   type TX = RDD[Array[data_type]]
@@ -113,3 +113,4 @@ class DataSchemaRDD(sc: SparkContext) extends DataDNA {
     //    }
   }
 }
+*/
