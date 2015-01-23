@@ -8,6 +8,7 @@ import org.apache.spark.rdd._
 import Math.pow
 import scala.io.Source
 import scala.util.Random
+import scala.reflect.ClassTag
 
 /*
   A few temporary classes to handle data...
@@ -16,9 +17,125 @@ case class Label(label: Int)
 case class Labeled(input: Seq[Float], label: Label)
 case class Unlabeled(input: Seq[Float])
 
+
+class RowDNA[T,TX <: Traversable[T],TY] (val attributes:TX, val label:Option[TY] = None) {
+  val isLabeled:Boolean = { label != None }
+  val nb_attributes:Int = attributes.size
+  override def toString = {
+    "attributes: [" + attributes.mkString(", ") + "]\tlabel: " + label.getOrElse("(unlabeled)")
+  }
+}
+
+trait DataDNA2[T,TX <: Traversable[T],TY] extends Traversable[RowDNA[T,TX,TY]] {
+  val rows:Traversable[RowDNA[T,TX,TY]]
+  def nb_objects: Int = rows.size
+  val nb_attributes: Int
+  val nb_classes: Int
+  val labeled: Boolean
+
+  def foreach[U](f: RowDNA[T,TX,TY] => U): Unit = {
+    rows.foreach(f)
+  }
+  override def toString = {
+    rows.mkString("\n")
+  }  
+
+  def getObject(index : Int) : RowDNA[T,TX,TY] = { getObjects(Traversable(index)).head }
+  def getObjects(indexes : Traversable[Int]) : DataDNA2[T,TX,TY]
+
+  def getAttribute(index : Int) : TX = { getAttributes(Traversable(index)).head }
+  def getAttributes(indexes : Traversable[Int]) : Traversable[TX]  
+  def getValue(i: Int, j: Int) : T
+  
+  def getLabel(index : Int) : TY = { getLabels(Traversable(index)).head }
+  def getLabels(indexes : Traversable[Int]) : Traversable[TY]
+
+  //def findRandomSplit() : Split
+  //def split(att: Int, th: Double): (DataDNA2[T,TX,TY], DataDNA2[T,TX,TY])
+  //def getCounts(): Map[TY,Int]
+
+  //def describe
+  
+}
+
+class Data2(val rows: Seq[RowDNA[Double,Seq[Double], Int]]) extends DataDNA2[Double,Seq[Double],Int] {  
+
+  val nb_attributes = if (check_attributes) { rows(0).nb_attributes } else { 0 /* or throw exception */ }
+  val nb_classes = if (check_labels) { rows.map(x => x.label).distinct.size } else { 0 }
+  val labeled = check_labels
+
+  private def check_attributes = {
+    rows.map(_.nb_attributes).distinct.size == 1
+  }
+
+  private def check_labels = {
+    rows.map(_.isLabeled).distinct.size == 1  
+  }
+  
+  // Create a Data2 from a CSV file
+  def this(uri: String, labelpos: Int, delimiter:String = " ") = {
+    // TODO: read from CSV
+    // create Seq[RowDNA] from the file
+    // call this(Seq[RowDNA])
+    this(Seq.empty[RowDNA[Double,Seq[Double], Int]])
+  }
+
+  // Create an empty Data2
+  def this() = {
+    this(Seq.empty[RowDNA[Double,Seq[Double], Int]])
+  }
+
+  def getAttributes(indexes : Traversable[Int]) : Traversable[Seq[Double]] = {
+    indexes.map(
+      i => rows.map(
+        row => row.attributes(i)
+        )
+      )        
+  }
+
+  def getObjects(indexes : Traversable[Int]) : DataDNA2[Double,Seq[Double],Int] = {
+    new Data2(indexes.map(i => rows(i)).toSeq)    
+  }
+
+  def getLabels(indexes : Traversable[Int]) : Traversable[Int] = {
+    indexes.map(i => rows(i).label.getOrElse(-1))
+  }
+  
+  def getValue(row: Int, att: Int) : Double = { rows(row).attributes(att) }
+  
+}
+
 case class IncompatibleDataTypeException(message: String) extends Exception(message)
 
 trait DataDNA {
+
+  // TODO: move the commented code in test suites
+  //val rowtest = new RowDNA[Double,Seq[Double], Int](Seq(1.5,2.5,3.5),Some(1))
+  //println(rowtest)
+  //println(rowtest.nbAttributes)
+  //println(rowtest.isLabeled)
+  //println(rowtest.attributes(0))
+
+  // toy rows
+  //val r1 = new RowDNA[Double,Seq[Double], Int](Seq(1.0,1.35,1.5,1.99),Some(0))
+  //val r2 = new RowDNA[Double,Seq[Double], Int](Seq(2.0,2.35,2.5,2.99),Some(1))
+  //val r3 = new RowDNA[Double,Seq[Double], Int](Seq(3.0,3.35,3.5,3.99),Some(2))
+  
+  //val datatest = new Data2(Seq(r1,r2,r3))
+  //println(datatest.getLabel(1))
+  //println(datatest.getLabels(Seq(1,2)))
+  //println(datatest.getObject(1))
+  //println(datatest.getObjects(Seq(0,2)))
+  //println(datatest.getAttribute(1))
+  //println(datatest.getAttributes(Seq(1,2)))
+  //println(datatest)
+  //println(datatest.nb_objects)  
+  //println(datatest.nb_attributes)
+  //println(datatest.nb_classes)
+  //println(datatest.labeled)
+  //println(datatest.map(_.attributes(0)))
+  //println(datatest.map(_.label))
+  //println(datatest.partition(_.attributes(1) < 2.5))  
 
   type data_type
   type TX
