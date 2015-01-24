@@ -3,7 +3,7 @@
 # Introduction
 
 Datalayer Model is a module that can be deployed and configured in the 
-<a href="http://datalayer.io/platform">Datalayer Big Data Science Platform</a>.
+[Datalayer Big Data Science Platform](http://datalayer.io/platform).
 
 [Read more](src/site/markdown/index.md) on this component.
 
