@@ -2,6 +2,7 @@ package io.datalayer.randomforest
 
 /*
  Learner trait: should evolve and end up in the common folder
+ TODO: use DataDNA
 */
 trait Learner {
   private def getMaxByIndex(x: Array[Double]): Label = Label(x.zipWithIndex.maxBy(_._1)._2)

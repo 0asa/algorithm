@@ -22,15 +22,6 @@ class Forest( n_estimators: Int = 10,
     trees(i) = new Tree(max_features, max_depth, min_samples_split)
   }
 
-  override def toString: String = {
-    val str_param:String = "n_estimators=" + n_estimators + ";" +
-      "bootstrap=" + bootstrap + ";" +
-      "max_features=" + max_features + ";" +
-      "max_depth=" + max_depth + ";" +
-      "min_samples_split=" + min_samples_split + ";"
-    str_param
-  }
-
   /** Fit method on DataDNA.
     *
     * TODO: abstract types contained in DataDNA
@@ -55,6 +46,7 @@ class Forest( n_estimators: Int = 10,
     *
     * TODO: this method is here for historical
     *       reasons and backward compatibility
+    *       this method will disappear (does not use DataDNA)
     *
     * @param x a sequence of Labeled
     * @return nothing
@@ -71,6 +63,8 @@ class Forest( n_estimators: Int = 10,
 
   /** Predict method for a single Unlabeled.
     *
+    * TODO: this method will disappear (does not use DataDNA)
+    *
     * @param x an Unlabeled object
     * @return probas a vector of class probabilities
     */
@@ -85,6 +79,8 @@ class Forest( n_estimators: Int = 10,
   }
 
   /** Predict method for a sequence of Unlabeled.
+    *
+    * TODO: this method will disappear (does not use DataDNA)
     *
     * @param x a sequence of Unlabeled objects
     * @return probas a vector of class probability vectors
@@ -136,5 +132,14 @@ class Forest( n_estimators: Int = 10,
       println("TREE" + (i+1) + " #############")
       trees(i).display
     }
+  }
+
+  override def toString: String = {
+    val str_param:String = "n_estimators=" + n_estimators + ";" +
+      "bootstrap=" + bootstrap + ";" +
+      "max_features=" + max_features + ";" +
+      "max_depth=" + max_depth + ";" +
+      "min_samples_split=" + min_samples_split + ";"
+    str_param
   }
 }

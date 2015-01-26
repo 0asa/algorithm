@@ -25,21 +25,14 @@ class Node( max_features: Int = 10,
             max_depth: Int = -1,
             min_samples_split: Int = 2) {
 
-  var left: Node = null
-  var right: Node = null
-  var split: Split = null
-  var depth: Int = 1
-  var votes: Array[Double] = null
+  var left: Node = null // left child
+  var right: Node = null // right child
+  var split: Split = null // the Split
+  var depth: Int = 1 // the depth of the node in the tree
+  var votes: Array[Double] = null // vector of class probabilities (freq.)
   var samples: Seq[Labeled] = null // this one will disappear
   var _samples: DataDNA[Double,Seq[Double],Int] = null // remove '_'
-  val nbclass:Int = Node.nbclass
-
-  override def toString: String = {
-    val str_param:String = "max_features=" + max_features + ";" +
-    "max_depth=" + max_depth + ";" +
-    "min_samples_split=" + min_samples_split + ";"
-    str_param
-  }
+  val nbclass:Int = Node.nbclass // global number of class found in whole learning set
 
   /** Check if a node is a leaf
     *
@@ -93,7 +86,7 @@ class Node( max_features: Int = 10,
 
   /** Compute the Gini index for a sequence of labeled samples
     *
-    * TODO: adapt to handle DataDNA
+    * TODO: this method will disappear (does not use DataDNA)
     *
     * @param p a partition of labeled objects
     * @return gi the gini index
@@ -109,9 +102,26 @@ class Node( max_features: Int = 10,
     1 - gi
   }
 
+  /** Compute the Gini index for a DataDNA
+    *
+    * NOTE: use DataDNA
+    *
+    * @param p a partition of labeled objects
+    * @return gi the gini index
+    */
+  def gini(p: DataDNA[Double,Seq[Double],Int]): Double = {
+    var gi:Double = 0.0
+    val counts = p.getCounts
+    val total:Double = counts.map(e => e._2).reduce(_+_)
+    for (e <- counts) {
+      gi += (e._2/total) * (e._2/total)
+    }
+    1 - gi
+  }
+
   /** Compute the Gini score for 3 partitions of labeled samples
     *
-    * TODO: adapt to handle DataDNA
+    * TODO: this method will disappear (does not use DataDNA)
     *
     * @param p the partition at the current node
     * @param pl the partition found in the left child node
@@ -123,9 +133,23 @@ class Node( max_features: Int = 10,
     gs/p.length
   }
 
+  /** Compute the Gini score for 3 DataDNA
+    *
+    * NOTE: use DataDNA
+    *
+    * @param p the partition at the current node
+    * @param pl the partition found in the left child node
+    * @param pr the partition found in the right child node
+    * @return gs the Gini score
+    */
+  def giniScore(p: DataDNA[Double,Seq[Double],Int], pl: DataDNA[Double,Seq[Double],Int], pr: DataDNA[Double,Seq[Double],Int]) : Double = {
+    val gs: Double = p.nb_objects*gini(p) - (pl.nb_objects*gini(pl) + pr.nb_objects*gini(pr))
+    gs/p.nb_objects
+  }
+
   /** Compute the information gain for a sequence of labeled samples
     *
-    * TODO: adapt to handle DataDNA
+    * TODO: this method will disappear (does not use DataDNA)
     *
     * @param p a partition of labeled objects
     * @return gi the information gain
@@ -141,9 +165,40 @@ class Node( max_features: Int = 10,
     - ig
   }
 
+  /** Compute the information gain for DataDNA
+    *
+    * NOTE: use DataDNA
+    *
+    * @param p a partition of labeled objects
+    * @return gi the information gain
+    */
+  def infogain(p: DataDNA[Double,Seq[Double],Int]) : Double = {
+    var ig:Double = 0.0
+    val counts = p.getCounts
+    val total:Double = counts.map(e => e._2).reduce(_+_)
+    for (e <- counts) {
+      ig += (e._2/total) * math.log(e._2/total)
+    }
+    - ig
+  }
+
+  /** Compute the information gain score for 3 DataDNA
+    *
+    * NOTE: use DataDNA
+    *
+    * @param p the partition at the current node
+    * @param pl the partition found in the left child node
+    * @param pr the partition found in the right child node
+    * @return gs the information gain score
+    */
+  def infogainScore(p: DataDNA[Double,Seq[Double],Int], pl: DataDNA[Double,Seq[Double],Int], pr: DataDNA[Double,Seq[Double],Int]) : Double = {
+    val is: Double = p.nb_objects*infogain(p) - (pl.nb_objects*infogain(pl) + pr.nb_objects*infogain(pr))
+    is/p.nb_objects
+  }
+
   /** Compute the information gain score for 3 partitions of labeled samples
     *
-    * TODO: adapt to handle DataDNA
+    * TODO: this method will disappear (does not use DataDNA)
     *
     * @param p the partition at the current node
     * @param pl the partition found in the left child node
@@ -155,7 +210,8 @@ class Node( max_features: Int = 10,
     is/p.length
   }
 
-  /** Search for the best split among max_features random splits
+  /** Search for the best split among max_features random splits.
+    * By default, it uses the information gain as a score measure.
     *
     * TODO: this method will disappear (does not use DataDNA)
     *
@@ -166,13 +222,48 @@ class Node( max_features: Int = 10,
     var ksplits:Vector[Split] = Vector.empty
     var s = Split()
     for (i <- 0 until math.min(max_features,samples(0).input.length)) {
-      //println(i)
       s = findRandomSplit()
       if (s.attribute != -1)
         updateSplitScore(s)
       ksplits = ksplits :+ s
     }
     ksplits.maxBy(_.score)
+  }
+
+  /** Search for the best split among max_features random splits
+    * By default, it uses the information gain as a score measure.
+    *
+    * NOTE: use DataDNA
+    * TODO: remove '_'
+    *
+    * @return split the best split
+    */
+  def _findKRandomSplit(): Split = {
+    val score_max:Double = -1.0
+    var ksplits:Vector[Split] = Vector.empty
+    var s = Split()
+    for (i <- 0 until math.min(max_features,_samples.nb_attributes)) {
+      s = _findRandomSplit()
+      if (s.attribute != -1)
+        _updateSplitScore(s)
+      ksplits = ksplits :+ s
+    }
+    ksplits.maxBy(_.score)
+  }
+
+  /** Update the split information
+    *
+    * NOTE: use DataDNA
+    * TODO: remove '_'
+    *
+    * @param s a give split
+    * @param scorer a function to compute a score (default to infogainScore)
+    * @return nothing
+    */
+  private def _updateSplitScore(s: Split, scorer:(DataDNA[Double,Seq[Double],Int], DataDNA[Double,Seq[Double],Int], DataDNA[Double,Seq[Double],Int]) => Double = infogainScore) {
+    val part = _samples.split(s.attribute, s.threshold)
+    s.score = scorer(_samples,part._1,part._2)
+    s.size = _samples.nb_objects
   }
 
   /** Update the split information
@@ -229,7 +320,7 @@ class Node( max_features: Int = 10,
     * @return nothing
     */
   def _fit(): Unit = {
-    split = _findRandomSplit()
+    split = _findKRandomSplit()
     _setVotes()
   }
 
@@ -336,5 +427,12 @@ class Node( max_features: Int = 10,
         println(votes.mkString(" | "))
       }
     }
+  }
+
+  override def toString: String = {
+    val str_param:String = "max_features=" + max_features + ";" +
+    "max_depth=" + max_depth + ";" +
+    "min_samples_split=" + min_samples_split + ";"
+    str_param
   }
 }

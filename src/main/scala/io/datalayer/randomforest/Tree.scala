@@ -11,17 +11,9 @@ class Tree( max_features: Int = 10,
             max_depth: Int = -1,
             min_samples_split: Int = 2) extends Learner {
 
-  var root:Node = null
-  var stack = new scala.collection.mutable.Stack[Node]
-  var complexity:Int = 0
-
-  override def toString: String = {
-    val str_param:String = "max_features=" + max_features + ";" +
-    "max_depth=" + max_depth + ";" +
-    "min_samples_split=" + min_samples_split + ";" +
-    "complexity=" + complexity + ";"
-    str_param
-  }
+  var root:Node = null // the root node of the tree
+  var stack = new scala.collection.mutable.Stack[Node] // a stack of Node
+  var complexity:Int = 0 // the number of nodes in the tree
 
   /** Fit method on DataDNA.
     *
@@ -40,7 +32,6 @@ class Tree( max_features: Int = 10,
       val n = stack.pop()
       complexity += 1
       n._fit()
-      // but will need to adapt the Node class
       if (n._canSplit()) {
         // generate partitions
         val partitions = n._samples.split(n.split.attribute,n.split.threshold)
@@ -53,7 +44,7 @@ class Tree( max_features: Int = 10,
         // push left and right children
         stack.push(n.left)
         stack.push(n.right)
-        // clear samples: not optimal
+        // clear samples: not optimal (should try to use lazy/views)
         n._samples = null
       }
     }
@@ -64,6 +55,7 @@ class Tree( max_features: Int = 10,
     *
     * TODO: this method is here for historical
     *       reasons and backward compatibility
+    *       this method will disappear (does not use DataDNA)
     *
     * @param x a sequence of Labeled
     * @return nothing
@@ -91,13 +83,15 @@ class Tree( max_features: Int = 10,
         // push left and right children
         stack.push(n.left)
         stack.push(n.right)
-        // clear samples: not optimal
+        // clear samples: not optimal (should try to use lazy/views)
         n.samples = null
       }
     }
   }
 
   /** Predict method for a single Unlabeled.
+    *
+    * TODO: this method will disappear (does not use DataDNA)
     *
     * @param x an Unlabeled object
     * @return probas a vector of class probabilities
@@ -107,6 +101,8 @@ class Tree( max_features: Int = 10,
   }
 
   /** Predict method for a sequence of Unlabeled.
+    *
+    * TODO: this method will disappear (does not use DataDNA)
     *
     * @param x a sequence of Unlabeled objects
     * @return probas a vector of class probability vectors
@@ -151,5 +147,13 @@ class Tree( max_features: Int = 10,
 
   def display() {
     root.display
+  }
+
+  override def toString: String = {
+    val str_param:String = "max_features=" + max_features + ";" +
+    "max_depth=" + max_depth + ";" +
+    "min_samples_split=" + min_samples_split + ";" +
+    "complexity=" + complexity + ";"
+    str_param
   }
 }
