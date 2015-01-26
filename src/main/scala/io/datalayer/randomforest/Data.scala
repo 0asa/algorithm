@@ -12,6 +12,7 @@ import scala.reflect.ClassTag
 
 /*
   A few temporary classes to handle data...
+  TODO: remove these once we do not use them anymore
 */
 case class Label(label: Int)
 case class Labeled(input: Seq[Float], label: Label)
@@ -152,10 +153,14 @@ class Data(val rows: Seq[RowDNA[Double,Seq[Double], Int]]) extends DataDNA[Doubl
       false
   }
 
-  /**
+  /** Constructor: create Data from a CSV file
     *
-    * @param
-    * @return
+    * TODO: implement this!
+    *
+    * @param uri a valid path to a CSV file
+    * @param labelpos the label position
+    * @param delimiter the delimiter (default to a single space)
+    * @return a Data loaded from uri CSV file
     */
   def this(uri: String, labelpos: Int, delimiter:String = " ") = {
     // TODO: read from CSV
@@ -164,20 +169,15 @@ class Data(val rows: Seq[RowDNA[Double,Seq[Double], Int]]) extends DataDNA[Doubl
     this(Seq.empty[RowDNA[Double,Seq[Double], Int]])
   }
 
-  /**
+  /** Constructor to generate an empty Data
     *
-    * @param
-    * @return
+    * @return an empty Data
     */
   def this() = {
     this(Seq.empty[RowDNA[Double,Seq[Double], Int]])
   }
 
-  /**
-    *
-    * @param
-    * @return
-    */
+
   def getAttributes(indexes : Traversable[Int]) = {
     indexes.map(
       i => rows.map(
@@ -186,55 +186,31 @@ class Data(val rows: Seq[RowDNA[Double,Seq[Double], Int]]) extends DataDNA[Doubl
       )
   }
 
-  /**
-    *
-    * @param
-    * @return
-    */
+
   def getObjects(indexes : Traversable[Int]) = {
     new Data(indexes.map(i => rows(i)).toSeq)
   }
 
-  /**
-    *
-    * @param
-    * @return
-    */
+
   def getLabels(indexes : Traversable[Int]) = {
     indexes.map(i => rows(i).label.getOrElse(-1))
   }
 
-  /**
-    *
-    * @param
-    * @return
-    */
+
   def getValue(row: Int, att: Int) = { rows(row).attributes(att) }
 
-  /**
-    *
-    * @param
-    * @return
-    */
+
   def getCounts() = {
     rows.groupBy(row => row.label.getOrElse(-1)).map(e => { (e._1, e._2.length) })
   }
 
-  /**
-    *
-    * @param
-    * @return
-    */
+
   def split(att: Int, th: Double) = {
     val part = partition(_.attributes(att) < th)
     (new Data(part._1.toSeq), new Data(part._2.toSeq))
   }
 
-  /**
-    *
-    * @param
-    * @return
-    */
+
   def findRandomSplit() = {
     var att = Random.nextInt(nb_attributes)
     var th = -1.0
