@@ -31,10 +31,12 @@ class Forest( n_estimators: Int = 10,
     str_param
   }
 
-  /** Method desc.
+  /** Fit method on DataDNA.
     *
-    * @param
-    * @return
+    * TODO: abstract types contained in DataDNA
+    *
+    * @param x the labeled data DNA
+    * @return nothing
     */
   def fit(x: DataDNA[Double,Seq[Double],Int]): Unit = {
     if (!x.labeled) {
@@ -49,10 +51,13 @@ class Forest( n_estimators: Int = 10,
     }
   }
 
-  /** Method desc.
+  /** Fit method on Sequence of Labeled.
     *
-    * @param
-    * @return
+    * TODO: this method is here for historical
+    *       reasons and backward compatibility
+    *
+    * @param x a sequence of Labeled
+    * @return nothing
     */
   def fit(x: Seq[Labeled]): Unit = {
     for (i <- 0 to (trees.length - 1)) {
@@ -64,10 +69,10 @@ class Forest( n_estimators: Int = 10,
     }
   }
 
-  /** Method desc.
+  /** Predict method for a single Unlabeled.
     *
-    * @param
-    * @return
+    * @param x an Unlabeled object
+    * @return probas a vector of class probabilities
     */
   def predict(x: Unlabeled): Array[Double]= {
     def agg(x: Array[Double], y: Array[Double]) : Array[Double] = {
@@ -79,19 +84,21 @@ class Forest( n_estimators: Int = 10,
     probas.map{ e => e/trees.length }
   }
 
-  /** Method desc.
+  /** Predict method for a sequence of Unlabeled.
     *
-    * @param
-    * @return
+    * @param x a sequence of Unlabeled objects
+    * @return probas a vector of class probability vectors
     */
   def predict(x: Seq[Unlabeled]): Array[Array[Double]] = {
     x.map(predict(_)).toArray
   }
 
-  /** Method desc.
+  /** Predict method for a single row of DataDNA.
     *
-    * @param
-    * @return
+    * TODO: abstract types contained in RowDNA
+    *
+    * @param x a row of dataDNA
+    * @return probas a vector of class probabilities
     */
   def predict(x: RowDNA[Double,Seq[Double], Int]): Array[Double] = {
     def agg(x: Array[Double], y: Array[Double]) : Array[Double] = {
@@ -103,30 +110,28 @@ class Forest( n_estimators: Int = 10,
     probas.map{ e => e/trees.length }
   }
 
-  /** Method desc.
+  /** Predict method for DataDNA.
     *
-    * @param
-    * @return
+    * TODO: abstract types contained in DataDNA
+    *
+    * @param x a DataDNA set of objects
+    * @return probas a vector of class probability vectors
     */
   def predict(x: DataDNA[Double,Seq[Double],Int]): Array[Array[Double]] = {
     x.map(predict(_)).toArray
   }
 
-  /** Method desc.
+  /** Retrieve Variable importances
     *
-    * @param
-    * @return
+    * TODO: implement this
+    *
+    * @return vimp a vector of variable importances
     */
   def importances(): Array[Double] = {
     // TODO
     Array.empty[Double]
   }
 
-  /** Method desc.
-    *
-    * @param
-    * @return
-    */
   def display() {
     for (i <- 0 to (trees.length - 1)) {
       println("TREE" + (i+1) + " #############")
