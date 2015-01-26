@@ -121,7 +121,7 @@ class Forest( n_estimators: Int = 10,
     x.map(predict(_)).toArray
   }
 
-  /** Retrieve Variable importances
+  /** Retrieve Variable importances for all the trees in the forest
     *
     * TODO: implement this
     *
