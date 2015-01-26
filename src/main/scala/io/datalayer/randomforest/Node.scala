@@ -38,20 +38,20 @@ class Node( max_features: Int = 10,
     str_param
   }
 
-  /** Method desc.
+  /** Check if a node is a leaf
     *
-    * @param
-    * @return
+    * @return true if node is a leaf, false otherwise
     */
   def isLeaf(): Boolean = {
     if (left == null && right == null) return true
     return false
   }
 
-  /** Method desc.
+  /** Check if a node can be a splitting node
     *
-    * @param
-    * @return
+    * NOTE: use DataDNA
+    *
+    * @return true is a node can split, false otherwise
     */
   def _canSplit(): Boolean = {
     if (max_depth > 0) {
@@ -67,10 +67,9 @@ class Node( max_features: Int = 10,
     }
   }
 
-  /** Method desc.
+  /** Check if a node can be a splitting node
     *
-    * @param
-    * @return
+    * @return true is a node can split, false otherwise
     */
   def canSplit(): Boolean = {
     if (max_depth > 0) {
@@ -86,10 +85,10 @@ class Node( max_features: Int = 10,
     }
   }
 
-  /** Method desc.
+  /** Compute the Gini index for a sequence of labeled samples
     *
-    * @param
-    * @return
+    * @param p a partition of labeled objects
+    * @return gi the gini index
     */
   def gini(p: Seq[Labeled]): Double = {
     var gi:Double = 0.0
@@ -102,20 +101,22 @@ class Node( max_features: Int = 10,
     1 - gi
   }
 
-  /** Method desc.
+  /** Compute the Gini score for 3 partitions of labeled samples
     *
-    * @param
-    * @return
+    * @param p the partition at the current node
+    * @param pl the partition found in the left child node
+    * @param pr the partition found in the right child node
+    * @return gs the Gini score
     */
   def giniScore(p: Seq[Labeled], pl: Seq[Labeled], pr: Seq[Labeled]) : Double = {
     val gs: Double = p.length*gini(p) - (pl.length*gini(pl) + pr.length*gini(pr))
     gs/p.length
   }
 
-  /** Method desc.
+  /** Compute the information gain for a sequence of labeled samples
     *
-    * @param
-    * @return
+    * @param p a partition of labeled objects
+    * @return gi the information gain
     */
   def infogain(p: Seq[Labeled]) : Double = {
     var ig:Double = 0.0
@@ -128,20 +129,21 @@ class Node( max_features: Int = 10,
     - ig
   }
 
-  /** Method desc.
+  /** Compute the information gain score for 3 partitions of labeled samples
     *
-    * @param
-    * @return
+    * @param p the partition at the current node
+    * @param pl the partition found in the left child node
+    * @param pr the partition found in the right child node
+    * @return gs the information gain score
     */
   def infogainScore(p: Seq[Labeled], pl: Seq[Labeled], pr: Seq[Labeled]) : Double = {
     val is: Double = p.length*infogain(p) - (pl.length*infogain(pl) + pr.length*infogain(pr))
     is/p.length
   }
 
-  /** Method desc.
+  /** Search for the best split among max_features random splits
     *
-    * @param
-    * @return
+    * @return split the best split
     */
   def findKRandomSplit(): Split = {
     val score_max:Double = -1.0
@@ -157,21 +159,23 @@ class Node( max_features: Int = 10,
     ksplits.maxBy(_.score)
   }
 
-  /** Method desc.
+  /** Update the split information
     *
-    * @param
-    * @return
+    * @param s a give split
+    * @param scorer a function to compute a score (default to infogainScore)
+    * @return nothing
     */
-  def updateSplitScore(s: Split, scorer:(Seq[Labeled], Seq[Labeled], Seq[Labeled]) => Double = infogainScore) {
+  private def updateSplitScore(s: Split, scorer:(Seq[Labeled], Seq[Labeled], Seq[Labeled]) => Double = infogainScore) {
     val part = samples.partition(i => i.input(s.attribute) < s.threshold)
     s.score = scorer(samples,part._1,part._2)
     s.size = samples.length
   }
 
-  /** Method desc.
+  /** Find a random split (an attribute and a valid threshold)
     *
-    * @param
-    * @return
+    * TODO: this is a rather naive implementation
+    *
+    * @return split a split
     */
   def findRandomSplit(): Split = {
     val rand = new Random
@@ -187,19 +191,21 @@ class Node( max_features: Int = 10,
     Split(att,th)
   }
 
-  /** Method desc.
+  /** Find a random split (an attribute and a valid threshold)
     *
-    * @param
-    * @return
+    * NOTE: use DataDNA
+    *
+    * @return split a split
     */
   def _findRandomSplit(): Split = {
     _samples.findRandomSplit
   }
 
-  /** Method desc.
+  /** Expand the current node.
     *
-    * @param
-    * @return
+    * NOTE: use DataDNA
+    *
+    * @return nothing
     */
   def _fit(): Unit = {
     // TODO: use DataDNA _ methods
@@ -207,20 +213,22 @@ class Node( max_features: Int = 10,
     _setVotes()
   }
 
-  /** Method desc.
+  /** Expand the current node.
     *
-    * @param
-    * @return
+    * @return nothing
     */
   def fit(): Unit = {
     split = findKRandomSplit()
     setVotes()
   }
 
-  /** Method desc.
+  /** Store/update the vector of votes.
     *
-    * @param
-    * @return
+    * votes are vector of class probabilities (frequencies)
+    *
+    * NOTE: use DataDNA
+    *
+    * @return nothing
     */
   def _setVotes() = {
     val counts = _samples.getCounts
@@ -231,10 +239,11 @@ class Node( max_features: Int = 10,
     }
   }
 
-  /** Method desc.
+  /** Store/update the vector of votes.
     *
-    * @param
-    * @return
+    * votes are vector of class probabilities (frequencies)
+    *
+    * @return nothing
     */
   def setVotes() = {
     val maps = samples.groupBy(e => e.label.label)
@@ -246,10 +255,12 @@ class Node( max_features: Int = 10,
     }
   }
 
-  /** Method desc.
+  /** Predict method for a single Unlabeled.
     *
-    * @param
-    * @return
+    * Propagate object until it reaches a leaf.
+    *
+    * @param x an Unlabeled object
+    * @return votes the vector of class probabilities
     */
   def predict(x: Unlabeled): Array[Double] = {
     if (!isLeaf) {
@@ -263,10 +274,14 @@ class Node( max_features: Int = 10,
     }
   }
 
-  /** Method desc.
+  /** Predict method for a single row of DataDNA.
     *
-    * @param
-    * @return
+    * Propagate object until it reaches a leaf.
+    *
+    * TODO: abstract types contained in RowDNA
+    *
+    * @param x a row of dataDNA
+    * @return votes the vector of class probabilities
     */
   def predict(x: RowDNA[Double,Seq[Double], Int]): Array[Double] = {
     if (!isLeaf) {
@@ -280,11 +295,6 @@ class Node( max_features: Int = 10,
     }
   }
 
-  /** Method desc.
-    *
-    * @param
-    * @return
-    */
   def display() {
     if (split != null) {
       for (i:Int <- 0 until depth) print("   ")
