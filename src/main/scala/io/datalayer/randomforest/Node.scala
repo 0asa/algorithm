@@ -13,6 +13,9 @@ object Node {
 
 /** A node for decision trees
   *
+  * TODO: - remove methods not using DataDNA
+  *       - rename 'underscored' (_xxx) methods
+  *
   * @constructor create a new node for decision tree induction.
   * @param max_features the number of features tested at each node
   * @param max_depth the maximum depth of trees
@@ -27,8 +30,8 @@ class Node( max_features: Int = 10,
   var split: Split = null
   var depth: Int = 1
   var votes: Array[Double] = null
-  var samples: Seq[Labeled] = null
-  var _samples: DataDNA[Double,Seq[Double],Int] = null
+  var samples: Seq[Labeled] = null // this one will disappear
+  var _samples: DataDNA[Double,Seq[Double],Int] = null // remove '_'
   val nbclass:Int = Node.nbclass
 
   override def toString: String = {
@@ -50,6 +53,7 @@ class Node( max_features: Int = 10,
   /** Check if a node can be a splitting node
     *
     * NOTE: use DataDNA
+    * TODO: remove '_'
     *
     * @return true is a node can split, false otherwise
     */
@@ -69,6 +73,8 @@ class Node( max_features: Int = 10,
 
   /** Check if a node can be a splitting node
     *
+    * TODO: this method will disappear (does not use DataDNA)
+    *
     * @return true is a node can split, false otherwise
     */
   def canSplit(): Boolean = {
@@ -87,6 +93,8 @@ class Node( max_features: Int = 10,
 
   /** Compute the Gini index for a sequence of labeled samples
     *
+    * TODO: adapt to handle DataDNA
+    *
     * @param p a partition of labeled objects
     * @return gi the gini index
     */
@@ -103,6 +111,8 @@ class Node( max_features: Int = 10,
 
   /** Compute the Gini score for 3 partitions of labeled samples
     *
+    * TODO: adapt to handle DataDNA
+    *
     * @param p the partition at the current node
     * @param pl the partition found in the left child node
     * @param pr the partition found in the right child node
@@ -114,6 +124,8 @@ class Node( max_features: Int = 10,
   }
 
   /** Compute the information gain for a sequence of labeled samples
+    *
+    * TODO: adapt to handle DataDNA
     *
     * @param p a partition of labeled objects
     * @return gi the information gain
@@ -131,6 +143,8 @@ class Node( max_features: Int = 10,
 
   /** Compute the information gain score for 3 partitions of labeled samples
     *
+    * TODO: adapt to handle DataDNA
+    *
     * @param p the partition at the current node
     * @param pl the partition found in the left child node
     * @param pr the partition found in the right child node
@@ -142,6 +156,8 @@ class Node( max_features: Int = 10,
   }
 
   /** Search for the best split among max_features random splits
+    *
+    * TODO: this method will disappear (does not use DataDNA)
     *
     * @return split the best split
     */
@@ -161,6 +177,8 @@ class Node( max_features: Int = 10,
 
   /** Update the split information
     *
+    * TODO: adapt to handle DataDNA
+    *
     * @param s a give split
     * @param scorer a function to compute a score (default to infogainScore)
     * @return nothing
@@ -174,6 +192,7 @@ class Node( max_features: Int = 10,
   /** Find a random split (an attribute and a valid threshold)
     *
     * TODO: this is a rather naive implementation
+    *       this method will disappear (does not use DataDNA)
     *
     * @return split a split
     */
@@ -194,6 +213,7 @@ class Node( max_features: Int = 10,
   /** Find a random split (an attribute and a valid threshold)
     *
     * NOTE: use DataDNA
+    * TODO: remove '_'
     *
     * @return split a split
     */
@@ -204,16 +224,18 @@ class Node( max_features: Int = 10,
   /** Expand the current node.
     *
     * NOTE: use DataDNA
+    * TODO: remove '_'
     *
     * @return nothing
     */
   def _fit(): Unit = {
-    // TODO: use DataDNA _ methods
     split = _findRandomSplit()
     _setVotes()
   }
 
   /** Expand the current node.
+    *
+    * TODO: this method will disappear (does not use DataDNA)
     *
     * @return nothing
     */
@@ -227,6 +249,7 @@ class Node( max_features: Int = 10,
     * votes are vector of class probabilities (frequencies)
     *
     * NOTE: use DataDNA
+    * TODO: remove '_'
     *
     * @return nothing
     */
@@ -243,6 +266,8 @@ class Node( max_features: Int = 10,
     *
     * votes are vector of class probabilities (frequencies)
     *
+    * TODO: this method will disappear (does not use DataDNA)
+    *
     * @return nothing
     */
   def setVotes() = {
@@ -258,6 +283,8 @@ class Node( max_features: Int = 10,
   /** Predict method for a single Unlabeled.
     *
     * Propagate object until it reaches a leaf.
+    *
+    * TODO: this method will disappear (does not use DataDNA)
     *
     * @param x an Unlabeled object
     * @return votes the vector of class probabilities

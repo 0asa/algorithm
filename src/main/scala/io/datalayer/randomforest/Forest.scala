@@ -128,7 +128,6 @@ class Forest( n_estimators: Int = 10,
     * @return vimp a vector of variable importances
     */
   def importances(): Array[Double] = {
-    // TODO
     Array.empty[Double]
   }
 

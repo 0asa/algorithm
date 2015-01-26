@@ -145,7 +145,7 @@ class Tree( max_features: Int = 10,
     */
   def importances(): Array[Double] = {
     // TODO: scan all the nodes
-    // use information stored in n.split
+    // use information stored in node.split
     Array.empty[Double]
   }
 
