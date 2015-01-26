@@ -82,11 +82,18 @@ class Forest( n_estimators: Int = 10,
     x.map(predict(_)).toArray
   }
 
-  // TODO
+  def predict(x: RowDNA[Double,Seq[Double], Int]): Array[Double] = {
+    def agg(x: Array[Double], y: Array[Double]) : Array[Double] = {
+      val z = new Array[Double](x.length)
+      for (i <- 0 until x.length) z(i) = x(i) + y(i)
+      z
+    }
+    val probas = trees.map(_.predict(x)).reduce(agg)
+    probas.map{ e => e/trees.length }
+  }
+
   def predict(x: DataDNA[Double,Seq[Double],Int]): Array[Array[Double]] = {
-    var probas = new Array[Array[Double]](x.nb_objects)
-    probas
-    //x.map(predict(_)).toArray
+    x.map(predict(_)).toArray
   }
 
   def importances(): Array[Double] = {

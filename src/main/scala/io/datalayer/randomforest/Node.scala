@@ -192,11 +192,19 @@ class Node( max_features: Int = 10,
     } else {
       votes
     }
-
-
   }
 
-  def predict(x: Seq[Unlabeled]) = {}
+  def predict(x: RowDNA[Double,Seq[Double], Int]): Array[Double] = {
+    if (!isLeaf) {
+      if (x.attributes(split.attribute) < split.threshold) {
+          left.predict(x)
+        } else {
+          right.predict(x)
+        }
+    } else {
+        votes
+    }
+  }
 
   def display() {
     if (split != null) {
