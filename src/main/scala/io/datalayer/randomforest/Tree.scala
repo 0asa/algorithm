@@ -91,8 +91,16 @@ class Tree( max_features: Int = 10,
     }
   }
 
-  def predict(x: Unlabeled) = {
+  def predict(x: Unlabeled): Array[Double] = {
     root.predict(x)
+  }
+
+  def predict(x: RowDNA[Double,Seq[Double], Int]): Array[Double] = {
+    root.predict(x)
+  }
+
+  def predict(x: DataDNA[Double,Seq[Double],Int]): Array[Array[Double]] = {
+    x.map(predict(_)).toArray
   }
 
   def predict(x: Seq[Unlabeled]): Array[Array[Double]] = {
