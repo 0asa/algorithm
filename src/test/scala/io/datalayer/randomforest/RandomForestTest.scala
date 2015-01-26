@@ -42,8 +42,10 @@ class ForestTest extends FunSuite {
     assert(labeled.labeled == true)
     trees.fit(labeled)
 
-    val pred = trees.predict(labeled)
-    //pred.foreach(p => println(p.mkString("|")))
+    val preds = trees.predict(labeled)
+
+    info("Score: " + trees.score(preds, labeled.getLabels()))
+
   }
 
   test("Forest fit on DataRDD") {

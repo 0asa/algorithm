@@ -71,6 +71,7 @@ trait DataDNA[T,TX <: Traversable[T],TY] extends Traversable[RowDNA[T,TX,TY]] {
   def getValue(i: Int, j: Int) : T
 
   def getLabel(index : Int) : TY = { getLabels(Traversable(index)).head }
+  def getLabels() : Traversable[TY] = { getLabels(0 until nb_objects) }
   def getLabels(indexes : Traversable[Int]) : Traversable[TY]
 
   def getCounts(): Map[TY,Int]

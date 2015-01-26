@@ -23,4 +23,9 @@ trait Learner {
     val accuracy = Metrics.accuracy(prediction, x.map(_.label))
     (out, accuracy)
   }
+
+  def score(probas: Array[Array[Double]],labels: Traversable[Int]): Double = {
+    val predicted_labels = probas.map(p => p.zipWithIndex.maxBy(_._1)._2)
+    predicted_labels.zip(labels.toSeq).filter(x => x._1 == x._2).size.toDouble / predicted_labels.length
+  }
 }
