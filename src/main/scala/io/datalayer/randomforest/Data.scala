@@ -19,14 +19,14 @@ case class Unlabeled(input: Seq[Float])
 
 /*
 class TraversableRDD[T: ClassTag](sc: SparkContext) extends RDD[T](sc, Nil) {
-  
-  def compute(split: org.apache.spark.Partition,context: org.apache.spark.TaskContext): Iterator[T] = { 
+
+  def compute(split: org.apache.spark.Partition,context: org.apache.spark.TaskContext): Iterator[T] = {
     throw new UnsupportedOperationException("empty RDD")
   }
   protected def getPartitions: Array[org.apache.spark.Partition] = {
     throw new UnsupportedOperationException("empty RDD")
   }
-  
+
 }
 
 class DataR extends DataDNA2[Double, RDD[Double], Int] {
@@ -34,6 +34,13 @@ class DataR extends DataDNA2[Double, RDD[Double], Int] {
 }
 */
 
+
+/** A single row of data DNA
+  *
+  * @constructor create a new row of data DNA.
+  * @param attributes A Traversable[T]
+  * @param label An optional label
+  */
 class RowDNA[T,TX <: Traversable[T],TY] (val attributes:TX, val label:Option[TY] = None) {
   val isLabeled:Boolean = { label != None }
   val nb_attributes:Int = attributes.size
@@ -54,26 +61,31 @@ trait DataDNA[T,TX <: Traversable[T],TY] extends Traversable[RowDNA[T,TX,TY]] {
   }
   override def toString = {
     rows.mkString("\n")
-  }  
+  }
 
   def getObject(index : Int) : RowDNA[T,TX,TY] = { getObjects(Traversable(index)).head }
   def getObjects(indexes : Traversable[Int]) : DataDNA[T,TX,TY]
 
   def getAttribute(index : Int) : TX = { getAttributes(Traversable(index)).head }
-  def getAttributes(indexes : Traversable[Int]) : Traversable[TX]  
+  def getAttributes(indexes : Traversable[Int]) : Traversable[TX]
   def getValue(i: Int, j: Int) : T
-  
+
   def getLabel(index : Int) : TY = { getLabels(Traversable(index)).head }
   def getLabels(indexes : Traversable[Int]) : Traversable[TY]
 
   def getCounts(): Map[TY,Int]
   def split(att: Int, th: Double): (DataDNA[T,TX,TY], DataDNA[T,TX,TY])
   def findRandomSplit() : Split
-  
+
   //def describe // Do we need this now?
 }
 
-class Data(val rows: Seq[RowDNA[Double,Seq[Double], Int]]) extends DataDNA[Double,Seq[Double],Int] {  
+/** A classic, (rather) naive, not distributed data DNA example
+  *
+  * @constructor create a new dataDNA composed of rows of RowDNA.
+  * @param rows A sequence of RowDNA
+  */
+class Data(val rows: Seq[RowDNA[Double,Seq[Double], Int]]) extends DataDNA[Double,Seq[Double],Int] {
 
   val nb_attributes = if (check_attributes) { rows(0).nb_attributes } else { 0 /* or throw exception */ }
   val nb_classes = if (check_labels) { rows.map(x => x.label).distinct.size } else { 0 }
@@ -84,13 +96,13 @@ class Data(val rows: Seq[RowDNA[Double,Seq[Double], Int]]) extends DataDNA[Doubl
   }
 
   private def check_labels = {
-    val lab = rows.map(_.isLabeled).distinct     
+    val lab = rows.map(_.isLabeled).distinct
     if (lab.size == 1)
       lab.head == true
-    else 
+    else
       false
   }
-  
+
   // Create a Data2 from a CSV file
   def this(uri: String, labelpos: Int, delimiter:String = " ") = {
     // TODO: read from CSV
@@ -109,21 +121,21 @@ class Data(val rows: Seq[RowDNA[Double,Seq[Double], Int]]) extends DataDNA[Doubl
       i => rows.map(
         row => row.attributes(i)
         )
-      )        
+      )
   }
 
   def getObjects(indexes : Traversable[Int]) = {
-    new Data(indexes.map(i => rows(i)).toSeq)    
+    new Data(indexes.map(i => rows(i)).toSeq)
   }
 
   def getLabels(indexes : Traversable[Int]) = {
     indexes.map(i => rows(i).label.getOrElse(-1))
   }
-  
+
   def getValue(row: Int, att: Int) = { rows(row).attributes(att) }
 
-  def getCounts() = {    
-    rows.groupBy(row => row.label.getOrElse(-1)).map(e => { (e._1, e._2.length) })    
+  def getCounts() = {
+    rows.groupBy(row => row.label.getOrElse(-1)).map(e => { (e._1, e._2.length) })
   }
 
   def split(att: Int, th: Double) = {
@@ -131,26 +143,26 @@ class Data(val rows: Seq[RowDNA[Double,Seq[Double], Int]]) extends DataDNA[Doubl
     (new Data(part._1.toSeq), new Data(part._2.toSeq))
   }
 
-  def findRandomSplit() = {    
+  def findRandomSplit() = {
     var att = Random.nextInt(nb_attributes)
-    var th = -1.0    
-    var att_vector = Random.shuffle(getAttribute(att))    
-    att_vector = att_vector.distinct    
-    if (att_vector.length > 1) {      
+    var th = -1.0
+    var att_vector = Random.shuffle(getAttribute(att))
+    att_vector = att_vector.distinct
+    if (att_vector.length > 1) {
       th = math.min(att_vector(0),att_vector(1)) + (math.abs(att_vector(0) - att_vector(1)) / 2.0)
-    } else {      
+    } else {
       att = -1
-    }    
-    Split(att,th)    
+    }
+    Split(att,th)
   }
-  
+
 }
 
 /*
 //########################################
 case class IncompatibleDataTypeException(message: String) extends Exception(message)
 
-trait DataDNA {  
+trait DataDNA {
 
   type data_type
   type TX
@@ -177,12 +189,12 @@ trait DataDNA {
   /*
   implicit def dataDNAToSeq(d: DataDNA) = {
     // TODO: implicit cast to a scala type?
-    println("IMPLICIT CALL")    
+    println("IMPLICIT CALL")
   }
   */
-  
+
   def findRandomSplit() : Split
-  
+
   def getLabel(index : Int) : TY = { getLabels(Traversable(index)) }
   def getLabels(indexes : Traversable[Int]) : TY
 
@@ -211,7 +223,7 @@ class Data extends DataDNA with Traversable[Seq[Double]] {
     // TODO: add some check somewhere
 
     inputs = X
-    nb_objects = X.length    
+    nb_objects = X.length
     nb_attributes = X(0).length
 
     // Check if we have a labels
@@ -226,31 +238,31 @@ class Data extends DataDNA with Traversable[Seq[Double]] {
     }
   }
 
-  def loadCSV(uri: String, label: Int, delimiter:String) = { 
+  def loadCSV(uri: String, label: Int, delimiter:String) = {
     // TODO: take label into account
     // TODO: avoid the 2 passes over the CSV file
     labeled = true
     val p1 = Source.fromFile(uri).getLines() map {
       line => val fields = line.split(delimiter)
-        fields(0).toDouble      
+        fields(0).toDouble
     }
     labels = p1.toList.toSeq
     nb_classes = labels.distinct.length
 
     val p2 = Source.fromFile(uri).getLines() map {
       line => val fields = line.split(delimiter)
-        fields.drop(1).map(_.toDouble).toList.toSeq 
-    } 
+        fields.drop(1).map(_.toDouble).toList.toSeq
+    }
     inputs = p2.toList
     nb_objects = inputs.length
-    nb_attributes = inputs(0).length    
+    nb_attributes = inputs(0).length
   }
 
   def split(att: Int, th: Double): (Data, Data) = {
     val partOne = new Data
     val partTwo = new Data
-    if (labeled) {      
-      val zipped = inputs.zip(labels).partition(i => i._1(att) < th)      
+    if (labeled) {
+      val zipped = inputs.zip(labels).partition(i => i._1(att) < th)
       partOne.load(zipped._1.unzip._1, zipped._1.unzip._2)
       partTwo.load(zipped._2.unzip._1, zipped._2.unzip._2)
     } else {
@@ -261,17 +273,17 @@ class Data extends DataDNA with Traversable[Seq[Double]] {
     (partOne, partTwo)
   }
 
-  def findRandomSplit() : Split = {    
+  def findRandomSplit() : Split = {
     val rand = new Random
     var att = Random.nextInt(nb_attributes)
     var th = -1.0
     var att_vector = rand.shuffle(inputs.map(_(att)))
-    att_vector = att_vector.distinct    
-    if (att_vector.length > 1) {      
+    att_vector = att_vector.distinct
+    if (att_vector.length > 1) {
       th = math.min(att_vector(0),att_vector(1)) + (math.abs(att_vector(0) - att_vector(1)) / 2.0)
-    } else {      
+    } else {
       att = -1
-    }    
+    }
     Split(att,th)
   }
 
@@ -288,7 +300,7 @@ class Data extends DataDNA with Traversable[Seq[Double]] {
     val newInputs = inputs.map(in => in.zipWithIndex.filter(x => indexes.exists(_ == x._2)).map(x => x._1) )
     newData.load(newInputs, labels)
     newData
-  }  
+  }
 
   def getLabels(indexes : Traversable[Int]) : TY = {
     indexes.map{i => labels(i)}.toSeq
@@ -455,7 +467,7 @@ y(i) = if (a + b > 10) { 0 } else { 1 }
 */
 
 def genData(numInstances: Int = 10, numFeatures: Int = 10, labeled: Boolean = false): Data = {
-  val rand = new scala.util.Random  
+  val rand = new scala.util.Random
   var labels = Seq.empty[Double]
   val inputs: Seq[RowDNA[Double,Seq[Double], Int]] = for (i:Int <- 0 until numInstances) yield {
     val a:Double = rand.nextInt(10)
@@ -467,8 +479,8 @@ def genData(numInstances: Int = 10, numFeatures: Int = 10, labeled: Boolean = fa
       new RowDNA[Double,Seq[Double], Int](Seq(a,b,c)++d,Some(y))
     } else {
       new RowDNA[Double,Seq[Double], Int](Seq(a,b,c)++d)
-    }      
-  }  
+    }
+  }
   new Data(inputs)
 }
 /*

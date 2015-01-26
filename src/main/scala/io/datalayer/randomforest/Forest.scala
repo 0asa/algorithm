@@ -12,17 +12,22 @@ object Forest {
 }
 
 
-
-/*
-  Forest class: build a forest of trees.
-*/
+/** A forest of decision trees
+  *
+  * @constructor create a new forest of decision trees.
+  * @param n_estimators the number of trees in the forest
+  * @param max_features the number of features tested at each node
+  * @param max_depth the maximum depth of trees
+  * @param min_samples_split the number of samples required in a splitting node
+  * @param bootstrap activate boostrap sampling (not implemeted yet)
+  */
 class Forest( n_estimators: Int = 10,
               max_features: Int = 10,
               max_depth: Int = -1,
               min_samples_split: Int = 2,
               bootstrap: Boolean = false) extends Learner {
 
-  var trees: Array[Tree] = new Array[Tree](n_estimators)  
+  var trees: Array[Tree] = new Array[Tree](n_estimators)
   for (i <- 0 to (trees.length - 1)) {
     trees(i) = new Tree(max_features, max_depth, min_samples_split)
   }
@@ -58,22 +63,22 @@ class Forest( n_estimators: Int = 10,
       if (bootstrap) {
         // TODO: bootstrap if needed
       } else {
-        trees(i).fit(x)        
+        trees(i).fit(x)
       }
     }
   }
-  
-  def predict(x: Unlabeled): Array[Double]= {    
+
+  def predict(x: Unlabeled): Array[Double]= {
     def agg(x: Array[Double], y: Array[Double]) : Array[Double] = {
       val z = new Array[Double](x.length)
       for (i <- 0 until x.length) z(i) = x(i) + y(i)
       z
-    }    
-    val probas = trees.map(_.predict(x)).reduce(agg)    
+    }
+    val probas = trees.map(_.predict(x)).reduce(agg)
     probas.map{ e => e/trees.length }
   }
 
-  def predict(x: Seq[Unlabeled]): Array[Array[Double]] = {    
+  def predict(x: Seq[Unlabeled]): Array[Array[Double]] = {
     x.map(predict(_)).toArray
   }
 

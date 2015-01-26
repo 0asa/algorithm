@@ -14,9 +14,13 @@ object Node {
 }
 
 
-/*
-  Node class
-*/
+/** A node for decision trees
+  *
+  * @constructor create a new node for decision tree induction.
+  * @param max_features the number of features tested at each node
+  * @param max_depth the maximum depth of trees
+  * @param min_samples_split the number of samples required in a splitting node
+  */
 class Node( max_features: Int = 10,
             max_depth: Int = -1,
             min_samples_split: Int = 2) {
@@ -165,7 +169,7 @@ class Node( max_features: Int = 10,
     var total:Double = _samples.nb_objects
     for (e <- counts) {
       votes(e._1.asInstanceOf[Double].toInt) = e._2/total
-    }    
+    }
   }
 
   def setVotes() = {
