@@ -49,6 +49,9 @@ class RowDNA[T,TX <: Traversable[T],TY] (val attributes:TX, val label:Option[TY]
   }
 }
 
+/** A trait for the Datalayer Data DNA
+  *
+  */
 trait DataDNA[T,TX <: Traversable[T],TY] extends Traversable[RowDNA[T,TX,TY]] {
   val rows:Traversable[RowDNA[T,TX,TY]]
   def nb_objects: Int = rows.size
@@ -63,27 +66,72 @@ trait DataDNA[T,TX <: Traversable[T],TY] extends Traversable[RowDNA[T,TX,TY]] {
     rows.mkString("\n")
   }
 
+  /** Generic methods to access samples (i.e. entire RowDNA) stored in DataDNA
+    *
+    * @param index(es) index or Traversable of indexes of objects
+    * @return a single row or a DataDNA
+    */
   def getObject(index : Int) : RowDNA[T,TX,TY] = { getObjects(Traversable(index)).head }
   def getObjects(indexes : Traversable[Int]) : DataDNA[T,TX,TY]
 
+  /** Generic methods to access attribute vectors stored in DataDNA
+    *
+    * @param index(es) index or Traversable of indexes of attributes
+    * @return a single vector (TX) of attributes or a Traversable of TX
+    */
   def getAttribute(index : Int) : TX = { getAttributes(Traversable(index)).head }
   def getAttributes(indexes : Traversable[Int]) : Traversable[TX]
+
+  /** Retrieve a specific attribute value
+    *
+    * @param i the object number
+    * @param j the attribute number
+    * @return value the value of the j attribute for the i sample
+    */
   def getValue(i: Int, j: Int) : T
 
+  /** Generic methods to access labels stored in DataDNA
+    *
+    * @param index(es) index or Traversable of indexes of objects
+    * @return a label (TY) or a Traversable of TY
+    */
   def getLabel(index : Int) : TY = { getLabels(Traversable(index)).head }
   def getLabels() : Traversable[TY] = { getLabels(0 until nb_objects) }
   def getLabels(indexes : Traversable[Int]) : Traversable[TY]
 
+  /** Return the number of samples by labels
+    *
+    * NOTE: decision tree specific
+    * TODO: move to another 'tree specific' trait
+    *
+    * @return map a map with (label, number_of_samples)
+    */
   def getCounts(): Map[TY,Int]
-  def split(att: Int, th: Double): (DataDNA[T,TX,TY], DataDNA[T,TX,TY])
-  def findRandomSplit() : Split
 
-  //def describe // Do we need this now?
+  /** Partition the DataDNA given a split (attribute, threshold)
+    *
+    * NOTE: decision tree specific
+    * TODO: use the Split case class
+    * TODO: move to another 'tree specific' trait
+    *
+    * @param
+    * @return
+    */
+  def split(att: Int, th: Double): (DataDNA[T,TX,TY], DataDNA[T,TX,TY])
+
+  /** Find a random split
+    *
+    * NOTE: decision tree specific
+    * TODO: move to another 'tree specific' trait
+    *
+    * @return split a (valid) split
+    */
+  def findRandomSplit() : Split
 }
 
-/** A classic, (rather) naive, not distributed data DNA example
+/** A classic, (rather) naive, not distributed data DNA structure example
   *
-  * @constructor create a new dataDNA composed of rows of RowDNA.
+  * @constructor create a new dataDNA with sequence of RowDNA.
   * @param rows A sequence of RowDNA
   */
 class Data(val rows: Seq[RowDNA[Double,Seq[Double], Int]]) extends DataDNA[Double,Seq[Double],Int] {
@@ -104,7 +152,11 @@ class Data(val rows: Seq[RowDNA[Double,Seq[Double], Int]]) extends DataDNA[Doubl
       false
   }
 
-  // Create a Data2 from a CSV file
+  /**
+    *
+    * @param
+    * @return
+    */
   def this(uri: String, labelpos: Int, delimiter:String = " ") = {
     // TODO: read from CSV
     // create Seq[RowDNA] from the file
@@ -112,11 +164,20 @@ class Data(val rows: Seq[RowDNA[Double,Seq[Double], Int]]) extends DataDNA[Doubl
     this(Seq.empty[RowDNA[Double,Seq[Double], Int]])
   }
 
-  // Create an empty Data2
+  /**
+    *
+    * @param
+    * @return
+    */
   def this() = {
     this(Seq.empty[RowDNA[Double,Seq[Double], Int]])
   }
 
+  /**
+    *
+    * @param
+    * @return
+    */
   def getAttributes(indexes : Traversable[Int]) = {
     indexes.map(
       i => rows.map(
@@ -125,25 +186,55 @@ class Data(val rows: Seq[RowDNA[Double,Seq[Double], Int]]) extends DataDNA[Doubl
       )
   }
 
+  /**
+    *
+    * @param
+    * @return
+    */
   def getObjects(indexes : Traversable[Int]) = {
     new Data(indexes.map(i => rows(i)).toSeq)
   }
 
+  /**
+    *
+    * @param
+    * @return
+    */
   def getLabels(indexes : Traversable[Int]) = {
     indexes.map(i => rows(i).label.getOrElse(-1))
   }
 
+  /**
+    *
+    * @param
+    * @return
+    */
   def getValue(row: Int, att: Int) = { rows(row).attributes(att) }
 
+  /**
+    *
+    * @param
+    * @return
+    */
   def getCounts() = {
     rows.groupBy(row => row.label.getOrElse(-1)).map(e => { (e._1, e._2.length) })
   }
 
+  /**
+    *
+    * @param
+    * @return
+    */
   def split(att: Int, th: Double) = {
     val part = partition(_.attributes(att) < th)
     (new Data(part._1.toSeq), new Data(part._2.toSeq))
   }
 
+  /**
+    *
+    * @param
+    * @return
+    */
   def findRandomSplit() = {
     var att = Random.nextInt(nb_attributes)
     var th = -1.0
