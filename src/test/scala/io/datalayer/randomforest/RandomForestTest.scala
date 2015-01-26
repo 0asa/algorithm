@@ -24,243 +24,6 @@ object TestParams {
   val evaluate = dataGenerator.genLabeled(ts_size,50)
 }
 
-class SparkTest extends FunSuite {
-  test("Creating Spark Context") {
-    //val conf = new SparkConf().setMaster("local[4]").setAppName("Simple Application")
-    val sc = SparkContextManager.getSparkContext(8)
-    Thread sleep 5000
-    val rdd = sc.parallelize(TestParams.train)
-    Thread sleep 1000
-    rdd.foreach(println)
-    Thread sleep 1000
-    val coucou = rdd.map(i => i.input(1)*10)
-    Thread sleep 1000
-    coucou.foreach(println)
-    println("You now have 20 seconds left...")
-    Thread sleep 20000
-    println("Done. Byebye.")
-    sc.stop()
-    assert(1 == 1)
-  }
-}
-
-class DataTest extends FunSuite {
-  /*
-  test("Input and labels with different sizes") {
-    val data = new Data
-    intercept[IncompatibleDataTypeException]{
-      data.load(Seq(Seq(1.0,1.1),Seq(2.0,2.1),Seq(3.0,3.1)), Seq(0.0,0.1))
-    }
-  }
-  */
-
-  test("RowDNA test") {
-    val rowtest = new RowDNA[Double,Seq[Double], Int](Seq(1.5,2.5,3.5),Some(1))
-    
-    assert(rowtest.nb_attributes == 3)
-    assert(rowtest.isLabeled == true)
-    assert(rowtest.attributes(0) == 1.5)
-    assert(rowtest.attributes(1) == 2.5)
-    assert(rowtest.attributes(2) == 3.5)
-    assert(rowtest.label == Some(1))
-  }
-
-  test("First DataDNA test") {
-    info("Going to be the coolest thing you've ever done!")
-    
-    val r1 = new RowDNA[Double,Seq[Double], Int](Seq(1.0,1.35,1.5,1.99),Some(0))
-    val r2 = new RowDNA[Double,Seq[Double], Int](Seq(2.0,2.35,2.5,2.99),Some(1))
-    val r3 = new RowDNA[Double,Seq[Double], Int](Seq(3.0,3.35,3.5,3.99),Some(2))
-  
-    val datatest = new Data(Seq(r1,r2,r3))
-
-    assert(datatest.nb_objects == 3)
-    assert(datatest.nb_attributes == 4)
-    assert(datatest.nb_classes == 3)
-    assert(datatest.labeled == true)
-    assert(datatest.getAttribute(1) == List(1.35, 2.35, 3.35))
-    assert(datatest.getLabel(1) == 1)
-    //println(datatest.findRandomSplit)
-    //println(datatest.split(0,1.5)._1)
-    //println(datatest.split(0,1.5)._2)
-    //println(datatest.getCounts)      
-    //println(datatest.getLabels(Seq(1,2)))
-    //println(datatest.getObject(1))
-    //println(datatest.getObjects(Seq(0,2)))
-    //println(datatest.getAttributes(Seq(1,2)))
-    //println(datatest)
-      
-    //println(datatest.map(_.attributes(0)))
-    //println(datatest.map(_.label))
-    //println(datatest.partition(_.attributes(1) < 2.5))  
-
-    /*
-    val data = new Data
-    data.load(Seq(Seq(1.0,1.1),Seq(2.0,2.1),Seq(3.0,3.1)))
-    data.split(0, 1.5)
-    data.load(Seq(Seq(1.0,1.1),Seq(2.0,2.1),Seq(3.0,3.1)), Seq(0.0,0.1,0.2))
-    data.inputs.foreach(println)
-    println(data.labels)
-
-    //data.loadCSV
-
-    // Test split
-    val splited = data.split(0, 1.5)
-    println(splited._1.labels)
-    println(splited._2.labels)
-
-    //data.describe
-
-    data.inputs.map(x => x)
-
-    assert(splited._1.labels == Seq(0.0))
-
-    assert(data.getAttribute(0).inputs == Seq(Seq(1.0),Seq(2.0),Seq(3.0)))
-
-    assert(data.getAttributes(Seq(0)).inputs == Seq(Seq(1.0),Seq(2.0), Seq(3.0)))
-
-    assert(data.getObjects(Seq(0,1)).inputs == Seq(Seq(1.0,1.1),Seq(2.0,2.1)))
-    assert(data.getObject(1).inputs == Seq(Seq(2.0,2.1)))
-
-    assert(data.getLabels(Seq(0,1)) == Seq(0.0,0.1))
-    assert(data.getLabel(1) == Seq(0.1))
-
-    assert(data.getValue(0,0) == 1.0)
-    assert(data.labeled == true)
-    assert(data.nb_attributes == 2)
-    assert(data.nb_objects == 3)
-    */
-  }
-
-  test("DataRDD test") {
-    /*
-    info("Some serious stuff going on…")
-    val sc = SparkContextManager.getSparkContext(8)
-    val data = new DataSchemaRDD(sc)
-    val train = sc.parallelize(Seq(Array(1.0,1.1), Array(2.0,2.1), Array(3.0,3.1)))
-    val labels = sc.parallelize(Seq((1.0, 1.toLong), (2.0, 1.toLong), (1.0, 0.toLong)))
-
-    data.load(train, labels)
-    val split = data.split(0, 1.5)
-    assert(Seq(Seq(1.0, 1.1)) === split._1.inputs.collect().toSeq.map(_.toSeq))
-    assert(Seq(Seq(2.0, 2.1), Seq(3.0, 3.1)) === split._2.inputs.collect().toSeq.map(_.toSeq))
-
-    assert(data.getAttributes(Seq(0)).inputs.collect.toSeq.map(_.toSeq) === Seq(Seq(1.0),Seq(2.0), Seq(3.0)))
-    assert(data.getAttributes(Seq(1)).inputs.collect.toSeq.map(_.toSeq) === Seq(Seq(1.1),Seq(2.1), Seq(3.1)))
-
-    assert(data.getObjects(Seq(2)).inputs.collect.toSeq.map(_.toSeq) === Seq(Seq(3.0, 3.1)))
-
-    assert(data.inputs.take(1).take(1)(0)(1) === 1.1)
-
-    //    data.loadCSV("/home/manuel/wrk/model/randomforest/src/test/resources/", 0)
-    */
-  }
-}
-
-class NodeTest extends FunSuite {
-
-  val train = TestParams.train
-  val test = TestParams.test
-  val maps = train.groupBy(e => e.label.label)
-  Node.nbclass = maps.size
-
-  test("Node should be a leaf") {
-    val node = new Node
-    info(node)
-    assert(node.isLeaf == true)
-  }
-
-  test("Node split after fit should not be null") {
-    val node = new Node
-    node.samples = train
-    node.fit()
-    assert(node.split !== null)
-  }
-
-  test("Node canSplit() test") {
-    // A case where canSplit() should return true
-    val ntrue = new Node(min_samples_split=TestParams.ls_size-1)
-    ntrue.samples = train
-    ntrue.split = ntrue.findRandomSplit()
-    info(ntrue)
-    assert(ntrue.canSplit === true)
-    // A case where canSplit() should return false
-    val nfalse = new Node(min_samples_split=TestParams.ls_size+1)
-    nfalse.samples = train
-    nfalse.split = nfalse.findRandomSplit()
-    info(nfalse)
-    assert(nfalse.canSplit === false)
-  }
-
-  test("Node findRandomSplit should find a split") {
-    // The truth is it might not...
-    // in which case split.attribute will be equal to -1
-    // this is caused by the current findRandomSplit implementation
-    val node = new Node
-    node.samples = train
-    val split = node.findRandomSplit()
-    assert(split.attribute >= -1 && split.attribute <= train(0).input.length)
-  }
-
-  test("Node findKRandomSplit") {
-    val node = new Node(max_features=1)
-    node.samples = train
-    val split = node.findKRandomSplit()
-    assert(true)
-  }
-
-}
-
-class TreeTest extends FunSuite {
-
-  val train = TestParams.train
-  val test = TestParams.test
-  val evaluate = TestParams.evaluate
-
-  test("Complexity should increase after fit") {
-    val tree = new Tree(min_samples_split=10,max_features=25)
-    val c1 = tree.complexity
-    tree.fit(train)
-    val c2 = tree.complexity
-    assert(c1 < c2)
-  }
-
-  test("Prediction should be consistent") {
-    val tree = new Tree(min_samples_split=5,max_features=25)
-    tree.fit(train)
-    var prob0 = tree.predict(test(0))
-    var prob1 = tree.predict(test(1))
-    var proball = tree.predict(test)
-    assert(prob0 === proball(0))
-    assert(prob1 === proball(1))
-  }
-
-  test("Labels should be consistent") {
-    val tree = new Tree(min_samples_split=5,max_features=25)
-    tree.fit(train)
-    val expectedClass0 = tree.predictLabel(test(0))
-    val expectedClass1 = tree.predictLabel(test(1))
-    val expectedClasses = tree.predictLabel(test)
-    assert(expectedClass0 === expectedClasses(0))
-    assert(expectedClass1 === expectedClasses(1))
-  }
-
-  test("Accuracy should be > 0.5") {
-    val tree = new Tree(min_samples_split=10,max_features=25)
-    tree.fit(train)
-    val accuracy = tree.predictEval(evaluate)._2
-    info("Accuracy = " + accuracy)
-    assert(accuracy >= 0.5)
-  }
-
-  test("Tree parameters test") {
-    val tree = new Tree(min_samples_split=10,max_features=25)
-    info(tree)
-    assert("max_features=25;max_depth=-1;min_samples_split=10;complexity=0;" == tree.printParams)
-  }
-}
-
-
 class ForestTest extends FunSuite {
 
   val train = TestParams.train
@@ -275,7 +38,7 @@ class ForestTest extends FunSuite {
       trees.fit(unlabeled)
     }
 
-    val labeled = dataGenerator.genData(50,10,true)    
+    val labeled = dataGenerator.genData(50,10,true)
     assert(labeled.labeled == true)
     trees.fit(labeled)
     //labeled.foreach(println)
@@ -352,5 +115,25 @@ class MainTest extends FunSuite {
   test("Some more test to test scala") {
     // I sometimes use this to test things...
     assert(1 === 1)
+  }
+}
+
+class SparkTest extends FunSuite {
+  test("Creating Spark Context") {
+    //val conf = new SparkConf().setMaster("local[4]").setAppName("Simple Application")
+    val sc = SparkContextManager.getSparkContext(8)
+    Thread sleep 5000
+    val rdd = sc.parallelize(TestParams.train)
+    Thread sleep 1000
+    rdd.foreach(println)
+    Thread sleep 1000
+    val coucou = rdd.map(i => i.input(1)*10)
+    Thread sleep 1000
+    coucou.foreach(println)
+    println("You now have 20 seconds left...")
+    Thread sleep 20000
+    println("Done. Byebye.")
+    sc.stop()
+    assert(1 == 1)
   }
 }
