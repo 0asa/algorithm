@@ -103,5 +103,10 @@
       <groupId>com.github.nscala-time</groupId>
       <artifactId>nscala-time_${scala.binary.version}</artifactId>
     </dependency>
+    <dependency>
+      <groupId>xml-apis</groupId>
+      <artifactId>xml-apis</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

@@ -135,7 +135,7 @@ class SparkTest extends FunSuite {
     println("You now have 20 seconds left...")
     Thread sleep 20000
     println("Done. Byebye.")
-    sc.stop()
+//    sc.stop()
     assert(1 == 1)
   }
 }
