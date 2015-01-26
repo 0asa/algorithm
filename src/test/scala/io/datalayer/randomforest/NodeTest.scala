@@ -25,7 +25,7 @@ class NodeTest extends FunSuite {
 
   test("Node should be a leaf") {
     val node = new Node
-    info(node)
+    info(node.toString)
     assert(node.isLeaf == true)
   }
 
@@ -41,13 +41,13 @@ class NodeTest extends FunSuite {
     val ntrue = new Node(min_samples_split=TestParams.ls_size-1)
     ntrue.samples = train
     ntrue.split = ntrue.findRandomSplit()
-    info(ntrue)
+    info(ntrue.toString)
     assert(ntrue.canSplit === true)
     // A case where canSplit() should return false
     val nfalse = new Node(min_samples_split=TestParams.ls_size+1)
     nfalse.samples = train
     nfalse.split = nfalse.findRandomSplit()
-    info(nfalse)
+    info(nfalse.toString)
     assert(nfalse.canSplit === false)
   }
 

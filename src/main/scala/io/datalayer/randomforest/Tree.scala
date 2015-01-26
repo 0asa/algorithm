@@ -1,14 +1,5 @@
 package io.datalayer.randomforest
 
-/*
-Companion object
-*/
-object Tree {
-  implicit def printParams(tree: Tree): String = {
-    tree.printParams()
-  }
-}
-
 /** A single decision tree
   *
   * @constructor create a new decison tree.
@@ -24,7 +15,7 @@ class Tree( max_features: Int = 10,
   var stack = new scala.collection.mutable.Stack[Node]
   var complexity:Int = 0
 
-  def printParams() : String = {
+  override def toString: String = {
     val str_param:String = "max_features=" + max_features + ";" +
     "max_depth=" + max_depth + ";" +
     "min_samples_split=" + min_samples_split + ";" +
@@ -32,6 +23,11 @@ class Tree( max_features: Int = 10,
     str_param
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def fit(x: DataDNA[Double,Seq[Double],Int]): Unit = {
     Node.nbclass = x.nb_classes
     root = new Node
@@ -62,6 +58,11 @@ class Tree( max_features: Int = 10,
 
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def fit(x: Seq[Labeled]): Unit = {
     val maps = x.groupBy(e => e.label.label)
     Node.nbclass = maps.size
@@ -91,28 +92,58 @@ class Tree( max_features: Int = 10,
     }
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def predict(x: Unlabeled): Array[Double] = {
     root.predict(x)
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def predict(x: RowDNA[Double,Seq[Double], Int]): Array[Double] = {
     root.predict(x)
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def predict(x: DataDNA[Double,Seq[Double],Int]): Array[Array[Double]] = {
     x.map(predict(_)).toArray
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def predict(x: Seq[Unlabeled]): Array[Array[Double]] = {
     x.map(predict(_)).toArray
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def importances(): Array[Double] = {
     // TODO: scan all the nodes
     // use information stored in n.split
     Array.empty[Double]
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def display() {
     root.display
   }

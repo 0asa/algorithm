@@ -43,9 +43,7 @@ class ForestTest extends FunSuite {
     trees.fit(labeled)
 
     val preds = trees.predict(labeled)
-
     info("Score: " + trees.score(preds, labeled.getLabels()))
-
   }
 
   test("Forest fit on DataRDD") {
@@ -66,11 +64,11 @@ class ForestTest extends FunSuite {
 
   test("Totally Random Trees vs. Extra-Trees") {
     val random_trees = new Forest(min_samples_split=10,n_estimators=100,max_features=1)
-    info(random_trees)
+    info(random_trees.toString)
     random_trees.fit(train)
     val acc_random = random_trees.predictEval(evaluate)._2
     val extra_trees = new Forest(min_samples_split=10,n_estimators=100,max_features=25)
-    info(extra_trees)
+    info(extra_trees.toString)
     extra_trees.fit(train)
     val acc_extra = extra_trees.predictEval(evaluate)._2
     info("Totally Random acc.: " + acc_random)
@@ -81,11 +79,11 @@ class ForestTest extends FunSuite {
   test("Single tree vs. Extra-Trees") {
     val tree = new Tree(min_samples_split=10,max_features=25)
     tree.fit(train)
-    info(tree)
+    info(tree.toString)
     val acc_tree = tree.predictEval(evaluate)._2
     val extra_trees = new Forest(min_samples_split=10,n_estimators=100,max_features=25)
     extra_trees.fit(train)
-    info(extra_trees)
+    info(extra_trees.toString)
     val acc_extra = extra_trees.predictEval(evaluate)._2
     info("Single tree acc.: " + acc_tree)
     info("Extra-Trees acc.: " + acc_extra)
@@ -94,7 +92,7 @@ class ForestTest extends FunSuite {
 
   test("Some forest test") {
     val forest = new Forest(min_samples_split=10,n_estimators=50,max_features=25)
-    info(forest)
+    info(forest.toString)
     forest.fit(train)
     val accuracy = forest.predictEval(evaluate)._2
     info("Accuracy = " + accuracy)

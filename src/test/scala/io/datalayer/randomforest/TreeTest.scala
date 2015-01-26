@@ -60,7 +60,7 @@ class TreeTest extends FunSuite {
 
   test("Tree parameters test") {
     val tree = new Tree(min_samples_split=10,max_features=25)
-    info(tree)
-    assert("max_features=25;max_depth=-1;min_samples_split=10;complexity=0;" == tree.printParams)
+    info(tree.toString)
+    assert("max_features=25;max_depth=-1;min_samples_split=10;complexity=0;" == tree.toString)
   }
 }

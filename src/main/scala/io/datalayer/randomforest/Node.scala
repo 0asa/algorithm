@@ -8,9 +8,6 @@ import scala.util.Random
 */
 object Node {
   var nbclass: Int = 0
-  implicit def printParams(node: Node): String = {
-    node.printParams()
-  }
 }
 
 
@@ -34,18 +31,28 @@ class Node( max_features: Int = 10,
   var _samples: DataDNA[Double,Seq[Double],Int] = null
   val nbclass:Int = Node.nbclass
 
-  private def printParams() : String = {
+  override def toString: String = {
     val str_param:String = "max_features=" + max_features + ";" +
     "max_depth=" + max_depth + ";" +
     "min_samples_split=" + min_samples_split + ";"
     str_param
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def isLeaf(): Boolean = {
     if (left == null && right == null) return true
     return false
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def _canSplit(): Boolean = {
     if (max_depth > 0) {
       if (_samples.nb_objects > math.max(2,min_samples_split) && depth <= max_depth && split.attribute != -1) {
@@ -60,6 +67,11 @@ class Node( max_features: Int = 10,
     }
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def canSplit(): Boolean = {
     if (max_depth > 0) {
       if (samples.length > math.max(2,min_samples_split) && depth <= max_depth && split.attribute != -1) {
@@ -74,6 +86,11 @@ class Node( max_features: Int = 10,
     }
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def gini(p: Seq[Labeled]): Double = {
     var gi:Double = 0.0
     val maps = p.groupBy(e => e.label.label)
@@ -85,15 +102,21 @@ class Node( max_features: Int = 10,
     1 - gi
   }
 
-  /*
-    Compute the gini impurity score
-    Currently not used
-  */
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def giniScore(p: Seq[Labeled], pl: Seq[Labeled], pr: Seq[Labeled]) : Double = {
     val gs: Double = p.length*gini(p) - (pl.length*gini(pl) + pr.length*gini(pr))
     gs/p.length
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def infogain(p: Seq[Labeled]) : Double = {
     var ig:Double = 0.0
     val maps = p.groupBy(e => e.label.label)
@@ -105,15 +128,21 @@ class Node( max_features: Int = 10,
     - ig
   }
 
-  /*
-    Compute the information gain score
-    Currently not used
-  */
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def infogainScore(p: Seq[Labeled], pl: Seq[Labeled], pr: Seq[Labeled]) : Double = {
     val is: Double = p.length*infogain(p) - (pl.length*infogain(pl) + pr.length*infogain(pr))
     is/p.length
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def findKRandomSplit(): Split = {
     val score_max:Double = -1.0
     var ksplits:Vector[Split] = Vector.empty
@@ -128,12 +157,22 @@ class Node( max_features: Int = 10,
     ksplits.maxBy(_.score)
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def updateSplitScore(s: Split, scorer:(Seq[Labeled], Seq[Labeled], Seq[Labeled]) => Double = infogainScore) {
     val part = samples.partition(i => i.input(s.attribute) < s.threshold)
     s.score = scorer(samples,part._1,part._2)
     s.size = samples.length
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def findRandomSplit(): Split = {
     val rand = new Random
     var att = Random.nextInt(samples(0).input.length)
@@ -148,21 +187,41 @@ class Node( max_features: Int = 10,
     Split(att,th)
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def _findRandomSplit(): Split = {
     _samples.findRandomSplit
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def _fit(): Unit = {
     // TODO: use DataDNA _ methods
     split = _findRandomSplit()
     _setVotes()
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def fit(): Unit = {
     split = findKRandomSplit()
     setVotes()
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def _setVotes() = {
     val counts = _samples.getCounts
     votes = new Array[Double](nbclass)
@@ -172,6 +231,11 @@ class Node( max_features: Int = 10,
     }
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def setVotes() = {
     val maps = samples.groupBy(e => e.label.label)
     val counts = maps.map(e => { (e._1, e._2.length) } )
@@ -182,6 +246,11 @@ class Node( max_features: Int = 10,
     }
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def predict(x: Unlabeled): Array[Double] = {
     if (!isLeaf) {
       if (x.input(split.attribute) < split.threshold) {
@@ -194,6 +263,11 @@ class Node( max_features: Int = 10,
     }
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def predict(x: RowDNA[Double,Seq[Double], Int]): Array[Double] = {
     if (!isLeaf) {
       if (x.attributes(split.attribute) < split.threshold) {
@@ -206,6 +280,11 @@ class Node( max_features: Int = 10,
     }
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def display() {
     if (split != null) {
       for (i:Int <- 0 until depth) print("   ")

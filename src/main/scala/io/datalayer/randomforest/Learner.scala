@@ -1,7 +1,7 @@
 package io.datalayer.randomforest
 
 /*
- Learner trait: will evolve and end up in the common folder
+ Learner trait: should evolve and end up in the common folder
 */
 trait Learner {
   private def getMaxByIndex(x: Array[Double]): Label = Label(x.zipWithIndex.maxBy(_._1)._2)

@@ -8,7 +8,7 @@ object Main extends App {
 
     // Preparing the Extra-Trees forest
     val forest = new Forest(min_samples_split=10,n_estimators=100, max_features=5)
-    println(Forest.printParams(forest))
+    println(forest)
 
     // Training the model
     forest.fit(train)

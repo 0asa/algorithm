@@ -2,16 +2,6 @@ package io.datalayer.randomforest
 
 case class CannotFitException(message: String) extends Exception(message)
 
-/*
-  Companion object
-*/
-object Forest {
-  implicit def printParams(forest: Forest): String = {
-    forest.printParams()
-  }
-}
-
-
 /** A forest of decision trees
   *
   * @constructor create a new forest of decision trees.
@@ -32,7 +22,7 @@ class Forest( n_estimators: Int = 10,
     trees(i) = new Tree(max_features, max_depth, min_samples_split)
   }
 
-  private def printParams() : String = {
+  override def toString: String = {
     val str_param:String = "n_estimators=" + n_estimators + ";" +
       "bootstrap=" + bootstrap + ";" +
       "max_features=" + max_features + ";" +
@@ -41,10 +31,11 @@ class Forest( n_estimators: Int = 10,
     str_param
   }
 
-  def setParams() {
-    println("Forest.setParams")
-  }
-
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def fit(x: DataDNA[Double,Seq[Double],Int]): Unit = {
     if (!x.labeled) {
       throw CannotFitException("Data must be labeled")
@@ -58,6 +49,11 @@ class Forest( n_estimators: Int = 10,
     }
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def fit(x: Seq[Labeled]): Unit = {
     for (i <- 0 to (trees.length - 1)) {
       if (bootstrap) {
@@ -68,6 +64,11 @@ class Forest( n_estimators: Int = 10,
     }
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def predict(x: Unlabeled): Array[Double]= {
     def agg(x: Array[Double], y: Array[Double]) : Array[Double] = {
       val z = new Array[Double](x.length)
@@ -78,10 +79,20 @@ class Forest( n_estimators: Int = 10,
     probas.map{ e => e/trees.length }
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def predict(x: Seq[Unlabeled]): Array[Array[Double]] = {
     x.map(predict(_)).toArray
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def predict(x: RowDNA[Double,Seq[Double], Int]): Array[Double] = {
     def agg(x: Array[Double], y: Array[Double]) : Array[Double] = {
       val z = new Array[Double](x.length)
@@ -92,15 +103,30 @@ class Forest( n_estimators: Int = 10,
     probas.map{ e => e/trees.length }
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def predict(x: DataDNA[Double,Seq[Double],Int]): Array[Array[Double]] = {
     x.map(predict(_)).toArray
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def importances(): Array[Double] = {
     // TODO
     Array.empty[Double]
   }
 
+  /** Method desc.
+    *
+    * @param
+    * @return
+    */
   def display() {
     for (i <- 0 to (trees.length - 1)) {
       println("TREE" + (i+1) + " #############")
